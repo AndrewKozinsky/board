@@ -1,7 +1,12 @@
+import './Board.scss'
+import MiddlePart from '../mainParts/MiddlePart/MiddlePart.tsx'
+import TopPart from '../mainParts/TopPart/TopPart.tsx'
+
 function Board() {
 	return (
-		<div>
-			Hello, board!
+		<div className="board">
+			<TopPart />
+			<MiddlePart />
 		</div>
 	)
 }
