@@ -1,7 +1,15 @@
 @use '@/components/App/css/variables' as *;
 
 .top-part {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
 	display: flex;
+	width: 100%;
+	height: $topPanelHeight;
+	background-color: $panelBackground;
+	backdrop-filter: blur($panelBlurStrength);
 }
 
 .top-part__logo {

@@ -30,8 +30,12 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-a {
+a, button {
 	cursor: pointer;
+
+	&:focus {
+		outline: 2px solid $blueColor-2;
+	}
 }
 
 /*.link {

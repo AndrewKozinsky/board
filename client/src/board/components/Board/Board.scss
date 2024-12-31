@@ -1,6 +1,7 @@
+@use "@/components/App/css/variables" as *;
+
 .board {
 	position: relative;
-	display: flex;
-	flex-direction: column;
 	height: 100dvh;
+	background-color: $grayColor-1;
 }

@@ -1,11 +1,13 @@
 import eslintConfigPrettier from 'eslint-config-prettier'
 import eslintPluginPrettier from 'eslint-plugin-prettier'
+import tsParser from '@typescript-eslint/parser'
 
 export default [
 	{
 		files: ['**/*.{ts,tsx}'],
 		languageOptions: {
 			parserOptions: {
+				parser: tsParser,
 				ecmaVersion: 'latest',
 				sourceType: 'module',
 				ecmaFeatures: {
@@ -17,6 +19,7 @@ export default [
 			prettier: eslintPluginPrettier,
 		},
 		rules: {
+			'no-unused-vars': "off",
 			'prettier/prettier': [
 				'error',
 				{
@@ -26,7 +29,6 @@ export default [
 					useTabs: true,
 				},
 			],
-			'no-undef': 'error',
 		},
 		ignores: ['node_modules/**'],
 	},

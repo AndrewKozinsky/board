@@ -1,6 +1,6 @@
-import './TopPart.scss'
+import './TopPanel.scss'
 
-function TopPart() {
+function TopPanel() {
 	return (
 		<div className="top-part">
 			<div className="top-part__logo">Доска</div>
@@ -8,4 +8,4 @@ function TopPart() {
 	)
 }
 
-export default TopPart
+export default TopPanel

@@ -1,12 +1,12 @@
-import MiddlePart from '../mainParts/MiddlePart/MiddlePart.tsx'
-import TopPart from '../mainParts/TopPart/TopPart'
+import LeftPanel from '../mainParts/LeftPanel/LeftPanel.tsx'
+import TopPanel from '../mainParts/TopPanel/TopPanel.tsx'
 import './Board.scss'
 
 function Board() {
 	return (
 		<div className="board">
-			<TopPart />
-			<MiddlePart />
+			<TopPanel />
+			<LeftPanel />
 		</div>
 	)
 }

@@ -1,0 +1,12 @@
+@use "@/components/App/css/variables" as *;
+
+.button {
+	font-size: 2rem;
+	text-align: center;
+	padding: .4rem;
+	border-radius: $radius-1;
+
+	&:hover {
+		background-color: $grayColor-2;
+	}
+}
