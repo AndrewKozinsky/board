@@ -1,11 +1,11 @@
 @use '@/components/App/css/variables' as *;
 
 .top-part {
-    display: flex;
+	display: flex;
 }
 
 .top-part__logo {
-    font-size: 2rem;
-    padding: .6rem 1.2rem;
-    border-right: 1px solid $grayColor-2;
+	font-size: 2rem;
+	padding: 0.6rem 1.2rem;
+	border-right: 1px solid $grayColor-2;
 }

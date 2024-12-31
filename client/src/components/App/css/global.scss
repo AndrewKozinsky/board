@@ -1,6 +1,5 @@
-@use "variables" as *;
+@use 'variables' as *;
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400,600&display=swap');
-
 
 :root {
 	// Стандартный размер шрифта в браузере 16 пикселей.
@@ -12,7 +11,7 @@
 *:not(svg, g, path) {
 	all: unset;
 	display: revert;
-    list-style: none;
+	list-style: none;
 
 	&:focus {
 		outline: 2px solid $blueColor-2;
@@ -20,7 +19,7 @@
 }
 
 body {
-	font-family: "Manrope", Arial, sans-serif;
+	font-family: 'Manrope', Arial, sans-serif;
 	font-optical-sizing: auto;
 	font-weight: 500;
 	font-size: 1.5rem;
