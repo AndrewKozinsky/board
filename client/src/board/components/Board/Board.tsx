@@ -1,5 +1,5 @@
-import LeftPanel from '../mainParts/LeftPanel/LeftPanel.tsx'
-import TopPanel from '../mainParts/TopPanel/TopPanel.tsx'
+import LeftPanel from '../panels/LeftPanel/LeftPanel.tsx'
+import TopPanel from '../panels/TopPanel/TopPanel.tsx'
 import './Board.scss'
 
 function Board() {
