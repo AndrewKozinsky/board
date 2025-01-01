@@ -1,40 +1,30 @@
-import eslintConfigPrettier from 'eslint-config-prettier'
-import eslintPluginPrettier from 'eslint-plugin-prettier'
-import tsParser from '@typescript-eslint/parser'
-import stylisticJs from '@stylistic/eslint-plugin-js'
+import tseslint from 'typescript-eslint'
 
-export default [
-	{
-		files: ['**/*.{ts,tsx}'],
-		languageOptions: {
-			parserOptions: {
-				parser: tsParser,
-				ecmaVersion: 'latest',
-				sourceType: 'module',
-				ecmaFeatures: {
-					jsx: true,
-				},
-			},
-		},
-		plugins: {
-			'@stylistic/js': stylisticJs,
-			prettier: eslintPluginPrettier,
-		},
-		rules: {
-			'no-unused-vars': "off",
-			'prettier/prettier': [
-				'error',
-				{
-					singleQuote: true,
-					printWidth: 100,
-					semi: false,
-					useTabs: true,
-				},
-			],
-			'object-curly-spacing': ['warn', 'always'],
-			'@stylistic/js/no-multiple-empty-lines': 'error',
-		},
-		ignores: ['node_modules/**'],
+export default tseslint.config({
+	files: ['**/*.ts', '**/*.tsx'],
+	languageOptions: {
+		parser: tseslint.parser
 	},
-	eslintConfigPrettier,
-]
+	rules: {
+		'no-multiple-empty-lines': ['error', {
+			max: 1,
+			maxEOF: 1,
+			maxBOF: 0
+		}],
+		'object-curly-spacing': ['warn', 'always'],
+		indent: ['warn', 'tab'],
+		quotes: ['warn', 'single'],
+		'jsx-quotes': ['warn', 'prefer-single'],
+		semi: ['warn', 'never'],
+		'comma-dangle': ['warn', {
+			arrays: 'never',
+			objects: 'always',
+			imports: 'never',
+			exports: 'always',
+			functions: 'never',
+		}],
+		'no-multi-spaces': 'error',
+		'space-in-parens': 'error',
+		'prefer-const': 'warn',
+	}
+})

@@ -7,6 +7,14 @@ import { renderCanvas } from './renderCanvas.ts'
 
 
 
+
+
+
+
+
+
+
+
 export const main = {
 	async init($canvasContainer: HTMLDivElement) {
 		const app = new Application()
@@ -38,3 +46,5 @@ export const main = {
 		// renderCanvas.drawScene()
 	},
 }
+
+
