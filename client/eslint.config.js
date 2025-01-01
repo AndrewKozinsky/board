@@ -1,10 +1,10 @@
 import eslintConfigPrettier from 'eslint-config-prettier'
 import eslintPluginPrettier from 'eslint-plugin-prettier'
 import tsParser from '@typescript-eslint/parser'
+import stylisticJs from '@stylistic/eslint-plugin-js'
 
 export default [
 	{
-		parser: '@typescript-eslint/parser',
 		files: ['**/*.{ts,tsx}'],
 		languageOptions: {
 			parserOptions: {
@@ -17,6 +17,7 @@ export default [
 			},
 		},
 		plugins: {
+			'@stylistic/js': stylisticJs,
 			prettier: eslintPluginPrettier,
 		},
 		rules: {
@@ -30,6 +31,8 @@ export default [
 					useTabs: true,
 				},
 			],
+			'object-curly-spacing': ['warn', 'always'],
+			'@stylistic/js/no-multiple-empty-lines': 'error',
 		},
 		ignores: ['node_modules/**'],
 	},
