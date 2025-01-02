@@ -1,25 +1,25 @@
-import {store} from '../store/store.ts'
+import { getStore } from '../store/store.ts'
 
 export const canvasSize = {
-	getCanvasSize() {
+	getSize() {
 		const windowWidth = document.documentElement.clientWidth
 		const windowHeight = document.documentElement.clientHeight
 
 		return {
 			width: windowWidth,
-			height: windowHeight,
+			height: windowHeight
 		}
 	},
 
-	/*setCorrectCanvasSizeAfterWindowResize() {
-		addEventListener("resize", this.setCorrectCanvasSize.bind(this))
-	},*/
+	setCorrectCanvasSizeAfterWindowResize() {
+		addEventListener('resize', this.setCorrectCanvasSize.bind(this))
+	},
 
-	/*setCorrectCanvasSize() {
+	setCorrectCanvasSize() {
 		setTimeout(() => {
-			const canvasSize = this.getCanvasSize()
+			const canvasSize = this.getSize()
 
-			store.app.renderer.resize(canvasSize.width, canvasSize.height);
+			getStore.app.renderer.resize(canvasSize.width, canvasSize.height)
 		}, 100)
-	}*/
+	}
 }

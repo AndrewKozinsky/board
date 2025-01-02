@@ -18,7 +18,7 @@ export default tseslint.config({
 		semi: ['warn', 'never'],
 		'comma-dangle': ['warn', {
 			arrays: 'never',
-			objects: 'always',
+			objects: 'never',
 			imports: 'never',
 			exports: 'always',
 			functions: 'never',

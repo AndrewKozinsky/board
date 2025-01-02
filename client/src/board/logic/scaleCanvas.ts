@@ -1,18 +1,17 @@
-import {store} from '../store/store.ts'
-import {pixiHelper} from './pixiHelper.ts'
+import { pixiHelper } from './pixiHelper.ts'
 
 type ScaleDirection = 'zoomIn' | 'zoomOut'
 
-export const canvasScale = {
-	/*setEventListeners() {
-		window.addEventListener('keydown', (event) => {
+export const scaleCanvas = {
+	setEventListeners() {
+		/*window.addEventListener('keydown', (event) => {
 			if (event.key === '=') {
 				this.zoomCanvas('zoomIn') // Zoom out (scale up by 25%)
 			} else if (event.key === '-') {
 				this.zoomCanvas('zoomOut') // Zoom in (scale down by 25%)
 			}
-		})
-	},*/
+		})*/
+	}
 
 	/*zoomCanvas(scaleDirection: ScaleDirection) {
 		const currentScale = store.app.stage.scale.x
