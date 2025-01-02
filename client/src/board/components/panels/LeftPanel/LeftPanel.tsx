@@ -4,7 +4,7 @@ import { useGetScale } from '../ScalePanel/fn/getScale.ts'
 
 function LeftPanel() {
 	return (
-		<div className="left-panel">
+		<div className='left-panel'>
 			<ScalePanel />
 		</div>
 	)

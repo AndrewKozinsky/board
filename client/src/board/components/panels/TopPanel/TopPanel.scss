@@ -10,6 +10,7 @@
 	height: $topPanelHeight;
 	background-color: $panelBackground;
 	backdrop-filter: blur($panelBlurStrength);
+	user-select: none;
 }
 
 .top-part__logo {

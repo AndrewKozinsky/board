@@ -5,6 +5,7 @@
 	text-align: center;
 	padding: 0.4rem;
 	border-radius: $radius-1;
+	user-select: none;
 
 	&:hover {
 		background-color: $grayColor-2;

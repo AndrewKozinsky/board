@@ -1,5 +1,6 @@
 import { Graphics, Text } from 'pixi.js'
 import { Cursor, getStore, updateStore } from '../store/store.ts'
+import { pixiHelper } from './pixiHelper.ts'
 
 export const renderCanvas = {
 	render() {
@@ -19,6 +20,8 @@ export const renderCanvas = {
 		app.canvas.style.cursor = cursor
 
 		this.drawSampleObjects()
+
+		pixiHelper.rerenderFonts(scale)
 	},
 
 	drawSampleObjects() {
