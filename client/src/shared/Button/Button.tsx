@@ -9,7 +9,7 @@ function Button(props: ButtonProps) {
 	const { children, ...rest } = props
 
 	return (
-		<button {...rest} type="button" className='button'>
+		<button {...rest} type="button" className="button">
 			{children}
 		</button>
 	)

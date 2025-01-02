@@ -12,7 +12,7 @@ function Board() {
 	}, [])
 
 	return (
-		<div className='board' ref={canvasContainerRef}>
+		<div className="board" ref={canvasContainerRef}>
 			<TopPanel />
 			<LeftPanel />
 		</div>

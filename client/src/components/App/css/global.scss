@@ -31,7 +31,8 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-a, button {
+a,
+button {
 	cursor: pointer;
 
 	&:focus {
@@ -51,5 +52,5 @@ a, button {
 }*/
 
 .mini-space {
-	font-size: .4em;
+	font-size: 0.4em;
 }

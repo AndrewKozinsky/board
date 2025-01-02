@@ -31,10 +31,9 @@ export const main = {
 
 		canvasSize.setCorrectCanvasSizeAfterWindowResize()
 
-		scaleCanvas.setEventListeners()
 		moveCanvas.setEventListeners()
+		scaleCanvas.setEventListeners()
 
 		renderCanvas.render()
 	}
 }
-

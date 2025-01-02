@@ -1,6 +1,10 @@
-type UseStore = { getState: () => any, setState: (...args: any[]) => any }
+type UseStore = { getState: () => any; setState: (...args: any[]) => any }
 
-export function createUpdateStoreProxy<T extends Record<string, any>>(store: T, useStore: UseStore, path: string[] = []) {
+export function createUpdateStoreProxy<T extends Record<string, any>>(
+	store: T,
+	useStore: UseStore,
+	path: string[] = []
+) {
 	return new Proxy(store, {
 		get(obj, prop: string) {
 			const newPath: string[] = [...path, prop]

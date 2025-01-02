@@ -1,5 +1,11 @@
-import { getStore, updateStore } from '../store/store.ts'
+import { Cursor, getStore, updateStore } from '../store/store.ts'
 import { renderCanvas } from './renderCanvas.ts'
+
+let isMousePressed = false
+let isCmdPressed = false
+let isSpacePressed = false
+let mouseStartX = 0
+let mouseStartY = 0
 
 export const moveCanvas = {
 	setEventListeners() {
@@ -9,22 +15,27 @@ export const moveCanvas = {
 
 	// Холст перемещается если прокручивают мышью
 	setMoveByMouseWheel() {
-		getStore.app.canvas.addEventListener('wheel', (event) => {
-			const { deltaX, deltaY } = event
-			this.moveCanvas(deltaX, deltaY)
-		}, { passive: true })
+		getStore.app.canvas.addEventListener(
+			'wheel',
+			(event) => {
+				if (isCmdPressed) return
+
+				const { deltaX, deltaY } = event
+				this.moveCanvas(deltaX, deltaY)
+			},
+			{ passive: true }
+		)
 	},
 
 	// Холст перемещается если нажали на пробел и зажали мышь
 	setMoveByMouseAndSpaceKey() {
-		let isSpacePressed = false
-		let mouseStartX = 0
-		let mouseStartY = 0
-
 		document.addEventListener('keydown', (event) => {
 			if (event.code === 'Space' && !event.repeat) {
 				isSpacePressed = true
 				this.setDragCursor()
+			}
+			if (event.code === 'MetaLeft') {
+				isCmdPressed = true
 			}
 		})
 
@@ -33,10 +44,13 @@ export const moveCanvas = {
 				isSpacePressed = false
 				this.clearCursorView()
 			}
+			if (event.code === 'MetaLeft') {
+				isCmdPressed = false
+			}
 		})
 
 		document.addEventListener('mousedown', (event) => {
-			updateStore.mouse.leftButton = true
+			isMousePressed = true
 			mouseStartX = event.clientX
 			mouseStartY = event.clientY
 
@@ -46,7 +60,7 @@ export const moveCanvas = {
 		})
 
 		document.addEventListener('mouseup', () => {
-			updateStore.mouse.leftButton = false
+			isMousePressed = false
 
 			if (isSpacePressed) {
 				this.setDragCursor()
@@ -56,7 +70,7 @@ export const moveCanvas = {
 		})
 
 		document.addEventListener('mousemove', (event) => {
-			if (getStore.mouse.leftButton && isSpacePressed) {
+			if (isMousePressed && isSpacePressed) {
 				const offsetX = mouseStartX - event.clientX
 				const offsetY = mouseStartY - event.clientY
 
@@ -78,17 +92,17 @@ export const moveCanvas = {
 	},
 
 	setDragCursor() {
-		updateStore.statuses.readyToMoveCanvas = true
-		updateStore.statuses.moveCanvasByDragging = false
+		updateStore.cursor = Cursor.Palm
+		renderCanvas.render()
 	},
 
 	setDraggingCursor() {
-		updateStore.statuses.readyToMoveCanvas = false
-		updateStore.statuses.moveCanvasByDragging = true
+		updateStore.cursor = Cursor.Dragging
+		renderCanvas.render()
 	},
 
 	clearCursorView() {
-		updateStore.statuses.readyToMoveCanvas = false
-		updateStore.statuses.moveCanvasByDragging = false
+		updateStore.cursor = Cursor.Default
+		renderCanvas.render()
 	}
 }
