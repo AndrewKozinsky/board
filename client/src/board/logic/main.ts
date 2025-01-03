@@ -1,5 +1,5 @@
-import { Application, Assets, Graphics, Text } from 'pixi.js'
-import { getStore, updateStore, useBoardStore } from '../store/store.ts'
+import { Application } from 'pixi.js'
+import { getStore, updateStore } from '../store/store.ts'
 import { moveCanvas } from './moveCanvas.ts'
 import { scaleCanvas } from './scaleCanvas.ts'
 import { canvasSize } from './canvasSize.ts'
