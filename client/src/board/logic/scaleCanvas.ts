@@ -38,6 +38,12 @@ export const scaleCanvas = {
 			}
 		})
 
+		// Если потеряли фокус, то скорее всего переключились на другое приложение,
+		// поэтому поставить isCmdPressed в false
+		window.addEventListener('blur', () => {
+			isCmdPressed = false
+		})
+
 		// Масштабировать если нажали Cmd и крутят колесо мыши
 		getStore.app.canvas.addEventListener(
 			'wheel',
@@ -83,15 +89,17 @@ export const scaleCanvas = {
 			return
 		}
 
+		const roundedNewScale = Math.round(newScale)
+
 		const currentScale = getStore.canvas.scale
-		const scaleDiff = (currentScale - newScale) / 100 // .25
+		const scaleDiff = (currentScale - roundedNewScale) / 100 // .25
 
 		const leftOffsetPx = canvasPivotLeftPx * scaleDiff
 		const topOffsetPx = canvasPivotTopPx * scaleDiff
 
 		updateStore.canvas.offset.x = getStore.canvas.offset.x + leftOffsetPx
 		updateStore.canvas.offset.y = getStore.canvas.offset.y + topOffsetPx
-		updateStore.canvas.scale = newScale
+		updateStore.canvas.scale = roundedNewScale
 
 		renderCanvas.render()
 	},

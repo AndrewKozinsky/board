@@ -7,6 +7,10 @@ import { renderCanvas } from './renderCanvas.ts'
 import '../../utils/createStoreProxy.ts'
 
 export const main = {
+	/**
+	 * Запуск приложения
+	 * @param $canvasContainer — контейнер, куда будет вставлен созданный холст.
+	 */
 	async init($canvasContainer: HTMLDivElement) {
 		const app = new Application()
 

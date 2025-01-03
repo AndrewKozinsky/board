@@ -7,13 +7,17 @@ let isSpacePressed = false
 let mouseStartX = 0
 let mouseStartY = 0
 
+// Методы работы с передвижением холста
 export const moveCanvas = {
+	/**
+	 * Установка обработчиков заставляющих холст двигаться
+	 */
 	setEventListeners() {
 		this.setMoveByMouseWheel()
 		this.setMoveByMouseAndSpaceKey()
 	},
 
-	// Холст перемещается если прокручивают мышью
+	/** Холст перемещается если прокручивают мышью */
 	setMoveByMouseWheel() {
 		getStore.app.canvas.addEventListener(
 			'wheel',
@@ -27,14 +31,14 @@ export const moveCanvas = {
 		)
 	},
 
-	// Холст перемещается если нажали на пробел и зажали мышь
+	/** Холст перемещается если нажали на пробел и зажали мышь */
 	setMoveByMouseAndSpaceKey() {
 		document.addEventListener('keydown', (event) => {
 			if (event.code === 'Space' && !event.repeat) {
 				isSpacePressed = true
 				this.setDragCursor()
 			}
-			if (event.code === 'MetaLeft') {
+			if (event.code === 'MetaLeft' && !event.repeat) {
 				isCmdPressed = true
 			}
 		})
@@ -47,6 +51,12 @@ export const moveCanvas = {
 			if (event.code === 'MetaLeft') {
 				isCmdPressed = false
 			}
+		})
+
+		// Если потеряли фокус, то скорее всего переключились на другое приложение,
+		// поэтому поставить isCmdPressed в false
+		window.addEventListener('blur', () => {
+			isCmdPressed = false
 		})
 
 		document.addEventListener('mousedown', (event) => {
@@ -84,6 +94,11 @@ export const moveCanvas = {
 		})
 	},
 
+	/**
+	 * Перемещение холста на указанное относительное расстояние в пикселах.
+	 * @param relativeX — относительное расстояние по горизонтали.
+	 * @param relativeY — относительное расстояние по вертикале.
+	 */
 	moveCanvas(relativeX: number, relativeY: number) {
 		updateStore.canvas.offset.x = getStore.canvas.offset.x -= relativeX
 		updateStore.canvas.offset.y = getStore.canvas.offset.y -= relativeY
@@ -91,16 +106,19 @@ export const moveCanvas = {
 		renderCanvas.render()
 	},
 
+	/** Ставит на холсте курсор в виде ладони */
 	setDragCursor() {
 		updateStore.cursor = Cursor.Palm
 		renderCanvas.render()
 	},
 
+	/** Ставит на холсте курсор перетаскивания */
 	setDraggingCursor() {
 		updateStore.cursor = Cursor.Dragging
 		renderCanvas.render()
 	},
 
+	/** Ставит на холсте стандартный курсор */
 	clearCursorView() {
 		updateStore.cursor = Cursor.Default
 		renderCanvas.render()

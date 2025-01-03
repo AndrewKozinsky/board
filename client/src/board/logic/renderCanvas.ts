@@ -3,9 +3,12 @@ import { Cursor, getStore, updateStore } from '../store/store.ts'
 import { pixiHelper } from './pixiHelper.ts'
 
 export const renderCanvas = {
+	/** Отрисовка сцены */
 	render() {
 		requestAnimationFrame(() => this.buildScene())
 	},
+
+	/** Сборка сцены */
 	buildScene() {
 		const { app } = getStore
 
@@ -24,6 +27,7 @@ export const renderCanvas = {
 		pixiHelper.rerenderFonts(scale)
 	},
 
+	/** Установка примеров объектов для отладки */
 	drawSampleObjects() {
 		// Удалить всех детей потому что далее будут добавлены по-новой.
 		// Нужно придумать какой-нибудь способ чтобы не пришлось удалять уже существующие фигуры.
