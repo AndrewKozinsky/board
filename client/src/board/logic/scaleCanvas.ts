@@ -56,13 +56,7 @@ export const scaleCanvas = {
 		if (!isCmdPressed) return
 
 		const newScale = getStore.canvas.scale + e.deltaY
-
-		// На сколько процентов должен быть отступ слева
-		// 50 / 500 = 0.1 (мышь на 10% экрана слева по горизонтали)
-		const mouseXPercents = e.clientX / getStore.app.canvas.clientWidth
-		const mouseYPercents = e.clientY / getStore.app.canvas.clientHeight
-
-		this.zoom(newScale, mouseXPercents, mouseYPercents)
+		this.zoom(newScale, e.clientX, e.clientY)
 	},
 
 	/**
@@ -72,59 +66,31 @@ export const scaleCanvas = {
 	zoomCanvasOneStep(direction: ZoomDirection) {
 		const newScale = this.getZoomValueNextStep(direction)
 
-		this.zoom(newScale, 0.5, 0.5)
+		const { clientWidth, clientHeight } = getStore.app.canvas
+		this.zoom(newScale, clientWidth / 2, clientHeight / 2)
 	},
 
 	/**
 	 * Масштабирование холста
 	 * @param newScale — новое значение масштаба холста в процентах (100 — масштаб 1:1)
-	 * @param pivotXPercents — доля от ширины холста, где должна находиться точка трансформации (0.5 — середина холста по X)
-	 * @param pivotYPercents — доля от высоты холста, где должна находиться точка трансформации (0.5 — середина холста по Y)
+	 * @param canvasPivotLeftPx — координата X точки трансформации в пикселах
+	 * @param canvasPivotTopPx — координата Y точки трансформации в пикселах
 	 */
-	/*zoom(newScale: number, pivotXPercents: number, pivotYPercents: number) {
+	zoom(newScale: number, canvasPivotLeftPx: number, canvasPivotTopPx: number) {
 		if (newScale < minZoomValue || newScale > maxZoomValue) {
 			updateStore.canvas.scale = newScale < minZoomValue ? minZoomValue : maxZoomValue
-
 			renderCanvas.render()
 			return
 		}
 
 		const currentScale = getStore.canvas.scale
-		updateStore.canvas.scale = newScale
+		const scaleDiff = (currentScale - newScale) / 100 // .25
 
-		const { clientWidth: canvasDefWidth, clientHeight: canvasDefHeight } = getStore.app.canvas
+		const leftOffsetPx = canvasPivotLeftPx * scaleDiff
+		const topOffsetPx = canvasPivotTopPx * scaleDiff
 
-		const scaleDiff = (currentScale - newScale) / 100
-		const offsetX = canvasDefWidth * scaleDiff * pivotXPercents
-		const offsetY = canvasDefHeight * scaleDiff * pivotYPercents
-
-		updateStore.canvas.offset.x = getStore.canvas.offset.x + offsetX
-		updateStore.canvas.offset.y = getStore.canvas.offset.y + offsetY
-
-		renderCanvas.render()
-	},*/
-
-	zoom(newScale: number, canvasPivotXPercents: number, canvasPivotYPercents: number) {
-		const currentScale = getStore.canvas.scale
-
-		// Разница между текущей и новой шириной сцены
-		const sceneDiffPxWidth = ((newScale - currentScale) / 100) * getStore.app.canvas.clientWidth // 250 px
-		const sceneDiffPxHeight = ((newScale - currentScale) / 100) * getStore.app.canvas.clientHeight // 200 px
-
-		// На сколько процентов отстаёт сцена
-		const sceneOffsetLeftPc = (getStore.canvas.offset.x / getStore.app.canvas.clientWidth) * 100 // 10%
-		const sceneOffsetTopPc = (getStore.canvas.offset.y / getStore.app.canvas.clientHeight) * 100 // 2%
-
-		// Процент на котором находится точка трансформации
-		const scenePivotLeftPc = canvasPivotXPercents * 100 - sceneOffsetLeftPc // 52
-		const scenePivotTopPc = canvasPivotYPercents * 100 - sceneOffsetTopPc
-
-		const leftOffset = sceneDiffPxWidth * (scenePivotLeftPc / 100)
-		const topOffset = sceneDiffPxHeight * (scenePivotTopPc / 100)
-		// debugger
-
-		updateStore.canvas.offset.x = -leftOffset
-		updateStore.canvas.offset.y = -topOffset
+		updateStore.canvas.offset.x = getStore.canvas.offset.x + leftOffsetPx
+		updateStore.canvas.offset.y = getStore.canvas.offset.y + topOffsetPx
 		updateStore.canvas.scale = newScale
 
 		renderCanvas.render()
