@@ -1,6 +1,5 @@
-import './LeftPanel.scss'
 import ScalePanel from '../ScalePanel/ScalePanel.tsx'
-import { useGetScale } from '../ScalePanel/fn/getScale.ts'
+import './LeftPanel.scss'
 
 function LeftPanel() {
 	return (

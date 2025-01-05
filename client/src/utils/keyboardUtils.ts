@@ -5,7 +5,6 @@ const isMacOS = detectOS() === OSNames.mac
 
 export const keyboardUtils = {
 	isCtrlPressed(event: KeyboardEvent) {
-		console.log(event)
 		if (isMacOS) return event.key === 'Meta'
 		return event.ctrlKey
 	},
