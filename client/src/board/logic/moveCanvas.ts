@@ -1,4 +1,7 @@
+import { KeyboardKeys, keyboardUtils } from '../../utils/keyboardUtils.ts'
+import { MouseKeys } from '../../utils/mouseUtils.ts'
 import { Cursor, getStore, updateStore } from '../store/store.ts'
+import { boardConfig } from './boardConfig.ts'
 import { renderCanvas } from './renderCanvas.ts'
 
 let isMousePressed = false
@@ -9,12 +12,18 @@ let mouseStartY = 0
 
 // Методы работы с передвижением холста
 export const moveCanvas = {
-	/**
-	 * Установка обработчиков заставляющих холст двигаться
-	 */
+	/** Установка обработчиков заставляющих холст двигаться */
 	setEventListeners() {
-		this.setMoveByMouseWheel()
-		this.setMoveByMouseAndSpaceKey()
+		if (boardConfig.commands.moveCanvas1.mouseKey === MouseKeys.Wheel) {
+			this.setMoveByMouseWheel()
+		}
+		const moveCanvas2Command = boardConfig.commands.moveCanvas2
+		if (
+			moveCanvas2Command.mouseKey === MouseKeys.PressLeft &&
+			moveCanvas2Command.hotKeys[0] === KeyboardKeys.Space
+		) {
+			this.setMoveByMouseAndSpaceKey()
+		}
 	},
 
 	/** Холст перемещается если прокручивают мышью */
@@ -24,31 +33,31 @@ export const moveCanvas = {
 			(event) => {
 				if (isCmdPressed) return
 
-				const { deltaX, deltaY } = event
+				const { deltaX, deltaY, } = event
 				this.moveCanvas(deltaX, deltaY)
 			},
-			{ passive: true }
+			{ passive: true, }
 		)
 	},
 
 	/** Холст перемещается если нажали на пробел и зажали мышь */
 	setMoveByMouseAndSpaceKey() {
 		document.addEventListener('keydown', (event) => {
-			if (event.code === 'Space' && !event.repeat) {
+			if (keyboardUtils.isSpacePressed(event) && !event.repeat) {
 				isSpacePressed = true
 				this.setDragCursor()
 			}
-			if (event.code === 'MetaLeft' && !event.repeat) {
+			if (keyboardUtils.isCtrlPressed(event) && !event.repeat) {
 				isCmdPressed = true
 			}
 		})
 
 		document.addEventListener('keyup', (event) => {
-			if (event.code === 'Space') {
+			if (keyboardUtils.isSpacePressed(event)) {
 				isSpacePressed = false
 				this.clearCursorView()
 			}
-			if (event.code === 'MetaLeft') {
+			if (keyboardUtils.isCtrlPressed(event)) {
 				isCmdPressed = false
 			}
 		})
@@ -122,5 +131,5 @@ export const moveCanvas = {
 	clearCursorView() {
 		updateStore.cursor = Cursor.Default
 		renderCanvas.render()
-	}
+	},
 }

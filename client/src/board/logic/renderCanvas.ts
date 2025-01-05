@@ -1,6 +1,6 @@
 import { Graphics, Rectangle, Text } from 'pixi.js'
 import { Cursor, getStore, updateStore } from '../store/store.ts'
-import { pixiHelper } from './pixiHelper.ts'
+import { pixiUtils } from '../../utils/pixiUtils.ts'
 
 export const renderCanvas = {
 	/** Отрисовка сцены */
@@ -10,11 +10,11 @@ export const renderCanvas = {
 
 	/** Сборка сцены */
 	buildScene() {
-		const { app } = getStore
+		const { app, } = getStore
 
-		const { scale } = getStore.canvas
-		const { offset } = getStore.canvas
-		const { cursor } = getStore
+		const { scale, } = getStore.canvas
+		const { offset, } = getStore.canvas
+		const { cursor, } = getStore
 
 		app.stage.position.x = offset.x
 		app.stage.position.y = offset.y
@@ -24,7 +24,7 @@ export const renderCanvas = {
 
 		this.drawSampleObjects()
 
-		pixiHelper.rerenderFonts(scale)
+		pixiUtils.rerenderFonts(scale)
 	},
 
 	/** Установка примеров объектов для отладки */
@@ -33,7 +33,9 @@ export const renderCanvas = {
 		// Нужно придумать какой-нибудь способ чтобы не пришлось удалять уже существующие фигуры.
 		getStore.app.stage.removeChildren()
 
-		const rect = new Graphics().rect(0, 0, getStore.app.canvas.clientWidth, getStore.app.canvas.clientHeight).fill(0xc7f804)
+		const rect = new Graphics()
+			.rect(0, 0, getStore.app.canvas.clientWidth, getStore.app.canvas.clientHeight)
+			.fill(0xc7f804)
 		getStore.app.stage.addChild(rect)
 
 		const circle = new Graphics().circle(250, 250, 200).fill(0xff0000)
@@ -42,9 +44,8 @@ export const renderCanvas = {
 		circle.x = getStore.app.canvas.width / (getStore.canvas.devicePixelRatio * 2) - circle.width / 2
 		circle.y = getStore.app.canvas.height / (getStore.canvas.devicePixelRatio * 2) - circle.height / 2
 
-		const text = new Text({ text: 'some text', style: { fontSize: 70 } })
+		const text = new Text({ text: 'some text', style: { fontSize: 70, }, x: -30, })
 
 		getStore.app.stage.addChild(text)
-
-	}
+	},
 }

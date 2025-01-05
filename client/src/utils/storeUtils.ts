@@ -25,7 +25,7 @@ export function createUpdateStoreProxy<T extends Record<string, any>>(
 			const newPath = [...path, prop]
 			const rootKey = newPath[0]
 
-			const storeClone = { ...useStore.getState() }
+			const storeClone = { ...useStore.getState(), }
 			let link = storeClone
 
 			for (let i = 0; i < newPath.length; i++) {
@@ -37,14 +37,14 @@ export function createUpdateStoreProxy<T extends Record<string, any>>(
 					break
 				}
 
-				link[keyName] = { ...link[keyName] }
+				link[keyName] = { ...link[keyName], }
 				link = link[keyName]
 			}
 
-			useStore.setState({ [rootKey]: storeClone[rootKey] })
+			useStore.setState({ [rootKey]: storeClone[rootKey], })
 
 			return true
-		}
+		},
 	})
 }
 
@@ -52,6 +52,6 @@ export function createGetStoreProxy<T>(useStore: UseStore): T {
 	return new Proxy(useStore.getState(), {
 		get(target, key: string) {
 			return useStore.getState()[key]
-		}
+		},
 	})
 }

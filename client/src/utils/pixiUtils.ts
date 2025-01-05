@@ -1,9 +1,9 @@
 import { Container, Text } from 'pixi.js'
-import { throttle } from '../../utils/misc.ts'
-import { getStore } from '../store/store.ts'
+import { throttle } from './miscUtils.ts'
+import { getStore } from '../board/store/store.ts'
 
 // Вспомогательные функции Pixi.js
-export const pixiHelper = {
+export const pixiUtils = {
 	/**
 	 * Поиск всех текстовых элементов
 	 * @param container — контейнер, где нужно искать тестовые элементы
@@ -23,6 +23,7 @@ export const pixiHelper = {
 
 		return result
 	},
+
 	/**
 	 * Функция перерисовывает все имеющиеся шрифты на холсте если увеличили масштаб
 	 * @param scale — новый масштаб.
@@ -31,14 +32,13 @@ export const pixiHelper = {
 		if (scale <= 100) return
 
 		const texts: any = this.findAllTextObjects(getStore.app.stage)
-		const { devicePixelRatio } = getStore.canvas
+		const { devicePixelRatio, } = getStore.canvas
 
 		for (let i = 0; i < texts.length; i++) {
 			texts[i].resolution = (scale / 100) * devicePixelRatio
 		}
-	}
+	},
 }
 
-// Затормозить перерисовку шрифтов чтобы это не просходило слишком часто
-pixiHelper.rerenderFonts = throttle(pixiHelper.rerenderFonts, 500)
-
+// Затормозить перерисовку шрифтов чтобы это не происходило слишком часто
+pixiUtils.rerenderFonts = throttle(pixiUtils.rerenderFonts, 500)

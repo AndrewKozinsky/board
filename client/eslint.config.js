@@ -6,40 +6,25 @@ export default tseslint.config({
 		parser: tseslint.parser
 	},
 	rules: {
-		'no-multiple-empty-lines': [
-			'error',
-			{
-				max: 1,
-				maxEOF: 1,
-				maxBOF: 0
-			}
-		],
+		'no-multiple-empty-lines': ['error', {
+			max: 1,
+			maxEOF: 1,
+			maxBOF: 0
+		}],
 		'object-curly-spacing': ['warn', 'always'],
 		indent: ['warn', 'tab'],
 		quotes: ['warn', 'single'],
 		'jsx-quotes': ['warn', 'prefer-single'],
 		semi: ['warn', 'never'],
-		'comma-dangle': [
-			'warn',
-			{
-				arrays: 'never',
-				objects: 'never',
-				imports: 'never',
-				exports: 'always',
-				functions: 'never'
-			}
-		],
+		'comma-dangle': ['warn', {
+			arrays: 'never',
+			objects: 'always',
+			imports: 'never',
+			exports: 'always',
+			functions: 'never',
+		}],
 		'no-multi-spaces': 'error',
 		'space-in-parens': 'error',
-		'prefer-const': 'warn',
-		// 'space-infix-ops': ['error', { int32Hint: false }],
-		/*'key-spacing': [
-			'error',
-			{
-				beforeColon: false,
-				afterColon: true,
-				align: 'value'
-			}
-		]*/
+		// 'prefer-const': 'warn',
 	}
 })

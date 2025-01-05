@@ -1,12 +1,11 @@
 export function throttle(func: (...args: any[]) => void, ms: number) {
-
 	let isThrottled = false,
 		savedArgs: any,
 		savedThis: any
 
 	function wrapper() {
-
-		if (isThrottled) { // (2)
+		if (isThrottled) {
+			// (2)
 			savedArgs = arguments
 			// @ts-ignore
 			savedThis = this
@@ -18,7 +17,7 @@ export function throttle(func: (...args: any[]) => void, ms: number) {
 
 		isThrottled = true
 
-		setTimeout(function() {
+		setTimeout(function () {
 			isThrottled = false // (3)
 			if (savedArgs) {
 				wrapper.apply(savedThis, savedArgs)

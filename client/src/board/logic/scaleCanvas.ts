@@ -1,14 +1,16 @@
+import { isKeysPressed, keyboardUtils } from '../../utils/keyboardUtils.ts'
 import { getStore, updateStore } from '../store/store.ts'
+import { boardConfig } from './boardConfig.ts'
 import { renderCanvas } from './renderCanvas.ts'
 
 export enum ZoomDirection {
 	// Приблизить
 	In = 1,
 	// Отдалить
-	Out = 2
+	Out = 2,
 }
 
-const zoomValues = [5, 10, 15, 20, 33, 50, 75, 100, 125, 150, 200, 250, 300, 400]
+const { zoomValues, } = boardConfig
 const minZoomValue = zoomValues[0]
 const maxZoomValue = zoomValues[zoomValues.length - 1]
 
@@ -19,21 +21,21 @@ export const scaleCanvas = {
 	setEventListeners() {
 		// Масштабировать если нажали + или -
 		window.addEventListener('keydown', (event) => {
-			if (event.key === '=') {
+			if (isKeysPressed(event, boardConfig.commands.zoomCanvasIn.hotKeys)) {
 				this.zoomCanvasOneStep(ZoomDirection.In) // Zoom out (scale up by 25%)
-			} else if (event.key === '-') {
+			} else if (isKeysPressed(event, boardConfig.commands.zoomCanvasOut.hotKeys)) {
 				this.zoomCanvasOneStep(ZoomDirection.Out) // Zoom in (scale down by 25%)
 			}
 		})
 
 		// Проверить нажали ли Cmd
 		document.addEventListener('keydown', (event) => {
-			if (event.code === 'MetaLeft') {
+			if (keyboardUtils.isCtrlPressed(event)) {
 				isCmdPressed = true
 			}
 		})
 		document.addEventListener('keyup', (event) => {
-			if (event.code === 'MetaLeft') {
+			if (keyboardUtils.isCtrlPressed(event)) {
 				isCmdPressed = false
 			}
 		})
@@ -48,9 +50,10 @@ export const scaleCanvas = {
 		getStore.app.canvas.addEventListener(
 			'wheel',
 			(event) => {
+				if (!isCmdPressed) return
 				this.zoomCanvasByMouse(event)
 			},
-			{ passive: true }
+			{ passive: true, }
 		)
 	},
 
@@ -59,8 +62,6 @@ export const scaleCanvas = {
 	 * @param e — событие прокрутки мыши
 	 */
 	zoomCanvasByMouse(e: WheelEvent) {
-		if (!isCmdPressed) return
-
 		const newScale = getStore.canvas.scale + e.deltaY
 		this.zoom(newScale, e.clientX, e.clientY)
 	},
@@ -72,7 +73,7 @@ export const scaleCanvas = {
 	zoomCanvasOneStep(direction: ZoomDirection) {
 		const newScale = this.getZoomValueNextStep(direction)
 
-		const { clientWidth, clientHeight } = getStore.app.canvas
+		const { clientWidth, clientHeight, } = getStore.app.canvas
 		this.zoom(newScale, clientWidth / 2, clientHeight / 2)
 	},
 
@@ -114,5 +115,5 @@ export const scaleCanvas = {
 		return direction === ZoomDirection.In
 			? (zoomValues.find((value) => value > currentScale) ?? maxZoomValue)
 			: ([...zoomValues].reverse().find((value) => value < currentScale) ?? minZoomValue)
-	}
+	},
 }

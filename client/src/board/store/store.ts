@@ -1,11 +1,11 @@
 import { Application, Renderer } from 'pixi.js'
 import { create } from 'zustand'
-import { createGetStoreProxy, createUpdateStoreProxy } from '../../utils/createStoreProxy.ts'
+import { createGetStoreProxy, createUpdateStoreProxy } from '../../utils/storeUtils.ts'
 
 export enum Cursor {
 	Default = 'default',
 	Palm = 'grab',
-	Dragging = 'grabbing'
+	Dragging = 'grabbing',
 }
 
 type BoardStore = {
@@ -31,10 +31,10 @@ export const useBoardStore = create<BoardStore>((set) => {
 			scale: 100,
 			offset: {
 				x: 0,
-				y: 0
-			}
+				y: 0,
+			},
 		},
-		cursor: Cursor.Default
+		cursor: Cursor.Default,
 		// increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
 	}
 })

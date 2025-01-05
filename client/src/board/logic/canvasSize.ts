@@ -9,7 +9,7 @@ export const canvasSize = {
 
 		return {
 			width: windowWidth,
-			height: windowHeight
+			height: windowHeight,
 		}
 	},
 
@@ -18,12 +18,12 @@ export const canvasSize = {
 		addEventListener('resize', this.setCorrectCanvasSize.bind(this))
 	},
 
-	/** Функция устанавливающая правильные размеры холста */
+	/** Устанавливает правильные размеры холста */
 	setCorrectCanvasSize() {
 		setTimeout(() => {
 			const canvasSize = this.getSize()
 
 			getStore.app.renderer.resize(canvasSize.width, canvasSize.height)
 		}, 0)
-	}
+	},
 }
