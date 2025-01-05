@@ -10,4 +10,12 @@
 	&:hover {
 		background-color: $grayColor-2;
 	}
+
+	&:active {
+		background-color: white;
+	}
+}
+
+.button--active {
+	background-color: white;
 }

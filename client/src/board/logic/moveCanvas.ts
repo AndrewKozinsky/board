@@ -16,13 +16,18 @@ export const moveCanvas = {
 	setEventListeners() {
 		if (boardConfig.commands.moveCanvas1.mouseKey === MouseKeys.Wheel) {
 			this.setMoveByMouseWheel()
+		} else {
+			throw new Error('Не установлено перемещение холста')
 		}
-		const moveCanvas2Command = boardConfig.commands.moveCanvas2
+
+		const moveCommand2 = boardConfig.commands.moveCanvas2
 		if (
-			moveCanvas2Command.mouseKey === MouseKeys.PressLeft &&
-			moveCanvas2Command.hotKeys[0] === KeyboardKeys.Space
+			moveCommand2.mouseKey === MouseKeys.PressLeft &&
+			moveCommand2.hotKeys[0] === KeyboardKeys.Space
 		) {
 			this.setMoveByMouseAndSpaceKey()
+		} else {
+			throw new Error('Не установлено перемещение холста')
 		}
 	},
 
