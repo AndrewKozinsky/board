@@ -1,9 +1,9 @@
 import { Graphics } from 'pixi.js'
 import { OutlineFilter } from 'pixi-filters'
-import { getElementIdx } from '../../../utils/arrayUtils.ts'
-import { getStore, updateStore } from '../../store/store.ts'
+import { getStore } from '../../store/store.ts'
 import { CanvasElement, ShapeElement, ShapeElementFigure } from '../../store/storeTypes.ts'
 import { boardColors } from '../boardConfig.ts'
+import { renderCanvas } from './renderCanvas.ts'
 
 export const figureRenderer = {
 	/**
@@ -14,29 +14,22 @@ export const figureRenderer = {
 	drawFigure(elements: CanvasElement[], figureData: ShapeElement) {
 		const { graphics } = figureData
 
-		graphics === null ? this.drawNewFigure(elements, figureData) : this.updateFigure(graphics!, figureData)
+		graphics === null ? this.drawNewFigure(figureData) : this.updateFigure(graphics!, figureData)
 	},
 
 	/**
 	 * Создаёт новую фигуру на холсте по переданным данным
-	 * @param elements — массив всех элементов сцены
 	 * @param figureData — данные фигуры
 	 */
-	drawNewFigure(elements: CanvasElement[], figureData: ShapeElement) {
+	drawNewFigure(figureData: ShapeElement) {
 		const graphics = new Graphics()
 
 		this.updateFigure(graphics, figureData)
+		this.setShapeInteraction(graphics, figureData)
 
 		getStore.app.stage.addChild(graphics)
 
-		// Поставить ссылку на созданный элемент в Хранилище
-		const elementIdx = getElementIdx(elements, 'id', figureData.id)
-		if (getStore.canvas.elements[elementIdx].type === 'figureElement') {
-			updateStore.canvas.elements[elementIdx] = {
-				...getStore.canvas.elements[elementIdx],
-				graphics: graphics,
-			}
-		}
+		getStore.updateCanvasElement(figureData.id, { graphics })
 	},
 
 	/**
@@ -46,9 +39,12 @@ export const figureRenderer = {
 	 */
 	updateFigure(graphics: Graphics, figureData: ShapeElement) {
 		const updateShapeFn = this.getUpdateFigureFunction(figureData.shape)
-
 		updateShapeFn(graphics, figureData)
-		this.setStyle(graphics, figureData)
+
+		graphics.x = figureData.x
+		graphics.y = figureData.y
+
+		this.setShapeStyle(graphics, figureData)
 	},
 
 	/**
@@ -74,169 +70,174 @@ export const figureRenderer = {
 	/**
 	 * Обновляет параметры прямоугольника
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param shapeData — данные для обновления фигуры
+	 * @param figureData — данные для обновления фигуры
 	 */
-	updateRectangle(graphics: Graphics, shapeData: ShapeElement) {
-		const { x, y, width, height } = shapeData
+	updateRectangle(graphics: Graphics, figureData: ShapeElement) {
+		const { width, height } = figureData
 
-		graphics.rect(x, y, width, height)
+		graphics.rect(0, 0, width, height)
 	},
 
 	/**
 	 * Обновляет параметры круга
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param shapeData — данные для обновления фигуры
+	 * @param figureData — данные для обновления фигуры
 	 */
-	updateCircle(graphics: Graphics, shapeData: ShapeElement) {
-		const { x, y, width, height } = shapeData
+	updateCircle(graphics: Graphics, figureData: ShapeElement) {
+		const { width, height } = figureData
 
-		graphics.ellipse(x, y, width, height)
+		graphics.ellipse(0, 0, width, height)
 	},
 
 	/**
 	 * Обновляет параметры треугольника
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param shapeData — данные для обновления фигуры
+	 * @param figureData — данные для обновления фигуры
 	 */
-	updateTriangle(graphics: Graphics, shapeData: ShapeElement) {
-		const { x, y, width, height } = shapeData
+	updateTriangle(graphics: Graphics, figureData: ShapeElement) {
+		const { width, height } = figureData
 
 		graphics
-			.moveTo(x + width / 2, y)
-			.lineTo(x + width, y + height)
-			.lineTo(x, y + height)
+			.moveTo(width / 2, 0)
+			.lineTo(width, height)
+			.lineTo(0, height)
 			.closePath()
 	},
 
 	/**
 	 * Обновляет параметры ромба
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param shapeData — данные для обновления фигуры
+	 * @param figureData — данные для обновления фигуры
 	 */
-	updateDiamond(graphics: Graphics, shapeData: ShapeElement) {
-		const { x, y, width, height } = shapeData
+	updateDiamond(graphics: Graphics, figureData: ShapeElement) {
+		const { width, height } = figureData
 
 		graphics
-			.moveTo(x + width / 2, y)
-			.lineTo(x + width, y + height / 2)
-			.lineTo(x + width / 2, y + height)
-			.lineTo(x, y + height / 2)
+			.moveTo(width / 2, 0)
+			.lineTo(width, height / 2)
+			.lineTo(width / 2, height)
+			.lineTo(0, height / 2)
 			.closePath()
 	},
 
 	/**
 	 * Обновляет параметры шестиугольника
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param shapeData — данные для обновления фигуры
+	 * @param figureData — данные для обновления фигуры
 	 */
-	updateHexagon(graphics: Graphics, shapeData: ShapeElement) {
-		const { x, y, width, height } = shapeData
+	updateHexagon(graphics: Graphics, figureData: ShapeElement) {
+		const { width, height } = figureData
 
 		const onePcWidth = width / 100
 
 		graphics
-			.moveTo(x + onePcWidth * 23, y) // 1
-			.lineTo(x + onePcWidth * 77, y) // 2
-			.lineTo(x + width, y + height / 2) // 3
-			.lineTo(x + onePcWidth * 77, y + height) // 4
-			.lineTo(x + onePcWidth * 23, y + height) // 5
-			.lineTo(x, y + height / 2) // 6
+			.moveTo(onePcWidth * 23, 0) // 1
+			.lineTo(onePcWidth * 77, 0) // 2
+			.lineTo(width, height / 2) // 3
+			.lineTo(onePcWidth * 77, height) // 4
+			.lineTo(onePcWidth * 23, height) // 5
+			.lineTo(0, height / 2) // 6
 			.closePath()
 	},
 
 	/**
 	 * Обновляет параметры звезды
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param shapeData — данные для обновления фигуры
+	 * @param figureData — данные для обновления фигуры
 	 */
-	updateStar(graphics: Graphics, shapeData: ShapeElement) {
-		const { x, y, width, height } = shapeData
+	updateStar(graphics: Graphics, figureData: ShapeElement) {
+		const { width, height } = figureData
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
 
 		graphics
-			.moveTo(x + width / 2, y) // 1
-			.lineTo(x + onePcWidth * 62, y + onePcHeight * 38) // 2
-			.lineTo(x + width, y + onePcHeight * 38) // 3
-			.lineTo(x + onePcWidth * 69, y + onePcHeight * 62) // 4
-			.lineTo(x + onePcWidth * 81, y + height) // 5
-			.lineTo(x + width / 2, y + onePcHeight * 76) // 6
-			.lineTo(x + onePcWidth * 19, y + height) // 7
-			.lineTo(x + onePcWidth * 31, y + onePcHeight * 62) // 8
-			.lineTo(x, y + onePcHeight * 38) // 9
-			.lineTo(x + onePcWidth * 38, y + onePcHeight * 38) // 10
+			.moveTo(width / 2, 0) // 1
+			.lineTo(onePcWidth * 62, onePcHeight * 38) // 2
+			.lineTo(width, onePcHeight * 38) // 3
+			.lineTo(onePcWidth * 69, onePcHeight * 62) // 4
+			.lineTo(onePcWidth * 81, height) // 5
+			.lineTo(width / 2, onePcHeight * 76) // 6
+			.lineTo(onePcWidth * 19, height) // 7
+			.lineTo(onePcWidth * 31, onePcHeight * 62) // 8
+			.lineTo(0, onePcHeight * 38) // 9
+			.lineTo(onePcWidth * 38, onePcHeight * 38) // 10
 			.closePath()
 	},
 
 	/**
 	 * Обновляет параметры стрелки влево
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param shapeData — данные для обновления фигуры
+	 * @param figureData — данные для обновления фигуры
 	 */
-	updateLeftArrow(graphics: Graphics, shapeData: ShapeElement) {
-		const { x, y, width, height } = shapeData
+	updateLeftArrow(graphics: Graphics, figureData: ShapeElement) {
+		const { width, height } = figureData
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
 
 		graphics
-			.moveTo(x, y + height / 2) // 1
-			.lineTo(x + onePcWidth * 50, y) // 2
-			.lineTo(x + onePcWidth * 50, y + onePcHeight * 28) // 3
-			.lineTo(x + width, y + onePcHeight * 28) // 4
-			.lineTo(x + width, y + onePcHeight * 72) // 5
-			.lineTo(x + onePcWidth * 50, y + onePcHeight * 72) // 6
-			.lineTo(x + onePcWidth * 50, y + height) // 7
+			.moveTo(0, height / 2) // 1
+			.lineTo(onePcWidth * 50, 0) // 2
+			.lineTo(onePcWidth * 50, onePcHeight * 28) // 3
+			.lineTo(width, onePcHeight * 28) // 4
+			.lineTo(width, onePcHeight * 72) // 5
+			.lineTo(onePcWidth * 50, onePcHeight * 72) // 6
+			.lineTo(onePcWidth * 50, height) // 7
 			.closePath()
 	},
 
 	/**
 	 * Обновляет параметры стрелки вправо
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param shapeData — данные для обновления фигуры
+	 * @param figureData — данные для обновления фигуры
 	 */
-	updateRightArrow(graphics: Graphics, shapeData: ShapeElement) {
-		const { x, y, width, height } = shapeData
+	updateRightArrow(graphics: Graphics, figureData: ShapeElement) {
+		const { width, height } = figureData
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
 
 		graphics
-			.moveTo(x, y + onePcHeight * 28) // 1
-			.lineTo(x + onePcWidth * 50, y + onePcHeight * 28) // 2
-			.lineTo(x + onePcWidth * 50, y) // 3
-			.lineTo(x + width, y + height / 2) // 4
-			.lineTo(x + onePcWidth * 50, y + height) // 5
-			.lineTo(x + onePcWidth * 50, y + onePcHeight * 72) // 6
-			.lineTo(x, y + onePcHeight * 72) // 7
+			.moveTo(0, onePcHeight * 28) // 1
+			.lineTo(onePcWidth * 50, onePcHeight * 28) // 2
+			.lineTo(onePcWidth * 50, 0) // 3
+			.lineTo(width, height / 2) // 4
+			.lineTo(onePcWidth * 50, height) // 5
+			.lineTo(onePcWidth * 50, onePcHeight * 72) // 6
+			.lineTo(0, onePcHeight * 72) // 7
 			.closePath()
 	},
 
 	/**
 	 * Обновляет параметры выноски с речью
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param shapeData — данные для обновления фигуры
+	 * @param figureData — данные для обновления фигуры
 	 */
-	updateSpeechBalloon(graphics: Graphics, shapeData: ShapeElement) {
-		const { x, y, width, height } = shapeData
+	updateSpeechBalloon(graphics: Graphics, figureData: ShapeElement) {
+		const { width, height } = figureData
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
 
 		graphics
-			.moveTo(x, y) // 1
-			.lineTo(x + width, y) // 2
-			.lineTo(x + width, y + onePcHeight * 71) // 3
-			.lineTo(x + onePcWidth * 34, y + onePcHeight * 71) // 4
-			.lineTo(x + onePcWidth * 13, y + height) // 5
-			.lineTo(x + onePcWidth * 13, y + onePcHeight * 71) // 6
-			.lineTo(x, y + onePcHeight * 71) // 7
+			.moveTo(0, 0) // 1
+			.lineTo(width, 0) // 2
+			.lineTo(width, onePcHeight * 71) // 3
+			.lineTo(onePcWidth * 34, onePcHeight * 71) // 4
+			.lineTo(onePcWidth * 13, height) // 5
+			.lineTo(onePcWidth * 13, onePcHeight * 71) // 6
+			.lineTo(0, onePcHeight * 71) // 7
 			.closePath()
 	},
 
-	setStyle(graphics: Graphics, shapeData: ShapeElement) {
-		const { backgroundColor, strokeColor, strokeWidth = 0 } = shapeData
+	/**
+	 * Устанавливает стили фигуры
+	 * @param graphics — ссылка на объект Graphics из Pixi.js
+	 * @param figureData — данные для обновления фигуры
+	 */
+	setShapeStyle(graphics: Graphics, figureData: ShapeElement) {
+		const { backgroundColor, strokeColor, strokeWidth = 0 } = figureData
 
 		if (backgroundColor) {
 			graphics.fill(backgroundColor)
@@ -246,16 +247,47 @@ export const figureRenderer = {
 			graphics.stroke({ color: strokeColor, width: strokeWidth })
 		}
 
-		if (shapeData.underHover) {
+		if (figureData.underHover) {
 			const filter = new OutlineFilter({
 				color: boardColors.selected,
 				quality: 10,
-				thickness: 2,
+				thickness: 1,
 			})
 			filter.antialias = 'on'
 			filter.resolution = getStore.canvas.devicePixelRatio
 
 			graphics.filters = [filter]
+		} else {
+			graphics.filters = []
 		}
+	},
+
+	/**
+	 * Ставит обработчики наведения и щелчка по фигуре
+	 * @param graphics
+	 * @param figureData
+	 */
+	setShapeInteraction(graphics: Graphics, figureData: ShapeElement) {
+		// Включение интерактивности чтобы заработали обработчики событий на фигуре
+		graphics.eventMode = 'static'
+
+		graphics.on('pointerover', () => {
+			this.toggleHover(figureData, true)
+		})
+		graphics.on('pointerout', () => {
+			this.toggleHover(figureData, false)
+		})
+	},
+
+	/**
+	 * Переключает в данных показ/скрытие обводки сообщающий о наведение на элемент
+	 * @param figureData
+	 * @param isUnderHover
+	 */
+	toggleHover(figureData: ShapeElement, isUnderHover: boolean) {
+		getStore.updateCanvasElement(figureData.id, { underHover: isUnderHover })
+		setTimeout(() => {
+			renderCanvas.render()
+		}, 30)
 	},
 }

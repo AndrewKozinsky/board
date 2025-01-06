@@ -26,6 +26,7 @@ export type BoardStore = {
 		elements: CanvasElement[]
 	}
 	cursor: Cursor
+	updateCanvasElement: (elementId: number, elementNewData: Partial<CanvasElement>) => void
 }
 
 export type CanvasElement = ShapeElement | TextElement

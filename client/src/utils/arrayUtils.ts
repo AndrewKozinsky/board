@@ -14,6 +14,6 @@ export function getHighestElementId(elementsArray: { id: number }[]) {
 	return highestId
 }
 
-export function getElementIdx<T extends {}>(elementsArray: T[], propName: keyof T, propValue: any) {
+export function getElementIdx<T extends {}, K extends keyof T>(elementsArray: T[], propName: K, propValue: T[K]) {
 	return elementsArray.findIndex((element) => element[propName] === propValue)
 }

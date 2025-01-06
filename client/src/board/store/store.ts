@@ -1,6 +1,7 @@
 import { create } from 'zustand'
+import { getElementIdx } from '../../utils/arrayUtils.ts'
 import { createGetStoreProxy, createUpdateStoreProxy } from '../../utils/storeUtils.ts'
-import { BoardStore, Cursor, ShapeElementFigure, ToolsName } from './storeTypes.ts'
+import { BoardStore, CanvasElement, Cursor, ShapeElement, ShapeElementFigure, ToolsName } from './storeTypes.ts'
 
 export const useBoardStore = create<BoardStore>((set) => {
 	return {
@@ -41,7 +42,22 @@ export const useBoardStore = create<BoardStore>((set) => {
 			],
 		},
 		cursor: Cursor.Default,
-		// increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
+		updateCanvasElement: (elementId: number, elementNewData: Partial<CanvasElement>) => {
+			set((state) => {
+				const elementIdx = getElementIdx(state.canvas.elements, 'id', elementId)
+				if (elementIdx < 0) {
+					throw new Error(`Canvas element ${elementIdx} not found`)
+				}
+
+				const canvasClone = { ...state.canvas }
+				canvasClone.elements = [...canvasClone.elements]
+
+				// @ts-expect-error
+				canvasClone.elements[elementIdx] = { ...canvasClone.elements[elementIdx], ...elementNewData }
+
+				return { canvas: canvasClone }
+			})
+		},
 	}
 })
 

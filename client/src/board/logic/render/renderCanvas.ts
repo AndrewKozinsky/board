@@ -27,7 +27,7 @@ export const renderCanvas = {
 		pixiUtils.rerenderFonts(scale)
 	},
 
-	/* Отрисовка всех элементов сцены */
+	/* Отрисовка элементов сцены */
 	drawElements() {
 		const elemsData = getStore.canvas.elements
 
