@@ -1,8 +1,6 @@
-import { Assets, Graphics, Sprite, Text, Texture } from 'pixi.js'
-import { getElementIdx, getHighestElementId } from '../../../utils/arrayUtils.ts'
-import { getStore, updateStore } from '../../store/store.ts'
+import { getStore } from '../../store/store.ts'
 import { pixiUtils } from '../../../utils/pixiUtils.ts'
-import { drawShape } from './drawShape.ts'
+import { figureRenderer } from './figureRenderer.ts'
 
 export const renderCanvas = {
 	/** Отрисовка сцены */
@@ -24,41 +22,19 @@ export const renderCanvas = {
 
 		app.canvas.style.cursor = cursor
 
-		this.drawShapes()
+		this.drawElements()
 
 		pixiUtils.rerenderFonts(scale)
 	},
 
-	drawShapes() {
+	drawElements() {
 		const elements = getStore.canvas.elements
 
 		for (let i = 0; i < elements.length; i++) {
 			const element = elements[i]
 
-			if (element.type === 'shapeElement') {
-				// drawShape.drawShapes()
-				/*if (element.link) {
-					const rectElement = element.link
-
-					rectElement.x = element.x
-					rectElement.y = element.y
-					rectElement.fill(element.backgroundColor)
-				} else {
-					const rectElement = new Graphics()
-						.rect(element.x, element.y, element.width, element.height)
-						.fill(element.backgroundColor)
-
-					getStore.app.stage.addChild(rectElement)
-
-					// Поставить ссылку на созданный элемент в Хранилище
-					const elementIdx = getElementIdx(elements, 'id', element.id)
-					if (getStore.canvas.elements[elementIdx].type === 'shapeElement') {
-						updateStore.canvas.elements[elementIdx] = {
-							...getStore.canvas.elements[elementIdx],
-							link: rectElement,
-						}
-					}
-				}*/
+			if (element.type === 'figureElement') {
+				figureRenderer.drawFigure(elements, element)
 			}
 		}
 	},

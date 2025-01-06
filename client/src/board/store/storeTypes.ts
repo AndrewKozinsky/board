@@ -22,7 +22,7 @@ export type BoardStore = {
 	cursor: Cursor
 }
 
-type CanvasElement = ShapeElement | TextElement
+export type CanvasElement = ShapeElement | TextElement
 
 type ElementBase = {
 	id: number
@@ -30,9 +30,9 @@ type ElementBase = {
 	y: number
 }
 
-type ShapeElement = ElementBase & {
-	type: 'shapeElement'
-	link: null | Graphics
+export type ShapeElement = ElementBase & {
+	type: 'figureElement'
+	graphics: null | Graphics
 	width: number
 	height: number
 	shape: ShapeElementFigure
