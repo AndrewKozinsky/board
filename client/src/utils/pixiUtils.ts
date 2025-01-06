@@ -32,7 +32,7 @@ export const pixiUtils = {
 		if (scale <= 100) return
 
 		const texts: any = this.findAllTextObjects(getStore.app.stage)
-		const { devicePixelRatio, } = getStore.canvas
+		const { devicePixelRatio } = getStore.canvas
 
 		for (let i = 0; i < texts.length; i++) {
 			texts[i].resolution = (scale / 100) * devicePixelRatio

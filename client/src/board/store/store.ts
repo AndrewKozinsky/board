@@ -1,27 +1,6 @@
-import { Application, Renderer } from 'pixi.js'
 import { create } from 'zustand'
 import { createGetStoreProxy, createUpdateStoreProxy } from '../../utils/storeUtils.ts'
-
-export enum Cursor {
-	Default = 'default',
-	Palm = 'grab',
-	Dragging = 'grabbing',
-}
-
-type BoardStore = {
-	app: Application<Renderer>
-	canvas: {
-		devicePixelRatio: number
-		// Уровень масштабирования холста. 1 = 100%
-		scale: number
-		// Смещение холста
-		offset: {
-			x: number
-			y: number
-		}
-	}
-	cursor: Cursor
-}
+import { BoardStore, Cursor, ShapeElementFigure } from './storeTypes.ts'
 
 export const useBoardStore = create<BoardStore>((set) => {
 	return {
@@ -33,6 +12,19 @@ export const useBoardStore = create<BoardStore>((set) => {
 				x: 0,
 				y: 0,
 			},
+			elements: [
+				{
+					id: 1,
+					type: 'shapeElement',
+					shape: ShapeElementFigure.Rectangle,
+					link: null,
+					x: 50,
+					y: 70,
+					width: 100,
+					height: 200,
+					backgroundColor: 'ccc',
+				},
+			],
 		},
 		cursor: Cursor.Default,
 		// increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),

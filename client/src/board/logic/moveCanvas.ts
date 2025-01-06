@@ -1,8 +1,9 @@
 import { KeyboardKeys, keyboardUtils } from '../../utils/keyboardUtils.ts'
 import { MouseKeys } from '../../utils/mouseUtils.ts'
-import { Cursor, getStore, updateStore } from '../store/store.ts'
+import { getStore, updateStore } from '../store/store.ts'
+import { Cursor } from '../store/storeTypes.ts'
 import { boardConfig } from './boardConfig.ts'
-import { renderCanvas } from './renderCanvas.ts'
+import { renderCanvas } from './render/renderCanvas.ts'
 
 let isMousePressed = false
 let isCmdPressed = false
@@ -21,10 +22,7 @@ export const moveCanvas = {
 		}
 
 		const moveCommand2 = boardConfig.commands.moveCanvas2
-		if (
-			moveCommand2.mouseKey === MouseKeys.PressLeft &&
-			moveCommand2.hotKeys[0] === KeyboardKeys.Space
-		) {
+		if (moveCommand2.mouseKey === MouseKeys.PressLeft && moveCommand2.hotKeys[0] === KeyboardKeys.Space) {
 			this.setMoveByMouseAndSpaceKey()
 		} else {
 			throw new Error('Не установлено перемещение холста')
@@ -38,10 +36,10 @@ export const moveCanvas = {
 			(event) => {
 				if (isCmdPressed) return
 
-				const { deltaX, deltaY, } = event
+				const { deltaX, deltaY } = event
 				this.moveCanvas(deltaX, deltaY)
 			},
-			{ passive: true, }
+			{ passive: true },
 		)
 	},
 

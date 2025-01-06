@@ -1,9 +1,13 @@
 import tseslint from 'typescript-eslint'
+import prettierPlugin from 'eslint-plugin-prettier'
 
-export default tseslint.config({
+export default tseslint.config([{
 	files: ['**/*.ts', '**/*.tsx'],
 	languageOptions: {
 		parser: tseslint.parser
+	},
+	plugins: {
+		prettier: prettierPlugin,
 	},
 	rules: {
 		'no-multiple-empty-lines': ['error', {
@@ -16,15 +20,24 @@ export default tseslint.config({
 		quotes: ['warn', 'single'],
 		'jsx-quotes': ['warn', 'prefer-single'],
 		semi: ['warn', 'never'],
-		'comma-dangle': ['warn', {
+		/*'comma-dangle': ['warn', {
 			arrays: 'never',
 			objects: 'always',
 			imports: 'never',
 			exports: 'always',
 			functions: 'never',
-		}],
+		}],*/
 		'no-multi-spaces': 'error',
 		'space-in-parens': 'error',
-		// 'prefer-const': 'warn',
+		'prettier/prettier': ['error', {
+			semi: false,
+			singleQuote: true,
+			tabWidth: 4,
+			useTabs: true,
+			printWidth: 120,
+			trailingComma: 'all',
+			jsxSingleQuote: true,
+		}],
 	}
-})
+}])
+

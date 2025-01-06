@@ -1,7 +1,7 @@
 import { isKeysPressed, keyboardUtils } from '../../utils/keyboardUtils.ts'
 import { getStore, updateStore } from '../store/store.ts'
 import { boardConfig } from './boardConfig.ts'
-import { renderCanvas } from './renderCanvas.ts'
+import { renderCanvas } from './render/renderCanvas.ts'
 
 export enum ZoomDirection {
 	// Приблизить
@@ -10,7 +10,7 @@ export enum ZoomDirection {
 	Out = 2,
 }
 
-const { zoomValues, } = boardConfig
+const { zoomValues } = boardConfig
 const minZoomValue = zoomValues[0]
 const maxZoomValue = zoomValues[zoomValues.length - 1]
 
@@ -53,7 +53,7 @@ export const scaleCanvas = {
 				if (!isCmdPressed) return
 				this.zoomCanvasByMouse(event)
 			},
-			{ passive: true, }
+			{ passive: true },
 		)
 	},
 
@@ -73,7 +73,7 @@ export const scaleCanvas = {
 	zoomCanvasOneStep(direction: ZoomDirection) {
 		const newScale = this.getZoomValueNextStep(direction)
 
-		const { clientWidth, clientHeight, } = getStore.app.canvas
+		const { clientWidth, clientHeight } = getStore.app.canvas
 		this.zoom(newScale, clientWidth / 2, clientHeight / 2)
 	},
 

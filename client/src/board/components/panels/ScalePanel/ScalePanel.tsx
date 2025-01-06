@@ -10,12 +10,16 @@ function ScalePanel() {
 
 	return (
 		<div className='scale-panel'>
-			<Button onClick={() => scaleCanvas.zoomCanvasOneStep(ZoomDirection.In)}><PlusIcon /></Button>
+			<Button onClick={() => scaleCanvas.zoomCanvasOneStep(ZoomDirection.In)}>
+				<PlusIcon />
+			</Button>
 			<p className='scale-panel__scale-text'>
 				{scale}
 				<span className='mini-space'> </span>%
 			</p>
-			<Button onClick={() => scaleCanvas.zoomCanvasOneStep(ZoomDirection.Out)}><MinusIcon /></Button>
+			<Button onClick={() => scaleCanvas.zoomCanvasOneStep(ZoomDirection.Out)}>
+				<MinusIcon />
+			</Button>
 		</div>
 	)
 }

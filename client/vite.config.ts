@@ -6,13 +6,13 @@ import path from 'path'
 export default defineConfig({
 	define: {
 		global: {
-			__PIXI_APP__: ''
-		}
+			__PIXI_APP__: '',
+		},
 	},
 	resolve: {
 		alias: {
-			'@': path.resolve(__dirname, './src') // Example alias for `src`
-		}
+			'@': path.resolve(__dirname, './src'), // Example alias for `src`
+		},
 	},
-	plugins: [react()]
+	plugins: [react()],
 })
