@@ -27,14 +27,15 @@ export const renderCanvas = {
 		pixiUtils.rerenderFonts(scale)
 	},
 
+	/* Отрисовка всех элементов сцены */
 	drawElements() {
-		const elements = getStore.canvas.elements
+		const elemsData = getStore.canvas.elements
 
-		for (let i = 0; i < elements.length; i++) {
-			const element = elements[i]
+		for (let i = 0; i < elemsData.length; i++) {
+			const elemData = elemsData[i]
 
-			if (element.type === 'figureElement') {
-				figureRenderer.drawFigure(elements, element)
+			if (elemData.type === 'figureElement') {
+				figureRenderer.drawFigure(elemsData, elemData)
 			}
 		}
 	},

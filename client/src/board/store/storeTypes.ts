@@ -1,5 +1,10 @@
 import { Application, Graphics, Renderer } from 'pixi.js'
 
+export enum ToolsName {
+	Select = 'select',
+	DrawShape = 'DrawShape',
+}
+
 export enum Cursor {
 	Default = 'default',
 	Palm = 'grab',
@@ -8,6 +13,7 @@ export enum Cursor {
 
 export type BoardStore = {
 	app: Application<Renderer>
+	tool: ToolsName
 	canvas: {
 		devicePixelRatio: number
 		// Уровень масштабирования холста. 1 = 100%
@@ -32,11 +38,15 @@ type ElementBase = {
 
 export type ShapeElement = ElementBase & {
 	type: 'figureElement'
+	shape: ShapeElementFigure
+	// Если элемента ещё нет на холсте, то тут будет null.
+	// Если есть, то ссылка объект Graphics потому что я обновляю параметры этого объекта, а не создаю новый при каждой перерисовке.
 	graphics: null | Graphics
 	width: number
 	height: number
-	shape: ShapeElementFigure
-	backgroundColor: string
+	backgroundColor?: string
+	strokeColor?: string
+	strokeWidth?: number
 }
 
 export enum ShapeElementFigure {

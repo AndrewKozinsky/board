@@ -1,10 +1,11 @@
 import { create } from 'zustand'
 import { createGetStoreProxy, createUpdateStoreProxy } from '../../utils/storeUtils.ts'
-import { BoardStore, Cursor, ShapeElementFigure } from './storeTypes.ts'
+import { BoardStore, Cursor, ShapeElementFigure, ToolsName } from './storeTypes.ts'
 
 export const useBoardStore = create<BoardStore>((set) => {
 	return {
 		app: null as any,
+		tool: ToolsName.Select,
 		canvas: {
 			devicePixelRatio: window.devicePixelRatio || 1,
 			scale: 100,
@@ -23,6 +24,8 @@ export const useBoardStore = create<BoardStore>((set) => {
 					width: 100,
 					height: 200,
 					backgroundColor: 'ccc',
+					strokeColor: 'a00',
+					strokeWidth: 5,
 				},
 				{
 					id: 2,

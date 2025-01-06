@@ -1,7 +1,6 @@
-import { Assets, Graphics, Sprite, Text, Texture } from 'pixi.js'
-import { getElementIdx, getHighestElementId } from '../../../utils/arrayUtils.ts'
+import { Application, Graphics } from 'pixi.js'
+import { getElementIdx } from '../../../utils/arrayUtils.ts'
 import { getStore, updateStore } from '../../store/store.ts'
-import { pixiUtils } from '../../../utils/pixiUtils.ts'
 import { CanvasElement, ShapeElement, ShapeElementFigure } from '../../store/storeTypes.ts'
 
 type DrawShapeSettings = {
@@ -10,7 +9,13 @@ type DrawShapeSettings = {
 	y: number
 	width: number
 	height: number
-	color: string
+}
+
+type ShapeStyle = {
+	graphics: Graphics
+	backgroundColor?: string
+	strokeColor?: string
+	strokeWidth?: number
 }
 
 export const figureRenderer = {
@@ -56,12 +61,13 @@ export const figureRenderer = {
 		const updateShapeFn = this.getUpdateFigureFunction(figureData.shape)
 
 		updateShapeFn({
+			...figureData,
 			graphics,
-			x: figureData.x,
-			y: figureData.y,
-			width: figureData.width,
-			height: figureData.height,
-			color: figureData.backgroundColor,
+		})
+
+		this.setStyle({
+			...figureData,
+			graphics,
 		})
 	},
 
@@ -90,9 +96,9 @@ export const figureRenderer = {
 	 * @param params — данные для обновления фигуры
 	 */
 	updateRectangle(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height, color } = params
+		const { graphics, x, y, width, height } = params
 
-		graphics.rect(x, y, width, height).fill(color)
+		graphics.rect(x, y, width, height)
 	},
 
 	/**
@@ -100,9 +106,9 @@ export const figureRenderer = {
 	 * @param params — данные для обновления фигуры
 	 */
 	updateCircle(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height, color } = params
+		const { graphics, x, y, width, height } = params
 
-		graphics.ellipse(x, y, width, height).fill(color)
+		graphics.ellipse(x, y, width, height)
 	},
 
 	/**
@@ -110,14 +116,13 @@ export const figureRenderer = {
 	 * @param params — данные для обновления фигуры
 	 */
 	updateTriangle(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height, color } = params
+		const { graphics, x, y, width, height } = params
 
 		graphics
 			.moveTo(x + width / 2, y)
 			.lineTo(x + width, y + height)
 			.lineTo(x, y + height)
 			.closePath()
-			.fill(color)
 	},
 
 	/**
@@ -125,7 +130,7 @@ export const figureRenderer = {
 	 * @param params — данные для обновления фигуры
 	 */
 	updateDiamond(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height, color } = params
+		const { graphics, x, y, width, height } = params
 
 		graphics
 			.moveTo(x + width / 2, y)
@@ -133,7 +138,6 @@ export const figureRenderer = {
 			.lineTo(x + width / 2, y + height)
 			.lineTo(x, y + height / 2)
 			.closePath()
-			.fill(color)
 	},
 
 	/**
@@ -141,7 +145,7 @@ export const figureRenderer = {
 	 * @param params — данные для обновления фигуры
 	 */
 	updateHexagon(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height, color } = params
+		const { graphics, x, y, width, height } = params
 
 		const onePcWidth = width / 100
 
@@ -153,7 +157,6 @@ export const figureRenderer = {
 			.lineTo(x + onePcWidth * 23, y + height) // 5
 			.lineTo(x, y + height / 2) // 6
 			.closePath()
-			.fill(color)
 	},
 
 	/**
@@ -161,7 +164,7 @@ export const figureRenderer = {
 	 * @param params — данные для обновления фигуры
 	 */
 	updateStar(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height, color } = params
+		const { graphics, x, y, width, height } = params
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
@@ -178,7 +181,6 @@ export const figureRenderer = {
 			.lineTo(x, y + onePcHeight * 38) // 9
 			.lineTo(x + onePcWidth * 38, y + onePcHeight * 38) // 10
 			.closePath()
-			.fill(color)
 	},
 
 	/**
@@ -186,7 +188,7 @@ export const figureRenderer = {
 	 * @param params — данные для обновления фигуры
 	 */
 	updateLeftArrow(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height, color } = params
+		const { graphics, x, y, width, height } = params
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
@@ -200,7 +202,6 @@ export const figureRenderer = {
 			.lineTo(x + onePcWidth * 50, y + onePcHeight * 72) // 6
 			.lineTo(x + onePcWidth * 50, y + height) // 7
 			.closePath()
-			.fill(color)
 	},
 
 	/**
@@ -208,7 +209,7 @@ export const figureRenderer = {
 	 * @param params — данные для обновления фигуры
 	 */
 	updateRightArrow(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height, color } = params
+		const { graphics, x, y, width, height } = params
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
@@ -222,7 +223,6 @@ export const figureRenderer = {
 			.lineTo(x + onePcWidth * 50, y + onePcHeight * 72) // 6
 			.lineTo(x, y + onePcHeight * 72) // 7
 			.closePath()
-			.fill(color)
 	},
 
 	/**
@@ -230,7 +230,7 @@ export const figureRenderer = {
 	 * @param params — данные для обновления фигуры
 	 */
 	updateSpeechBalloon(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height, color } = params
+		const { graphics, x, y, width, height } = params
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
@@ -244,6 +244,16 @@ export const figureRenderer = {
 			.lineTo(x + onePcWidth * 13, y + onePcHeight * 71) // 6
 			.lineTo(x, y + onePcHeight * 71) // 7
 			.closePath()
-			.fill(color)
+	},
+
+	setStyle(style: ShapeStyle) {
+		const { graphics, backgroundColor, strokeColor, strokeWidth = 0 } = style
+
+		if (backgroundColor) {
+			graphics.fill(backgroundColor)
+		}
+		if (strokeColor) {
+			graphics.stroke({ color: strokeColor, width: strokeWidth })
+		}
 	},
 }
