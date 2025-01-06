@@ -34,6 +34,8 @@ type ElementBase = {
 	id: number
 	x: number
 	y: number
+	// Навели ли на элемент (должна появиться синяя обводка)
+	underHover?: boolean
 }
 
 export type ShapeElement = ElementBase & {

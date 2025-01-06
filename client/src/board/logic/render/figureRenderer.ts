@@ -1,22 +1,9 @@
-import { Application, Graphics } from 'pixi.js'
+import { Graphics } from 'pixi.js'
+import { OutlineFilter } from 'pixi-filters'
 import { getElementIdx } from '../../../utils/arrayUtils.ts'
 import { getStore, updateStore } from '../../store/store.ts'
 import { CanvasElement, ShapeElement, ShapeElementFigure } from '../../store/storeTypes.ts'
-
-type DrawShapeSettings = {
-	graphics: Graphics
-	x: number
-	y: number
-	width: number
-	height: number
-}
-
-type ShapeStyle = {
-	graphics: Graphics
-	backgroundColor?: string
-	strokeColor?: string
-	strokeWidth?: number
-}
+import { boardColors } from '../boardConfig.ts'
 
 export const figureRenderer = {
 	/**
@@ -60,15 +47,8 @@ export const figureRenderer = {
 	updateFigure(graphics: Graphics, figureData: ShapeElement) {
 		const updateShapeFn = this.getUpdateFigureFunction(figureData.shape)
 
-		updateShapeFn({
-			...figureData,
-			graphics,
-		})
-
-		this.setStyle({
-			...figureData,
-			graphics,
-		})
+		updateShapeFn(graphics, figureData)
+		this.setStyle(graphics, figureData)
 	},
 
 	/**
@@ -76,7 +56,7 @@ export const figureRenderer = {
 	 * @param figureType — тип фигуры
 	 */
 	getUpdateFigureFunction(figureType: ShapeElementFigure) {
-		const obj: Record<ShapeElementFigure, (settings: DrawShapeSettings) => void> = {
+		const obj: Record<ShapeElementFigure, (graphics: Graphics, settings: ShapeElement) => void> = {
 			[ShapeElementFigure.Rectangle]: this.updateRectangle,
 			[ShapeElementFigure.Circle]: this.updateCircle,
 			[ShapeElementFigure.Triangle]: this.updateTriangle,
@@ -93,30 +73,33 @@ export const figureRenderer = {
 
 	/**
 	 * Обновляет параметры прямоугольника
-	 * @param params — данные для обновления фигуры
+	 * @param graphics — ссылка на объект Graphics из Pixi.js
+	 * @param shapeData — данные для обновления фигуры
 	 */
-	updateRectangle(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height } = params
+	updateRectangle(graphics: Graphics, shapeData: ShapeElement) {
+		const { x, y, width, height } = shapeData
 
 		graphics.rect(x, y, width, height)
 	},
 
 	/**
 	 * Обновляет параметры круга
-	 * @param params — данные для обновления фигуры
+	 * @param graphics — ссылка на объект Graphics из Pixi.js
+	 * @param shapeData — данные для обновления фигуры
 	 */
-	updateCircle(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height } = params
+	updateCircle(graphics: Graphics, shapeData: ShapeElement) {
+		const { x, y, width, height } = shapeData
 
 		graphics.ellipse(x, y, width, height)
 	},
 
 	/**
 	 * Обновляет параметры треугольника
-	 * @param params — данные для обновления фигуры
+	 * @param graphics — ссылка на объект Graphics из Pixi.js
+	 * @param shapeData — данные для обновления фигуры
 	 */
-	updateTriangle(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height } = params
+	updateTriangle(graphics: Graphics, shapeData: ShapeElement) {
+		const { x, y, width, height } = shapeData
 
 		graphics
 			.moveTo(x + width / 2, y)
@@ -127,10 +110,11 @@ export const figureRenderer = {
 
 	/**
 	 * Обновляет параметры ромба
-	 * @param params — данные для обновления фигуры
+	 * @param graphics — ссылка на объект Graphics из Pixi.js
+	 * @param shapeData — данные для обновления фигуры
 	 */
-	updateDiamond(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height } = params
+	updateDiamond(graphics: Graphics, shapeData: ShapeElement) {
+		const { x, y, width, height } = shapeData
 
 		graphics
 			.moveTo(x + width / 2, y)
@@ -142,10 +126,11 @@ export const figureRenderer = {
 
 	/**
 	 * Обновляет параметры шестиугольника
-	 * @param params — данные для обновления фигуры
+	 * @param graphics — ссылка на объект Graphics из Pixi.js
+	 * @param shapeData — данные для обновления фигуры
 	 */
-	updateHexagon(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height } = params
+	updateHexagon(graphics: Graphics, shapeData: ShapeElement) {
+		const { x, y, width, height } = shapeData
 
 		const onePcWidth = width / 100
 
@@ -161,10 +146,11 @@ export const figureRenderer = {
 
 	/**
 	 * Обновляет параметры звезды
-	 * @param params — данные для обновления фигуры
+	 * @param graphics — ссылка на объект Graphics из Pixi.js
+	 * @param shapeData — данные для обновления фигуры
 	 */
-	updateStar(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height } = params
+	updateStar(graphics: Graphics, shapeData: ShapeElement) {
+		const { x, y, width, height } = shapeData
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
@@ -185,10 +171,11 @@ export const figureRenderer = {
 
 	/**
 	 * Обновляет параметры стрелки влево
-	 * @param params — данные для обновления фигуры
+	 * @param graphics — ссылка на объект Graphics из Pixi.js
+	 * @param shapeData — данные для обновления фигуры
 	 */
-	updateLeftArrow(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height } = params
+	updateLeftArrow(graphics: Graphics, shapeData: ShapeElement) {
+		const { x, y, width, height } = shapeData
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
@@ -206,10 +193,11 @@ export const figureRenderer = {
 
 	/**
 	 * Обновляет параметры стрелки вправо
-	 * @param params — данные для обновления фигуры
+	 * @param graphics — ссылка на объект Graphics из Pixi.js
+	 * @param shapeData — данные для обновления фигуры
 	 */
-	updateRightArrow(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height } = params
+	updateRightArrow(graphics: Graphics, shapeData: ShapeElement) {
+		const { x, y, width, height } = shapeData
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
@@ -227,10 +215,11 @@ export const figureRenderer = {
 
 	/**
 	 * Обновляет параметры выноски с речью
-	 * @param params — данные для обновления фигуры
+	 * @param graphics — ссылка на объект Graphics из Pixi.js
+	 * @param shapeData — данные для обновления фигуры
 	 */
-	updateSpeechBalloon(params: DrawShapeSettings) {
-		const { graphics, x, y, width, height } = params
+	updateSpeechBalloon(graphics: Graphics, shapeData: ShapeElement) {
+		const { x, y, width, height } = shapeData
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
@@ -246,14 +235,27 @@ export const figureRenderer = {
 			.closePath()
 	},
 
-	setStyle(style: ShapeStyle) {
-		const { graphics, backgroundColor, strokeColor, strokeWidth = 0 } = style
+	setStyle(graphics: Graphics, shapeData: ShapeElement) {
+		const { backgroundColor, strokeColor, strokeWidth = 0 } = shapeData
 
 		if (backgroundColor) {
 			graphics.fill(backgroundColor)
 		}
+
 		if (strokeColor) {
 			graphics.stroke({ color: strokeColor, width: strokeWidth })
+		}
+
+		if (shapeData.underHover) {
+			const filter = new OutlineFilter({
+				color: boardColors.selected,
+				quality: 10,
+				thickness: 2,
+			})
+			filter.antialias = 'on'
+			filter.resolution = getStore.canvas.devicePixelRatio
+
+			graphics.filters = [filter]
 		}
 	},
 }
