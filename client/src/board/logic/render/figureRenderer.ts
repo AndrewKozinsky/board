@@ -1,17 +1,18 @@
 import { Graphics } from 'pixi.js'
 import { OutlineFilter } from 'pixi-filters'
+import { arrUtils } from '../../../utils/arrayUtils.ts'
 import { getStore } from '../../store/store.ts'
-import { CanvasElement, ShapeElement, ShapeElementFigure } from '../../store/storeTypes.ts'
+import { InteractionStatus, ShapeElement, ShapeElementFigure, ToolsName } from '../../store/storeTypes.ts'
 import { boardColors } from '../boardConfig.ts'
+import { boardUtils } from '../boardUtils.ts'
 import { renderCanvas } from './renderCanvas.ts'
 
 export const figureRenderer = {
 	/**
 	 * По полученным данным фигуры отрисовывает новую на холсте или изменяет уже существующую
-	 * @param elements — массив всех элементов сцены
 	 * @param figureData — данные фигуры
 	 */
-	drawFigure(elements: CanvasElement[], figureData: ShapeElement) {
+	main(figureData: ShapeElement) {
 		const { graphics } = figureData
 
 		graphics === null ? this.drawNewFigure(figureData) : this.updateFigure(graphics!, figureData)
@@ -38,6 +39,8 @@ export const figureRenderer = {
 	 * @param figureData — данные фигуры
 	 */
 	updateFigure(graphics: Graphics, figureData: ShapeElement) {
+		graphics.clear()
+
 		const updateShapeFn = this.getUpdateFigureFunction(figureData.shape)
 		updateShapeFn(graphics, figureData)
 
@@ -70,7 +73,7 @@ export const figureRenderer = {
 	/**
 	 * Обновляет параметры прямоугольника
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные для обновления фигуры
+	 * @param figureData — данные фигуры
 	 */
 	updateRectangle(graphics: Graphics, figureData: ShapeElement) {
 		const { width, height } = figureData
@@ -81,7 +84,7 @@ export const figureRenderer = {
 	/**
 	 * Обновляет параметры круга
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные для обновления фигуры
+	 * @param figureData — данные фигуры
 	 */
 	updateCircle(graphics: Graphics, figureData: ShapeElement) {
 		const { width, height } = figureData
@@ -92,7 +95,7 @@ export const figureRenderer = {
 	/**
 	 * Обновляет параметры треугольника
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные для обновления фигуры
+	 * @param figureData — данные фигуры
 	 */
 	updateTriangle(graphics: Graphics, figureData: ShapeElement) {
 		const { width, height } = figureData
@@ -107,7 +110,7 @@ export const figureRenderer = {
 	/**
 	 * Обновляет параметры ромба
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные для обновления фигуры
+	 * @param figureData — данные фигуры
 	 */
 	updateDiamond(graphics: Graphics, figureData: ShapeElement) {
 		const { width, height } = figureData
@@ -123,7 +126,7 @@ export const figureRenderer = {
 	/**
 	 * Обновляет параметры шестиугольника
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные для обновления фигуры
+	 * @param figureData — данные фигуры
 	 */
 	updateHexagon(graphics: Graphics, figureData: ShapeElement) {
 		const { width, height } = figureData
@@ -143,7 +146,7 @@ export const figureRenderer = {
 	/**
 	 * Обновляет параметры звезды
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные для обновления фигуры
+	 * @param figureData — данные фигуры
 	 */
 	updateStar(graphics: Graphics, figureData: ShapeElement) {
 		const { width, height } = figureData
@@ -168,7 +171,7 @@ export const figureRenderer = {
 	/**
 	 * Обновляет параметры стрелки влево
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные для обновления фигуры
+	 * @param figureData — данные фигуры
 	 */
 	updateLeftArrow(graphics: Graphics, figureData: ShapeElement) {
 		const { width, height } = figureData
@@ -190,7 +193,7 @@ export const figureRenderer = {
 	/**
 	 * Обновляет параметры стрелки вправо
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные для обновления фигуры
+	 * @param figureData — данные фигуры
 	 */
 	updateRightArrow(graphics: Graphics, figureData: ShapeElement) {
 		const { width, height } = figureData
@@ -212,7 +215,7 @@ export const figureRenderer = {
 	/**
 	 * Обновляет параметры выноски с речью
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные для обновления фигуры
+	 * @param figureData — данные фигуры
 	 */
 	updateSpeechBalloon(graphics: Graphics, figureData: ShapeElement) {
 		const { width, height } = figureData
@@ -234,7 +237,7 @@ export const figureRenderer = {
 	/**
 	 * Устанавливает стили фигуры
 	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные для обновления фигуры
+	 * @param figureData — данные фигуры
 	 */
 	setShapeStyle(graphics: Graphics, figureData: ShapeElement) {
 		const { backgroundColor, strokeColor, strokeWidth = 0 } = figureData
@@ -247,7 +250,7 @@ export const figureRenderer = {
 			graphics.stroke({ color: strokeColor, width: strokeWidth })
 		}
 
-		if (figureData.underHover) {
+		if (figureData.interactionStatus === InteractionStatus.Hovered) {
 			const filter = new OutlineFilter({
 				color: boardColors.selected,
 				quality: 10,
@@ -264,30 +267,59 @@ export const figureRenderer = {
 
 	/**
 	 * Ставит обработчики наведения и щелчка по фигуре
-	 * @param graphics
-	 * @param figureData
+	 * @param graphics — ссылка на объект Graphics из Pixi.js
+	 * @param figureData — данные фигуры
 	 */
 	setShapeInteraction(graphics: Graphics, figureData: ShapeElement) {
 		// Включение интерактивности чтобы заработали обработчики событий на фигуре
 		graphics.eventMode = 'static'
 
 		graphics.on('pointerover', () => {
-			this.toggleHover(figureData, true)
+			this.toggleHover(figureData.id, true)
 		})
 		graphics.on('pointerout', () => {
-			this.toggleHover(figureData, false)
+			this.toggleHover(figureData.id, false)
+		})
+
+		graphics.on('pointerdown', () => {
+			this.selectFigure(figureData.id)
 		})
 	},
 
 	/**
 	 * Переключает в данных показ/скрытие обводки сообщающий о наведение на элемент
-	 * @param figureData
-	 * @param isUnderHover
+	 * @param figureDataId — идентификатор фигуры
+	 * @param isUnderHover — навели ли на фигуру
 	 */
-	toggleHover(figureData: ShapeElement, isUnderHover: boolean) {
-		getStore.updateCanvasElement(figureData.id, { underHover: isUnderHover })
-		setTimeout(() => {
-			renderCanvas.render()
-		}, 30)
+	toggleHover(figureDataId: number, isUnderHover: boolean) {
+		const figureData = arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', figureDataId)
+		if (!figureData) return
+
+		if (getStore.tool !== ToolsName.Select || figureData.interactionStatus === InteractionStatus.Selected) return
+
+		getStore.updateCanvasElement(figureData.id, {
+			interactionStatus: isUnderHover ? InteractionStatus.Hovered : InteractionStatus.Default,
+		})
+
+		renderCanvas.render()
+	},
+
+	/**
+	 * Делает фигуру выделенной
+	 * @param figureDataId — идентификатор фигуры
+	 */
+	selectFigure(figureDataId: number) {
+		const figureData = arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', figureDataId)
+		if (!figureData) return
+
+		if (figureData.interactionStatus === InteractionStatus.Selected) return
+
+		boardUtils.makeAllElemsUnselected()
+
+		getStore.updateCanvasElement(figureData.id, {
+			interactionStatus: InteractionStatus.Selected,
+		})
+
+		renderCanvas.render()
 	},
 }

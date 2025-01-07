@@ -1,6 +1,7 @@
 import { getStore } from '../../store/store.ts'
 import { pixiUtils } from '../../../utils/pixiUtils.ts'
 import { figureRenderer } from './figureRenderer.ts'
+import { transformRectRenderer } from './transformRectRenderer.ts'
 
 export const renderCanvas = {
 	/** Отрисовка сцены */
@@ -23,6 +24,7 @@ export const renderCanvas = {
 		app.canvas.style.cursor = cursor
 
 		this.drawElements()
+		transformRectRenderer.init()
 
 		pixiUtils.rerenderFonts(scale)
 	},
@@ -35,7 +37,7 @@ export const renderCanvas = {
 			const elemData = elemsData[i]
 
 			if (elemData.type === 'figureElement') {
-				figureRenderer.drawFigure(elemsData, elemData)
+				figureRenderer.main(elemData)
 			}
 		}
 	},

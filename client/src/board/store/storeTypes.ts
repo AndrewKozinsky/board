@@ -2,13 +2,19 @@ import { Application, Graphics, Renderer } from 'pixi.js'
 
 export enum ToolsName {
 	Select = 'select',
-	DrawShape = 'DrawShape',
+	Shape = 'drawShape',
 }
 
 export enum Cursor {
 	Default = 'default',
 	Palm = 'grab',
 	Dragging = 'grabbing',
+}
+
+export enum InteractionStatus {
+	Default = 'default',
+	Hovered = 'hovered',
+	Selected = 'selected',
 }
 
 export type BoardStore = {
@@ -36,7 +42,7 @@ type ElementBase = {
 	x: number
 	y: number
 	// Навели ли на элемент (должна появиться синяя обводка)
-	underHover?: boolean
+	interactionStatus?: InteractionStatus
 }
 
 export type ShapeElement = ElementBase & {

@@ -1,6 +1,7 @@
 import { Application } from 'pixi.js'
 import { getStore, useBoardStore } from '../store/store.ts'
 import { canvasSize } from './canvasSize.ts'
+import { canvasBg } from './canvasBg.ts'
 import { moveCanvas } from './moveCanvas.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
 import { scaleCanvas } from './scaleCanvas.ts'
@@ -28,6 +29,7 @@ export const main = {
 		$canvasContainer.appendChild(app.canvas)
 
 		canvasSize.setCorrectCanvasSizeAfterWindowResize()
+		canvasBg.createCanvasBg()
 
 		scaleCanvas.setEventListeners()
 		moveCanvas.setEventListeners()

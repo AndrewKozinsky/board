@@ -1,7 +1,7 @@
 import { create } from 'zustand'
-import { getElementIdx } from '../../utils/arrayUtils.ts'
+import { arrUtils } from '../../utils/arrayUtils.ts'
 import { createGetStoreProxy, createUpdateStoreProxy } from '../../utils/storeUtils.ts'
-import { BoardStore, CanvasElement, Cursor, ShapeElement, ShapeElementFigure, ToolsName } from './storeTypes.ts'
+import { BoardStore, CanvasElement, Cursor, InteractionStatus, ShapeElementFigure, ToolsName } from './storeTypes.ts'
 
 export const useBoardStore = create<BoardStore>((set) => {
 	return {
@@ -20,31 +20,30 @@ export const useBoardStore = create<BoardStore>((set) => {
 					type: 'figureElement',
 					shape: ShapeElementFigure.Rectangle,
 					graphics: null,
-					x: 50,
+					x: 150,
 					y: 70,
 					width: 100,
 					height: 200,
 					backgroundColor: 'ccc',
-					strokeColor: 'a00',
-					strokeWidth: 5,
 				},
 				{
 					id: 2,
 					type: 'figureElement',
-					shape: ShapeElementFigure.Diamond,
+					shape: ShapeElementFigure.Star,
 					graphics: null,
-					x: 250,
+					x: 350,
 					y: 270,
-					width: 300,
+					width: 200,
 					height: 200,
 					backgroundColor: 'ccc',
+					interactionStatus: InteractionStatus.Selected,
 				},
 			],
 		},
 		cursor: Cursor.Default,
 		updateCanvasElement: (elementId: number, elementNewData: Partial<CanvasElement>) => {
 			set((state) => {
-				const elementIdx = getElementIdx(state.canvas.elements, 'id', elementId)
+				const elementIdx = arrUtils.getItemIdxByPropNameAndValue(state.canvas.elements, 'id', elementId)
 				if (elementIdx < 0) {
 					throw new Error(`Canvas element ${elementIdx} not found`)
 				}
