@@ -4,7 +4,7 @@ import { arrUtils } from '../../../utils/arrayUtils.ts'
 import { getStore } from '../../store/store.ts'
 import { InteractionStatus, ShapeElement, ShapeElementFigure, ToolsName } from '../../store/storeTypes.ts'
 import { boardColors } from '../boardConfig.ts'
-import { boardUtils } from '../boardUtils.ts'
+import { canvasUtils } from '../canvasUtils.ts'
 import { renderCanvas } from './renderCanvas.ts'
 
 export const figureRenderer = {
@@ -314,7 +314,7 @@ export const figureRenderer = {
 
 		if (figureData.interactionStatus === InteractionStatus.Selected) return
 
-		boardUtils.makeAllElemsUnselected()
+		canvasUtils.makeAllElemsUnselected()
 
 		getStore.updateCanvasElement(figureData.id, {
 			interactionStatus: InteractionStatus.Selected,

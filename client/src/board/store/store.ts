@@ -1,4 +1,3 @@
-import { Container, ContainerChild } from 'pixi.js'
 import { create } from 'zustand'
 import { arrUtils } from '../../utils/arrayUtils.ts'
 import { createGetStoreProxy, createUpdateStoreProxy } from '../../utils/storeUtils.ts'
@@ -12,10 +11,10 @@ export const useBoardStore = create<BoardStore>((set) => {
 		tool: ToolsName.Select,
 		canvas: {
 			devicePixelRatio: window.devicePixelRatio || 1,
-			scale: 100,
+			scale: 400,
 			offset: {
-				x: 0,
-				y: 0,
+				x: -1200,
+				y: -900,
 			},
 			elements: [
 				{

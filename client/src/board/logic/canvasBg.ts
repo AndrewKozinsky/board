@@ -1,7 +1,6 @@
 import { Graphics } from 'pixi.js'
 import { getStore } from '../store/store.ts'
 import { boardColors } from './boardConfig.ts'
-import { boardUtils } from './boardUtils.ts'
 import { canvasUtils } from './canvasUtils.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
 
@@ -45,7 +44,7 @@ export const canvasBg = {
 
 	/** Убирает выделение с выделенного элемента */
 	clearSelection() {
-		boardUtils.makeAllElemsUnselected()
+		canvasUtils.makeAllElemsUnselected()
 
 		renderCanvas.render()
 	},
