@@ -122,7 +122,7 @@ export const transformRectRenderer = {
 
 		sideRectsGraphics.push(graphics)
 
-		getStore.app.stage.addChild(graphics)
+		getStore.$mainContainer.addChild(graphics)
 	},
 
 	createCornerRectGraphics(cornerRectName: InteractiveElemName) {
@@ -144,7 +144,7 @@ export const transformRectRenderer = {
 
 		cornerRectsGraphics.push(graphics)
 
-		getStore.app.stage.addChild(graphics)
+		getStore.$mainContainer.addChild(graphics)
 	},
 
 	updateAllCoordsAndSize(selectedElem: ShapeElement) {
@@ -202,10 +202,4 @@ export const transformRectRenderer = {
 
 		mouseWasPressed = true
 	},
-
-	/*getCornerRectMouseHandler(cornerName: InteractiveElemName) {
-		return (e: FederatedPointerEvent) => {
-			console.log(e)
-		}
-	},*/
 }

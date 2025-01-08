@@ -1,3 +1,4 @@
+import { Container, ContainerChild } from 'pixi.js'
 import { create } from 'zustand'
 import { arrUtils } from '../../utils/arrayUtils.ts'
 import { createGetStoreProxy, createUpdateStoreProxy } from '../../utils/storeUtils.ts'
@@ -6,6 +7,8 @@ import { BoardStore, CanvasElement, Cursor, InteractionStatus, ShapeElementFigur
 export const useBoardStore = create<BoardStore>((set) => {
 	return {
 		app: null as any,
+		$bgContainer: null as any,
+		$mainContainer: null as any,
 		tool: ToolsName.Select,
 		canvas: {
 			devicePixelRatio: window.devicePixelRatio || 1,

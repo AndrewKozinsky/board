@@ -11,15 +11,15 @@ export const renderCanvas = {
 
 	/** Сборка сцены */
 	buildScene() {
-		const { app } = getStore
+		const { $mainContainer, app } = getStore
 
 		const { scale } = getStore.canvas
 		const { offset } = getStore.canvas
 		const { cursor } = getStore
 
-		app.stage.position.x = offset.x
-		app.stage.position.y = offset.y
-		app.stage.scale = scale / 100
+		$mainContainer.position.x = offset.x
+		$mainContainer.position.y = offset.y
+		$mainContainer.scale = scale / 100
 
 		app.canvas.style.cursor = cursor
 

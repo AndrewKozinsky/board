@@ -28,7 +28,7 @@ export const figureRenderer = {
 		this.updateFigure(graphics, figureData)
 		this.setShapeInteraction(graphics, figureData)
 
-		getStore.app.stage.addChild(graphics)
+		getStore.$mainContainer.addChild(graphics)
 
 		getStore.updateCanvasElement(figureData.id, { graphics })
 	},

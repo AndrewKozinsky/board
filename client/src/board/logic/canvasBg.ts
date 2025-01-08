@@ -2,30 +2,49 @@ import { Graphics } from 'pixi.js'
 import { getStore } from '../store/store.ts'
 import { boardColors } from './boardConfig.ts'
 import { boardUtils } from './boardUtils.ts'
+import { canvasUtils } from './canvasUtils.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
 
-// Фоновый прямоугольник, который нужен, чтобы ловить щелчки.
-// После этого должно пропасть выделение со всех элементов.
+// Фоновый прямоугольник нужен чтобы ловить щелчки по холсту
+// чтобы убрать выделение со всех элементов.
 export const canvasBg = {
-	createCanvasBg() {
+	/** Создание фонового прямоугольника */
+	create() {
 		const bgRectGraphic = new Graphics()
-		getStore.app.stage.addChild(bgRectGraphic)
+		this.drawRectangle(bgRectGraphic)
 
-		bgRectGraphic.rect(0, 0, 600, 600)
-		bgRectGraphic.fill(boardColors.canvasBackground)
+		this.addEventListeners(bgRectGraphic)
+
+		getStore.$bgContainer.addChild(bgRectGraphic)
+	},
+
+	/** Добавление слушателей событий для фонового прямоугольника */
+	addEventListeners(bgRectGraphic: Graphics) {
 		bgRectGraphic.eventMode = 'static'
 
 		bgRectGraphic.addEventListener('pointerdown', () => {
-			this.removeSelectionFromElems()
+			this.clearSelection()
 		})
 
-		// TODO Этот прямоугольник как-то нужно сделать чтобы автоматически перемещался
-		//  в зависимости от смещения камеры. И менял размеры в зависимости от
-		// масштаба камеры.
+		addEventListener('resize', () => {
+			this.drawRectangle(bgRectGraphic)
+		})
+	},
+
+	/**
+	 * Отрисовка прямоугольника
+	 * @param bgRectGraphic — объект графики куда рисуется прямоугольник.
+	 */
+	drawRectangle(bgRectGraphic: Graphics) {
+		bgRectGraphic.clear()
+
+		const canvasSize = canvasUtils.getCanvasSize()
+		bgRectGraphic.rect(0, 0, canvasSize.width, canvasSize.height)
+		bgRectGraphic.fill(boardColors.canvasBackground)
 	},
 
 	/** Убирает выделение с выделенного элемента */
-	removeSelectionFromElems() {
+	clearSelection() {
 		boardUtils.makeAllElemsUnselected()
 
 		renderCanvas.render()

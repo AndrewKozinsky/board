@@ -1,4 +1,4 @@
-import { Application, Graphics, Renderer } from 'pixi.js'
+import { Application, Container, ContainerChild, Graphics, Renderer } from 'pixi.js'
 
 export enum ToolsName {
 	Select = 'select',
@@ -19,6 +19,8 @@ export enum InteractionStatus {
 
 export type BoardStore = {
 	app: Application<Renderer>
+	$bgContainer: Container<ContainerChild>
+	$mainContainer: Container<ContainerChild>
 	tool: ToolsName
 	canvas: {
 		devicePixelRatio: number
