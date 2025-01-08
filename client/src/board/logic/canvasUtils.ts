@@ -30,4 +30,12 @@ export const canvasUtils = {
 			interactionStatus: InteractionStatus.Default,
 		})
 	},
+
+	/**
+	 * Так как все части трансформирующего прямоугольника должны иметь такую же толщину линий
+	 * при любом масштабе холста, то их следует умножить на множитель масштаба.
+	 */
+	getScaleMultiplier() {
+		return 1 / (getStore.canvas.scale / 100)
+	},
 }

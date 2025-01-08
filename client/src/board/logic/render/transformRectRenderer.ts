@@ -3,6 +3,7 @@ import { arrUtils } from '../../../utils/arrayUtils.ts'
 import { getStore } from '../../store/store.ts'
 import { InteractionStatus, ShapeElement } from '../../store/storeTypes.ts'
 import { boardColors } from '../boardConfig.ts'
+import { canvasUtils } from '../canvasUtils.ts'
 import { renderCanvas } from './renderCanvas.ts'
 
 // Названия интерактивных элементов с помощью которых изменяется размер выделенной фигуры.
@@ -153,10 +154,12 @@ export const transformRectRenderer = {
 	 * @param selectedElem — данные выделенного элемента
 	 */
 	updateAllCoordsAndSize(selectedElem: ShapeElement) {
+		// =====
 		const { x, y, width, height } = selectedElem
 
-		const visibleBoxThickness = 1
-		const hitBoxThickness = 5
+		const scaleFactor = canvasUtils.getScaleMultiplier()
+		const visibleBoxThickness = scaleFactor
+		const hitBoxThickness = 5 * scaleFactor
 
 		this.updateSideRectCoordsAndSize(
 			sideRectsGraphics[0],
@@ -190,9 +193,9 @@ export const transformRectRenderer = {
 		)
 
 		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[0], x, y)
-		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[1], x + width - 1, y)
-		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[2], x + width - 1, y + height - 1)
-		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[3], x, y + height - 1)
+		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[1], x + width, y)
+		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[2], x + width, y + height)
+		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[3], x, y + height)
 	},
 
 	/**
@@ -206,15 +209,15 @@ export const transformRectRenderer = {
 
 		const isHorizontal = visibleBox.width > visibleBox.height
 
-		const visibleBoxScaledWidth = isHorizontal ? visibleBox.width : visibleBox.width * this.getScaleMultiplier()
-		const visibleBoxScaledHeight = isHorizontal ? visibleBox.height * this.getScaleMultiplier() : visibleBox.height
+		const visibleBoxScaledWidth = isHorizontal ? visibleBox.width : visibleBox.width
+		const visibleBoxScaledHeight = isHorizontal ? visibleBox.height : visibleBox.height
 
 		graphics
 			.rect(visibleBox.x, visibleBox.y, visibleBoxScaledWidth, visibleBoxScaledHeight)
 			.fill({ color: boardColors.selected })
 
-		const hitAreaScaledWidth = isHorizontal ? hitArea.width : hitArea.width * this.getScaleMultiplier()
-		const hitAreaScaledHeight = isHorizontal ? hitArea.height * this.getScaleMultiplier() : hitArea.height
+		const hitAreaScaledWidth = isHorizontal ? hitArea.width : hitArea.width
+		const hitAreaScaledHeight = isHorizontal ? hitArea.height : hitArea.height
 
 		graphics.hitArea = new Rectangle(hitArea.x, hitArea.y, hitAreaScaledWidth, hitAreaScaledHeight)
 	},
@@ -228,10 +231,11 @@ export const transformRectRenderer = {
 	updateCornerRectCoordsAndSize(graphics: Graphics, x: number, y: number) {
 		graphics.clear()
 
-		const scaledX = x - 3 * this.getScaleMultiplier()
-		const scaledY = y - 3 * this.getScaleMultiplier()
-		const scaledWidth = 7 * this.getScaleMultiplier()
-		const scaledStrokeWidth = this.getScaleMultiplier()
+		const scaleFactor = canvasUtils.getScaleMultiplier()
+		const scaledX = x - 3 * scaleFactor
+		const scaledY = y - 3 * scaleFactor
+		const scaledWidth = 7 * scaleFactor
+		const scaledStrokeWidth = scaleFactor
 
 		graphics
 			.rect(scaledX, scaledY, scaledWidth, scaledWidth)
@@ -286,8 +290,8 @@ export const transformRectRenderer = {
 		)
 		if (!selectedElem || selectedElem.type !== 'figureElement') return
 
-		const diffX = (e.global.x - startMouseX) * this.getScaleMultiplier()
-		const diffY = (e.global.y - startMouseY) * this.getScaleMultiplier()
+		const diffX = (e.global.x - startMouseX) * canvasUtils.getScaleMultiplier()
+		const diffY = (e.global.y - startMouseY) * canvasUtils.getScaleMultiplier()
 
 		const setNewPositionMapper: Record<InteractiveElemNames, () => void> = {
 			[InteractiveElemNames.Right]: () => {
@@ -351,13 +355,5 @@ export const transformRectRenderer = {
 	/** Обработчик отпускания мыши */
 	onInteractiveElemMouseOn() {
 		selectedInteractiveRectName = null
-	},
-
-	/**
-	 * Так как все части трансформирующего прямоугольника должны иметь такую же толщину линий
-	 * при любом масштабе холста, то их следует умножить на множитель масштаба.
-	 */
-	getScaleMultiplier() {
-		return 1 / (getStore.canvas.scale / 100)
 	},
 }
