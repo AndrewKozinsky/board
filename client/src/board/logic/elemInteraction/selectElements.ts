@@ -1,12 +1,12 @@
 import { FederatedPointerEvent } from 'pixi.js'
-import { getStore } from '../../store/store.ts'
-import { InteractionStatus, ToolsName } from '../../store/storeTypes.ts'
 import { canvasUtils } from '../canvasUtils.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
+import { canvasStore } from '../store/canvasStore.ts'
+import { InteractionStatus, ToolsName } from '../store/canvasStoreTypes.ts'
 
 export const selectElements = {
 	init() {
-		getStore.app.stage.on('pointerdown', (e) => {
+		canvasStore.app.stage.on('pointerdown', (e) => {
 			this.selectFigure(e)
 		})
 	},
@@ -19,12 +19,12 @@ export const selectElements = {
 		const elemUnderCursor = canvasUtils.getElemUnderCursor(e)
 		if (!elemUnderCursor) return
 
-		if (getStore.tool !== ToolsName.Select || elemUnderCursor.interactionStatus === InteractionStatus.Selected)
+		if (canvasStore.tool !== ToolsName.Select || elemUnderCursor.interactionStatus === InteractionStatus.Selected)
 			return
 
 		canvasUtils.makeAllElemsUnselected()
 
-		getStore.updateCanvasElement(elemUnderCursor.id, {
+		canvasUtils.updateCanvasElement(elemUnderCursor.id, {
 			interactionStatus: InteractionStatus.Selected,
 		})
 

@@ -1,9 +1,9 @@
 import { FederatedPointerEvent, Graphics, Rectangle } from 'pixi.js'
 import { arrUtils } from '../../../utils/arrayUtils.ts'
-import { getStore } from '../../store/store.ts'
-import { InteractionStatus, ShapeElement } from '../../store/storeTypes.ts'
 import { boardColors } from '../boardConfig.ts'
 import { canvasUtils } from '../canvasUtils.ts'
+import { canvasStore } from '../store/canvasStore.ts'
+import { InteractionStatus, ShapeElement } from '../store/canvasStoreTypes.ts'
 import { renderCanvas } from './renderCanvas.ts'
 
 // Названия интерактивных элементов с помощью которых изменяется размер выделенной фигуры.
@@ -51,7 +51,7 @@ export const transformRectRenderer = {
 	init() {
 		// Данные выделенной фигуры
 		const selectedFigure = arrUtils.getItemByPropNameAndValue(
-			getStore.canvas.elements,
+			canvasStore.canvas.elements,
 			'interactionStatus',
 			InteractionStatus.Selected,
 		)
@@ -122,7 +122,7 @@ export const transformRectRenderer = {
 
 		sideRectsGraphics.push(graphics)
 
-		getStore.$mainContainer.addChild(graphics)
+		canvasStore.$mainContainer.addChild(graphics)
 	},
 
 	/**
@@ -146,7 +146,7 @@ export const transformRectRenderer = {
 
 		cornerRectsGraphics.push(graphics)
 
-		getStore.$mainContainer.addChild(graphics)
+		canvasStore.$mainContainer.addChild(graphics)
 	},
 
 	/**
@@ -261,7 +261,7 @@ export const transformRectRenderer = {
 		startMouseY = e.global.y
 
 		const selectedElem = arrUtils.getItemByPropNameAndValue(
-			getStore.canvas.elements,
+			canvasStore.canvas.elements,
 			'interactionStatus',
 			InteractionStatus.Selected,
 		)
@@ -284,7 +284,7 @@ export const transformRectRenderer = {
 		if (!selectedInteractiveRectName) return
 
 		const selectedElem = arrUtils.getItemByPropNameAndValue(
-			getStore.canvas.elements,
+			canvasStore.canvas.elements,
 			'interactionStatus',
 			InteractionStatus.Selected,
 		)
@@ -296,24 +296,24 @@ export const transformRectRenderer = {
 		const setNewPositionMapper: Record<InteractiveElemNames, () => void> = {
 			[InteractiveElemNames.Right]: () => {
 				const newWidth = shapeInitialCoords.width + diffX
-				getStore.updateCanvasElement(selectedElem.id, { width: newWidth })
+				canvasUtils.updateCanvasElement(selectedElem.id, { width: newWidth })
 			},
 			[InteractiveElemNames.Left]: () => {
 				const newWidth = shapeInitialCoords.width - diffX
 				const newX = shapeInitialCoords.x + diffX
 
-				getStore.updateCanvasElement(selectedElem.id, { x: newX, width: newWidth })
+				canvasUtils.updateCanvasElement(selectedElem.id, { x: newX, width: newWidth })
 			},
 			[InteractiveElemNames.Bottom]: () => {
 				const newHeight = shapeInitialCoords.height + diffY
 
-				getStore.updateCanvasElement(selectedElem.id, { height: newHeight })
+				canvasUtils.updateCanvasElement(selectedElem.id, { height: newHeight })
 			},
 			[InteractiveElemNames.Top]: () => {
 				const newHeight = shapeInitialCoords.height - diffY
 				const newY = shapeInitialCoords.y + diffY
 
-				getStore.updateCanvasElement(selectedElem.id, { y: newY, height: newHeight })
+				canvasUtils.updateCanvasElement(selectedElem.id, { y: newY, height: newHeight })
 			},
 			[InteractiveElemNames.LeftTop]: () => {
 				const newX = shapeInitialCoords.x + diffX
@@ -322,7 +322,12 @@ export const transformRectRenderer = {
 				const newY = shapeInitialCoords.y + diffY
 				const newHeight = shapeInitialCoords.height - diffY
 
-				getStore.updateCanvasElement(selectedElem.id, { x: newX, y: newY, width: newWidth, height: newHeight })
+				canvasUtils.updateCanvasElement(selectedElem.id, {
+					x: newX,
+					y: newY,
+					width: newWidth,
+					height: newHeight,
+				})
 			},
 			[InteractiveElemNames.RightTop]: () => {
 				const newWidth = shapeInitialCoords.width + diffX
@@ -330,13 +335,13 @@ export const transformRectRenderer = {
 				const newY = shapeInitialCoords.y + diffY
 				const newHeight = shapeInitialCoords.height - diffY
 
-				getStore.updateCanvasElement(selectedElem.id, { y: newY, width: newWidth, height: newHeight })
+				canvasUtils.updateCanvasElement(selectedElem.id, { y: newY, width: newWidth, height: newHeight })
 			},
 			[InteractiveElemNames.RightBottom]: () => {
 				const newWidth = shapeInitialCoords.width + diffX
 				const newHeight = shapeInitialCoords.height + diffY
 
-				getStore.updateCanvasElement(selectedElem.id, { width: newWidth, height: newHeight })
+				canvasUtils.updateCanvasElement(selectedElem.id, { width: newWidth, height: newHeight })
 			},
 			[InteractiveElemNames.LeftBottom]: () => {
 				const newX = shapeInitialCoords.x + diffX
@@ -344,7 +349,7 @@ export const transformRectRenderer = {
 
 				const newHeight = shapeInitialCoords.height + diffY
 
-				getStore.updateCanvasElement(selectedElem.id, { x: newX, width: newWidth, height: newHeight })
+				canvasUtils.updateCanvasElement(selectedElem.id, { x: newX, width: newWidth, height: newHeight })
 			},
 		}
 

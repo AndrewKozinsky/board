@@ -1,10 +1,10 @@
-import { produce } from 'immer'
-import { create } from 'zustand'
-import { arrUtils } from '../../utils/arrayUtils.ts'
-import { createGetStoreProxy, createUpdateStoreProxy } from '../../utils/storeUtils.ts'
-import { BoardStore, CanvasElement, Cursor, InteractionStatus, ShapeElementFigure, ToolsName } from './storeTypes.ts'
+// import { produce } from 'immer'
+// import { create } from 'zustand'
+// import { arrUtils } from '../../utils/arrayUtils.ts'
+// import { createGetStoreProxy, createUpdateStoreProxy } from '../../utils/storeUtils.ts'
+// import { BoardStore, CanvasElement, Cursor, InteractionStatus, ShapeElementFigure, ToolsName } from './storeTypes.ts'
 
-export const useBoardStore = create<BoardStore>((set) => {
+/*export const useBoardStore = create<BoardStore>((set) => {
 	return {
 		app: null as any,
 		$bgContainer: null as any,
@@ -67,7 +67,7 @@ export const useBoardStore = create<BoardStore>((set) => {
 			})
 		},
 	}
-})
+})*/
 
-export const updateStore = createUpdateStoreProxy(useBoardStore.getState(), useBoardStore)
-export const getStore = createGetStoreProxy<BoardStore>(useBoardStore)
+// export const updateStore = createUpdateStoreProxy(useBoardStore.getState(), useBoardStore)
+// export const getStore = createGetStoreProxy<BoardStore>(useBoardStore)

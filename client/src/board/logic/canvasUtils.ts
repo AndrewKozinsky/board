@@ -1,7 +1,7 @@
 import { FederatedPointerEvent } from 'pixi.js'
 import { arrUtils } from '../../utils/arrayUtils.ts'
-import { getStore } from '../store/store.ts'
-import { InteractionStatus } from '../store/storeTypes.ts'
+import { canvasStore } from './store/canvasStore.ts'
+import { CanvasElement, InteractionStatus } from './store/canvasStoreTypes.ts'
 
 // Методы для работы с холстом
 export const canvasUtils = {
@@ -20,14 +20,14 @@ export const canvasUtils = {
 	makeAllElemsUnselected() {
 		// Если уже есть выделенный элемент, то сделать его невыделенным.
 		const selectedElem = arrUtils.getItemByPropNameAndValue(
-			getStore.canvas.elements,
+			canvasStore.canvas.elements,
 			'interactionStatus',
 			InteractionStatus.Selected,
 		)
 
 		if (!selectedElem) return
 
-		getStore.updateCanvasElement(selectedElem.id, {
+		this.updateCanvasElement(selectedElem.id, {
 			interactionStatus: InteractionStatus.Default,
 		})
 	},
@@ -37,7 +37,7 @@ export const canvasUtils = {
 	 * при любом масштабе холста, то их следует умножить на множитель масштаба.
 	 */
 	getScaleMultiplier() {
-		return 1 / (getStore.canvas.scale / 100)
+		return 1 / (canvasStore.scale / 100)
 	},
 
 	getElemUnderCursor(e: FederatedPointerEvent) {
@@ -48,11 +48,18 @@ export const canvasUtils = {
 			return false
 		}
 
-		return arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', elemId)
+		return arrUtils.getItemByPropNameAndValue(canvasStore.canvas.elements, 'id', elemId)
 	},
 
 	getSelectedElems() {
 		// Если уже есть выделенный элемент, то сделать его невыделенным.
-		return getStore.canvas.elements.filter((elem) => elem.interactionStatus === InteractionStatus.Selected)
+		return canvasStore.canvas.elements.filter((elem) => elem.interactionStatus === InteractionStatus.Selected)
+	},
+
+	updateCanvasElement: (elementId: number, elementNewData: Partial<CanvasElement>) => {
+		const elementIdx = arrUtils.getItemIdxByPropNameAndValue(canvasStore.canvas.elements, 'id', elementId)
+		if (elementIdx < 0) return
+
+		Object.assign(canvasStore.canvas.elements[elementIdx], elementNewData)
 	},
 }

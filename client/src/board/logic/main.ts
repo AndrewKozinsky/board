@@ -1,5 +1,4 @@
 import { Application, Container, Renderer } from 'pixi.js'
-import { getStore, updateStore, useBoardStore } from '../store/store.ts'
 import { canvasUtils } from './canvasUtils.ts'
 import { canvasBg } from './canvasBg.ts'
 import { deleteElements } from './elemInteraction/deleteElements.ts'
@@ -9,6 +8,7 @@ import { moveElements } from './elemInteraction/moveElements.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
 import { scaleCanvas } from './canvasInteraction/scaleCanvas.ts'
 import { selectElements } from './elemInteraction/selectElements.ts'
+import { canvasStore } from './store/canvasStore.ts'
 
 export const main = {
 	async init($canvasContainer: HTMLDivElement) {
@@ -38,14 +38,14 @@ export const main = {
 		await app.init({
 			width,
 			height,
-			resolution: getStore.canvas.devicePixelRatio, // Automatically adjust for Retina
+			resolution: canvasStore.devicePixelRatio, // Automatically adjust for Retina
 			autoDensity: true, // Ensures proper scaling on Retina displays
 			antialias: true,
 		})
 
 		app.stage.eventMode = 'static'
 
-		useBoardStore.setState({ app })
+		canvasStore.app = app
 
 		// Append the PixiJS canvas to the container
 		$canvasContainer.appendChild(app.canvas)
@@ -68,7 +68,7 @@ export const main = {
 		app.stage.addChild($bgContainer)
 		app.stage.addChild($mainContainer)
 
-		updateStore.$bgContainer = $bgContainer
-		updateStore.$mainContainer = $mainContainer
+		canvasStore.$bgContainer = $bgContainer
+		canvasStore.$mainContainer = $mainContainer
 	},
 }

@@ -1,6 +1,6 @@
 import { Container, Text } from 'pixi.js'
+import { canvasStore } from '../board/logic/store/canvasStore.ts'
 import { throttle } from './miscUtils.ts'
-import { getStore } from '../board/store/store.ts'
 
 // Вспомогательные функции Pixi.js
 export const pixiUtils = {
@@ -31,8 +31,8 @@ export const pixiUtils = {
 	rerenderFonts(scale: number) {
 		if (scale <= 100) return
 
-		const texts: any = this.findAllTextObjects(getStore.app.stage)
-		const { devicePixelRatio } = getStore.canvas
+		const texts: any = this.findAllTextObjects(canvasStore.app.stage)
+		const { devicePixelRatio } = canvasStore
 
 		for (let i = 0; i < texts.length; i++) {
 			texts[i].resolution = (scale / 100) * devicePixelRatio

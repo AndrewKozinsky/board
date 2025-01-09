@@ -1,6 +1,6 @@
 import { Graphics } from 'pixi.js'
-import { getStore } from '../store/store.ts'
 import { boardColors } from './boardConfig.ts'
+import { canvasStore } from './store/canvasStore.ts'
 import { canvasUtils } from './canvasUtils.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
 
@@ -14,7 +14,7 @@ export const canvasBg = {
 
 		this.addEventListeners(bgRectGraphic)
 
-		getStore.$bgContainer.addChild(bgRectGraphic)
+		canvasStore.$bgContainer.addChild(bgRectGraphic)
 	},
 
 	/** Добавление слушателей событий для фонового прямоугольника */

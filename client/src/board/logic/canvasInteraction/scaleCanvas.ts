@@ -1,7 +1,7 @@
 import { isKeysPressed, keyboardUtils } from '../../../utils/keyboardUtils.ts'
-import { getStore, updateStore } from '../../store/store.ts'
 import { boardConfig } from '../boardConfig.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
+import { canvasStore } from '../store/canvasStore.ts'
 
 export enum ZoomDirection {
 	// Приблизить
@@ -50,7 +50,7 @@ export const scaleCanvas = {
 		})
 
 		// Масштабировать если нажали Cmd и крутят колесо мыши
-		getStore.app.canvas.addEventListener(
+		canvasStore.app.canvas.addEventListener(
 			'wheel',
 			(event) => {
 				if (!isCmdPressed) return
@@ -65,7 +65,7 @@ export const scaleCanvas = {
 	 * @param e — событие прокрутки мыши
 	 */
 	zoomCanvasByMouse(e: WheelEvent) {
-		const newScale = getStore.canvas.scale + e.deltaY
+		const newScale = canvasStore.scale + e.deltaY
 		this.zoom(newScale, e.clientX, e.clientY)
 	},
 
@@ -76,7 +76,7 @@ export const scaleCanvas = {
 	zoomCanvasOneStep(direction: ZoomDirection) {
 		const newScale = this.getZoomValueNextStep(direction)
 
-		const { clientWidth, clientHeight } = getStore.app.canvas
+		const { clientWidth, clientHeight } = canvasStore.app.canvas
 		this.zoom(newScale, clientWidth / 2, clientHeight / 2)
 	},
 
@@ -88,22 +88,22 @@ export const scaleCanvas = {
 	 */
 	zoom(newScale: number, canvasPivotLeftPx: number, canvasPivotTopPx: number) {
 		if (newScale < minZoomValue || newScale > maxZoomValue) {
-			updateStore.canvas.scale = newScale < minZoomValue ? minZoomValue : maxZoomValue
+			canvasStore.scale = newScale < minZoomValue ? minZoomValue : maxZoomValue
 			renderCanvas.render()
 			return
 		}
 
 		const roundedNewScale = Math.round(newScale)
 
-		const currentScale = getStore.canvas.scale
+		const currentScale = canvasStore.scale
 		const scaleDiff = (currentScale - roundedNewScale) / 100 // .25
 
 		const leftOffsetPx = canvasPivotLeftPx * scaleDiff
 		const topOffsetPx = canvasPivotTopPx * scaleDiff
 
-		updateStore.canvas.offset.x = getStore.canvas.offset.x + leftOffsetPx
-		updateStore.canvas.offset.y = getStore.canvas.offset.y + topOffsetPx
-		updateStore.canvas.scale = roundedNewScale
+		canvasStore.offset.x = canvasStore.offset.x + leftOffsetPx
+		canvasStore.offset.y = canvasStore.offset.y + topOffsetPx
+		canvasStore.scale = roundedNewScale
 
 		renderCanvas.render()
 	},
@@ -113,7 +113,7 @@ export const scaleCanvas = {
 	 * @param direction — направление масштабирования
 	 */
 	getZoomValueNextStep(direction: ZoomDirection) {
-		const currentScale = getStore.canvas.scale
+		const currentScale = canvasStore.scale
 
 		return direction === ZoomDirection.In
 			? (zoomValues.find((value) => value > currentScale) ?? maxZoomValue)

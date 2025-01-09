@@ -1,53 +1,54 @@
 import { Application, Container, ContainerChild, Graphics, Renderer } from 'pixi.js'
 
-/*export enum ToolsName {
+export enum ToolsName {
 	Select = 'select',
 	Shape = 'shape',
-}*/
+}
 
-/*export enum Cursor {
+export enum Cursor {
 	Default = 'default',
 	Palm = 'grab',
 	Dragging = 'grabbing',
-}*/
+}
 
-/*export enum InteractionStatus {
+export enum InteractionStatus {
 	Default = 'default',
 	Hovered = 'hovered',
 	Selected = 'selected',
-}*/
+}
 
-/*export type BoardStore = {
+export type CanvasStoreType = {
 	app: Application<Renderer>
+	devicePixelRatio: number
 	$bgContainer: Container<ContainerChild>
 	$mainContainer: Container<ContainerChild>
+	// Уровень масштабирования холста. 1 = 100%
 	tool: ToolsName
+	// Масштабирование холста
+	scale: number
+	// Смещение холста
+	offset: {
+		x: number
+		y: number
+	}
 	canvas: {
-		devicePixelRatio: number
-		// Уровень масштабирования холста. 1 = 100%
-		scale: number
-		// Смещение холста
-		offset: {
-			x: number
-			y: number
-		}
 		elements: CanvasElement[]
 	}
 	cursor: Cursor
-	updateCanvasElement: (elementId: number, elementNewData: Partial<CanvasElement>) => void
-}*/
+}
 
-// export type CanvasElement = ShapeElement | TextElement
+export type CanvasElement = ShapeElement | TextElement
 
-/*type ElementBase = {
+type ElementBase = {
 	id: number
 	x: number
 	y: number
 	// Навели ли на элемент (должна появиться синяя обводка)
 	interactionStatus?: InteractionStatus
-}*/
+	delete: boolean
+}
 
-/*export type ShapeElement = ElementBase & {
+export type ShapeElement = ElementBase & {
 	type: 'figureElement'
 	shape: ShapeElementFigure
 	// Если элемента ещё нет на холсте, то тут будет null.
@@ -58,9 +59,9 @@ import { Application, Container, ContainerChild, Graphics, Renderer } from 'pixi
 	backgroundColor?: string
 	strokeColor?: string
 	strokeWidth?: number
-}*/
+}
 
-/*export enum ShapeElementFigure {
+export enum ShapeElementFigure {
 	Rectangle = 'rectangle',
 	Circle = 'circle',
 	Triangle = 'triangle',
@@ -70,8 +71,8 @@ import { Application, Container, ContainerChild, Graphics, Renderer } from 'pixi
 	LeftArrow = 'leftArrow',
 	RightArrow = 'rightArrow',
 	SpeechBalloon = 'speechBalloon',
-}*/
+}
 
-/*type TextElement = ElementBase & {
+type TextElement = ElementBase & {
 	type: 'textElement'
-}*/
+}

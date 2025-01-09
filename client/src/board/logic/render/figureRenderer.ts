@@ -1,8 +1,9 @@
 import { Graphics } from 'pixi.js'
 import { OutlineFilter } from 'pixi-filters'
-import { getStore } from '../../store/store.ts'
-import { InteractionStatus, ShapeElement, ShapeElementFigure, ToolsName } from '../../store/storeTypes.ts'
 import { boardColors } from '../boardConfig.ts'
+import { canvasStore } from '../store/canvasStore.ts'
+import { canvasUtils } from '../canvasUtils.ts'
+import { InteractionStatus, ShapeElement, ShapeElementFigure } from '../store/canvasStoreTypes.ts'
 
 export const figureRenderer = {
 	/**
@@ -28,9 +29,9 @@ export const figureRenderer = {
 
 		this.updateFigure(graphics, figureData)
 
-		getStore.$mainContainer.addChild(graphics)
+		canvasStore.$mainContainer.addChild(graphics)
 
-		getStore.updateCanvasElement(figureData.id, { graphics })
+		canvasUtils.updateCanvasElement(figureData.id, { graphics })
 	},
 
 	/**
@@ -73,7 +74,7 @@ export const figureRenderer = {
 				thickness: 1,
 			})
 			filter.antialias = 'on'
-			filter.resolution = getStore.canvas.devicePixelRatio
+			filter.resolution = canvasStore.devicePixelRatio
 
 			graphics.filters = [filter]
 		} else {

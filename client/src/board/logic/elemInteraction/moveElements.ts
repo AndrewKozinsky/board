@@ -1,8 +1,8 @@
 import { FederatedPointerEvent } from 'pixi.js'
-import { getStore } from '../../store/store.ts'
-import { InteractionStatus, ToolsName } from '../../store/storeTypes.ts'
 import { canvasUtils } from '../canvasUtils.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
+import { canvasStore } from '../store/canvasStore.ts'
+import { InteractionStatus, ToolsName } from '../store/canvasStoreTypes.ts'
 
 // При щелчке по управляющим элементам сюда будут помещаться данные выделенной фигуры
 // для правильного расчёта после перемещения.
@@ -16,15 +16,15 @@ let startMouseY = 0
 
 export const moveElements = {
 	init() {
-		getStore.app.stage.on('pointerdown', (e) => {
+		canvasStore.app.stage.on('pointerdown', (e) => {
 			this.setMovingStartCoords(e)
 		})
 
-		getStore.app.stage.on('pointermove', (e) => {
+		canvasStore.app.stage.on('pointermove', (e) => {
 			this.moveElemUnderCursor(e)
 		})
 
-		getStore.app.stage.on('pointerup', (e) => {
+		canvasStore.app.stage.on('pointerup', (e) => {
 			this.clearMovingStartCoords()
 		})
 	},
@@ -35,7 +35,7 @@ export const moveElements = {
 
 		elemUnderCursorId = elemUnderCursor.id
 
-		if (getStore.tool !== ToolsName.Select || elemUnderCursor.interactionStatus !== InteractionStatus.Selected)
+		if (canvasStore.tool !== ToolsName.Select || elemUnderCursor.interactionStatus !== InteractionStatus.Selected)
 			return
 
 		startMouseX = e.global.x
@@ -52,7 +52,7 @@ export const moveElements = {
 	moveElemUnderCursor(e: FederatedPointerEvent) {
 		if (!elemUnderCursorId) return
 
-		if (getStore.tool !== ToolsName.Select) return
+		if (canvasStore.tool !== ToolsName.Select) return
 
 		const diffX = (e.global.x - startMouseX) * canvasUtils.getScaleMultiplier()
 		const diffY = (e.global.y - startMouseY) * canvasUtils.getScaleMultiplier()
@@ -60,7 +60,7 @@ export const moveElements = {
 		const newX = shapeInitialCoords.x + diffX
 		const newY = shapeInitialCoords.y + diffY
 
-		getStore.updateCanvasElement(elemUnderCursorId, { x: newX, y: newY })
+		canvasUtils.updateCanvasElement(elemUnderCursorId, { x: newX, y: newY })
 
 		renderCanvas.render()
 	},

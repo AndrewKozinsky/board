@@ -1,9 +1,9 @@
 import { KeyboardKeys, keyboardUtils } from '../../../utils/keyboardUtils.ts'
 import { MouseKeys } from '../../../utils/mouseUtils.ts'
-import { getStore, updateStore } from '../../store/store.ts'
-import { Cursor } from '../../store/storeTypes.ts'
 import { boardConfig } from '../boardConfig.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
+import { canvasStore } from '../store/canvasStore.ts'
+import { Cursor } from '../store/canvasStoreTypes.ts'
 
 let isMousePressed = false
 let isCmdPressed = false
@@ -35,7 +35,7 @@ export const moveCanvas = {
 
 	/** Холст перемещается если прокручивают мышью */
 	setMoveByMouseWheel() {
-		getStore.app.canvas.addEventListener(
+		canvasStore.app.canvas.addEventListener(
 			'wheel',
 			(event) => {
 				if (isCmdPressed) return
@@ -116,27 +116,27 @@ export const moveCanvas = {
 	 * @param relativeY — относительное расстояние по вертикале.
 	 */
 	moveCanvas(relativeX: number, relativeY: number) {
-		updateStore.canvas.offset.x = getStore.canvas.offset.x -= relativeX
-		updateStore.canvas.offset.y = getStore.canvas.offset.y -= relativeY
+		canvasStore.offset.x = canvasStore.offset.x -= relativeX
+		canvasStore.offset.y = canvasStore.offset.y -= relativeY
 
 		renderCanvas.render()
 	},
 
 	/** Ставит на холсте курсор в виде ладони */
 	setDragCursor() {
-		updateStore.cursor = Cursor.Palm
+		canvasStore.cursor = Cursor.Palm
 		renderCanvas.render()
 	},
 
 	/** Ставит на холсте курсор перетаскивания */
 	setDraggingCursor() {
-		updateStore.cursor = Cursor.Dragging
+		canvasStore.cursor = Cursor.Dragging
 		renderCanvas.render()
 	},
 
 	/** Ставит на холсте стандартный курсор */
 	clearCursorView() {
-		updateStore.cursor = Cursor.Default
+		canvasStore.cursor = Cursor.Default
 		renderCanvas.render()
 	},
 }

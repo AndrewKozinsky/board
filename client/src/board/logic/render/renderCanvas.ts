@@ -1,5 +1,6 @@
-import { getStore } from '../../store/store.ts'
 import { pixiUtils } from '../../../utils/pixiUtils.ts'
+import { deleteElements } from '../elemInteraction/deleteElements.ts'
+import { canvasStore } from '../store/canvasStore.ts'
 import { figureRenderer } from './figureRenderer.ts'
 import { transformRectRenderer } from './transformRectRenderer.ts'
 
@@ -11,11 +12,9 @@ export const renderCanvas = {
 
 	/** Сборка сцены */
 	buildScene() {
-		const { $mainContainer, app } = getStore
+		const { $mainContainer, app } = canvasStore
 
-		const { scale } = getStore.canvas
-		const { offset } = getStore.canvas
-		const { cursor } = getStore
+		const { scale, offset, cursor } = canvasStore
 
 		$mainContainer.position.x = offset.x
 		$mainContainer.position.y = offset.y
@@ -31,7 +30,7 @@ export const renderCanvas = {
 
 	/* Отрисовка элементов сцены */
 	drawElements() {
-		const elemsData = getStore.canvas.elements
+		const elemsData = canvasStore.canvas.elements
 
 		for (let i = 0; i < elemsData.length; i++) {
 			const elemData = elemsData[i]
@@ -40,5 +39,8 @@ export const renderCanvas = {
 				figureRenderer.entryPoint(elemData)
 			}
 		}
+
+		deleteElements.eraseDeletedElems()
+		deleteElements.deleteFromDataElemsWithDeletionStatus()
 	},
 }

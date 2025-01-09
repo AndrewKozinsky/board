@@ -1,15 +1,15 @@
-import { FederatedPointerEvent } from 'pixi.js'
-import { getStore } from '../../store/store.ts'
-import { InteractionStatus, ToolsName } from '../../store/storeTypes.ts'
+import { FederatedPointerEvent, log2 } from 'pixi.js'
+import { canvasStore } from '../store/canvasStore.ts'
 import { canvasUtils } from '../canvasUtils.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
+import { InteractionStatus, ToolsName } from '../store/canvasStoreTypes.ts'
 
 export const hoverElements = {
 	init() {
-		getStore.app.stage.on('pointerover', (e) => {
+		canvasStore.app.stage.on('pointerover', (e) => {
 			this.toggleHover(e, true)
 		})
-		getStore.app.stage.on('pointerout', (e) => {
+		canvasStore.app.stage.on('pointerout', (e) => {
 			this.toggleHover(e, false)
 		})
 	},
@@ -23,10 +23,10 @@ export const hoverElements = {
 		const elemUnderCursor = canvasUtils.getElemUnderCursor(e)
 		if (!elemUnderCursor) return
 
-		if (getStore.tool !== ToolsName.Select || elemUnderCursor.interactionStatus === InteractionStatus.Selected)
+		if (canvasStore.tool !== ToolsName.Select || elemUnderCursor.interactionStatus === InteractionStatus.Selected)
 			return
 
-		getStore.updateCanvasElement(elemUnderCursor.id, {
+		canvasUtils.updateCanvasElement(elemUnderCursor.id, {
 			interactionStatus: isUnderHover ? InteractionStatus.Hovered : InteractionStatus.Default,
 		})
 
