@@ -3,6 +3,7 @@ import { getStore, updateStore, useBoardStore } from '../store/store.ts'
 import { canvasUtils } from './canvasUtils.ts'
 import { canvasBg } from './canvasBg.ts'
 import { moveCanvas } from './moveCanvas.ts'
+import { moveElements } from './moveElements.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
 import { scaleCanvas } from './scaleCanvas.ts'
 
@@ -15,6 +16,7 @@ export const main = {
 
 		scaleCanvas.setEventListeners()
 		moveCanvas.setEventListeners()
+		moveElements.init()
 
 		renderCanvas.render()
 	},
@@ -49,7 +51,10 @@ export const main = {
 
 	createRootContainers(app: Application<Renderer>) {
 		const $bgContainer = new Container()
+		$bgContainer.label = 'bgContainer'
+
 		const $mainContainer = new Container()
+		$mainContainer.label = 'mainContainer'
 
 		app.stage.addChild($bgContainer)
 		app.stage.addChild($mainContainer)

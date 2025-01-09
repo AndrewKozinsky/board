@@ -1,4 +1,4 @@
-import { Graphics } from 'pixi.js'
+import { FederatedPointerEvent, Graphics, log2 } from 'pixi.js'
 import { OutlineFilter } from 'pixi-filters'
 import { arrUtils } from '../../../utils/arrayUtils.ts'
 import { getStore } from '../../store/store.ts'
@@ -12,7 +12,7 @@ export const figureRenderer = {
 	 * По полученным данным фигуры отрисовывает новую на холсте или изменяет уже существующую
 	 * @param figureData — данные фигуры
 	 */
-	main(figureData: ShapeElement) {
+	entryPoint(figureData: ShapeElement) {
 		const { graphics } = figureData
 
 		graphics === null ? this.drawNewFigure(figureData) : this.updateFigure(graphics!, figureData)
@@ -24,6 +24,7 @@ export const figureRenderer = {
 	 */
 	drawNewFigure(figureData: ShapeElement) {
 		const graphics = new Graphics()
+		graphics.label = 'myFigure'
 
 		this.updateFigure(graphics, figureData)
 		this.setShapeInteraction(graphics, figureData)
@@ -41,7 +42,7 @@ export const figureRenderer = {
 	updateFigure(graphics: Graphics, figureData: ShapeElement) {
 		graphics.clear()
 
-		const updateShapeFn = this.getUpdateFigureFunction(figureData.shape)
+		const updateShapeFn = figureShape.getUpdateFigureFunction(figureData.shape)
 		updateShapeFn(graphics, figureData)
 
 		graphics.x = figureData.x
@@ -50,6 +51,127 @@ export const figureRenderer = {
 		this.setShapeStyle(graphics, figureData)
 	},
 
+	/**
+	 * Устанавливает стили фигуры
+	 * @param graphics — ссылка на объект Graphics из Pixi.js
+	 * @param figureData — данные фигуры
+	 */
+	setShapeStyle(graphics: Graphics, figureData: ShapeElement) {
+		const { backgroundColor, strokeColor, strokeWidth = 0 } = figureData
+
+		if (backgroundColor) {
+			graphics.fill(backgroundColor)
+		}
+
+		if (strokeColor) {
+			graphics.stroke({ color: strokeColor, width: strokeWidth })
+		}
+
+		if (figureData.interactionStatus === InteractionStatus.Hovered) {
+			const filter = new OutlineFilter({
+				color: boardColors.selected,
+				quality: 10,
+				thickness: 1,
+			})
+			filter.antialias = 'on'
+			filter.resolution = getStore.canvas.devicePixelRatio
+
+			graphics.filters = [filter]
+		} else {
+			graphics.filters = []
+		}
+	},
+
+	/**
+	 * Ставит обработчики наведения и щелчка по фигуре
+	 * @param graphics — ссылка на объект Graphics из Pixi.js
+	 * @param figureData — данные фигуры
+	 */
+	setShapeInteraction(graphics: Graphics, figureData: ShapeElement) {
+		// Включение интерактивности чтобы заработали обработчики событий на фигуре
+		graphics.eventMode = 'static'
+
+		graphics.on('pointerover', () => {
+			this.toggleHover(figureData.id, true)
+		})
+		graphics.on('pointerout', () => {
+			this.toggleHover(figureData.id, false)
+		})
+
+		graphics.on('pointerdown', (e) => {
+			this.selectFigure(figureData.id)
+
+			this.setMovingStartCoords(e, figureData.id)
+		})
+
+		graphics.on('pointerup', () => {
+			this.clearMovingStartCoords(figureData.id)
+		})
+	},
+
+	/**
+	 * Переключает в данных показ/скрытие обводки сообщающий о наведение на элемент
+	 * @param figureDataId — идентификатор фигуры
+	 * @param isUnderHover — навели ли на фигуру
+	 */
+	toggleHover(figureDataId: number, isUnderHover: boolean) {
+		const figureData = arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', figureDataId)
+		if (!figureData) return
+
+		if (getStore.tool !== ToolsName.Select || figureData.interactionStatus === InteractionStatus.Selected) return
+
+		getStore.updateCanvasElement(figureData.id, {
+			interactionStatus: isUnderHover ? InteractionStatus.Hovered : InteractionStatus.Default,
+		})
+
+		renderCanvas.render()
+	},
+
+	/**
+	 * Делает фигуру выделенной
+	 * @param figureDataId — идентификатор фигуры
+	 */
+	selectFigure(figureDataId: number) {
+		const figureData = arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', figureDataId)
+		if (!figureData) return
+
+		if (figureData.interactionStatus === InteractionStatus.Selected) return
+
+		canvasUtils.makeAllElemsUnselected()
+
+		getStore.updateCanvasElement(figureData.id, {
+			interactionStatus: InteractionStatus.Selected,
+		})
+
+		renderCanvas.render()
+	},
+
+	setMovingStartCoords(e: FederatedPointerEvent, figureDataId: number) {
+		const figureData = arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', figureDataId)
+		if (!figureData) return
+
+		if (getStore.tool !== ToolsName.Select || figureData.interactionStatus !== InteractionStatus.Selected) return
+
+		getStore.updateCanvasElementMovingSettings(figureDataId, {
+			startMouseX: e.global.x,
+			startMouseY: e.global.y,
+		})
+	},
+
+	clearMovingStartCoords(figureDataId: number) {
+		const figureData = arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', figureDataId)
+		if (!figureData) return
+
+		if (getStore.tool !== ToolsName.Select || figureData.interactionStatus !== InteractionStatus.Selected) return
+
+		getStore.updateCanvasElementMovingSettings(figureDataId, {
+			startMouseX: 0,
+			startMouseY: 0,
+		})
+	},
+}
+
+const figureShape = {
 	/**
 	 * Принимает тип фигуры и возвращает функцию обновляющую параметры фигуры этого типа
 	 * @param figureType — тип фигуры
@@ -232,94 +354,5 @@ export const figureRenderer = {
 			.lineTo(onePcWidth * 13, onePcHeight * 71) // 6
 			.lineTo(0, onePcHeight * 71) // 7
 			.closePath()
-	},
-
-	/**
-	 * Устанавливает стили фигуры
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	setShapeStyle(graphics: Graphics, figureData: ShapeElement) {
-		const { backgroundColor, strokeColor, strokeWidth = 0 } = figureData
-
-		if (backgroundColor) {
-			graphics.fill(backgroundColor)
-		}
-
-		if (strokeColor) {
-			graphics.stroke({ color: strokeColor, width: strokeWidth })
-		}
-
-		if (figureData.interactionStatus === InteractionStatus.Hovered) {
-			const filter = new OutlineFilter({
-				color: boardColors.selected,
-				quality: 10,
-				thickness: 1,
-			})
-			filter.antialias = 'on'
-			filter.resolution = getStore.canvas.devicePixelRatio
-
-			graphics.filters = [filter]
-		} else {
-			graphics.filters = []
-		}
-	},
-
-	/**
-	 * Ставит обработчики наведения и щелчка по фигуре
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	setShapeInteraction(graphics: Graphics, figureData: ShapeElement) {
-		// Включение интерактивности чтобы заработали обработчики событий на фигуре
-		graphics.eventMode = 'static'
-
-		graphics.on('pointerover', () => {
-			this.toggleHover(figureData.id, true)
-		})
-		graphics.on('pointerout', () => {
-			this.toggleHover(figureData.id, false)
-		})
-
-		graphics.on('pointerdown', () => {
-			this.selectFigure(figureData.id)
-		})
-	},
-
-	/**
-	 * Переключает в данных показ/скрытие обводки сообщающий о наведение на элемент
-	 * @param figureDataId — идентификатор фигуры
-	 * @param isUnderHover — навели ли на фигуру
-	 */
-	toggleHover(figureDataId: number, isUnderHover: boolean) {
-		const figureData = arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', figureDataId)
-		if (!figureData) return
-
-		if (getStore.tool !== ToolsName.Select || figureData.interactionStatus === InteractionStatus.Selected) return
-
-		getStore.updateCanvasElement(figureData.id, {
-			interactionStatus: isUnderHover ? InteractionStatus.Hovered : InteractionStatus.Default,
-		})
-
-		renderCanvas.render()
-	},
-
-	/**
-	 * Делает фигуру выделенной
-	 * @param figureDataId — идентификатор фигуры
-	 */
-	selectFigure(figureDataId: number) {
-		const figureData = arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', figureDataId)
-		if (!figureData) return
-
-		if (figureData.interactionStatus === InteractionStatus.Selected) return
-
-		canvasUtils.makeAllElemsUnselected()
-
-		getStore.updateCanvasElement(figureData.id, {
-			interactionStatus: InteractionStatus.Selected,
-		})
-
-		renderCanvas.render()
 	},
 }

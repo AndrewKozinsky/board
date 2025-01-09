@@ -37,7 +37,7 @@ export const renderCanvas = {
 			const elemData = elemsData[i]
 
 			if (elemData.type === 'figureElement') {
-				figureRenderer.main(elemData)
+				figureRenderer.entryPoint(elemData)
 			}
 		}
 	},

@@ -1,7 +1,16 @@
+import { produce } from 'immer'
 import { create } from 'zustand'
 import { arrUtils } from '../../utils/arrayUtils.ts'
 import { createGetStoreProxy, createUpdateStoreProxy } from '../../utils/storeUtils.ts'
-import { BoardStore, CanvasElement, Cursor, InteractionStatus, ShapeElementFigure, ToolsName } from './storeTypes.ts'
+import {
+	BoardStore,
+	CanvasElement,
+	CanvasElementMovingSettings,
+	Cursor,
+	InteractionStatus,
+	ShapeElementFigure,
+	ToolsName,
+} from './storeTypes.ts'
 
 export const useBoardStore = create<BoardStore>((set) => {
 	return {
@@ -11,10 +20,10 @@ export const useBoardStore = create<BoardStore>((set) => {
 		tool: ToolsName.Select,
 		canvas: {
 			devicePixelRatio: window.devicePixelRatio || 1,
-			scale: 400,
+			scale: 100,
 			offset: {
-				x: -1200,
-				y: -900,
+				x: 120,
+				y: 90,
 			},
 			elements: [
 				{
@@ -27,6 +36,12 @@ export const useBoardStore = create<BoardStore>((set) => {
 					width: 100,
 					height: 200,
 					backgroundColor: 'ccc',
+					moving: {
+						shapeInitialX: 0,
+						shapeInitialY: 0,
+						startMouseX: 0,
+						startMouseY: 0,
+					},
 				},
 				{
 					id: 2,
@@ -39,24 +54,43 @@ export const useBoardStore = create<BoardStore>((set) => {
 					height: 200,
 					backgroundColor: 'ccc',
 					interactionStatus: InteractionStatus.Selected,
+					moving: {
+						shapeInitialX: 0,
+						shapeInitialY: 0,
+						startMouseX: 0,
+						startMouseY: 0,
+					},
 				},
 			],
 		},
 		cursor: Cursor.Default,
 		updateCanvasElement: (elementId: number, elementNewData: Partial<CanvasElement>) => {
 			set((state) => {
-				const elementIdx = arrUtils.getItemIdxByPropNameAndValue(state.canvas.elements, 'id', elementId)
-				if (elementIdx < 0) {
-					throw new Error(`Canvas element ${elementIdx} not found`)
-				}
+				return produce(state, (draft) => {
+					const elementIdx = arrUtils.getItemIdxByPropNameAndValue(draft.canvas.elements, 'id', elementId)
+					if (elementIdx < 0) return draft
 
-				const canvasClone = { ...state.canvas }
-				canvasClone.elements = [...canvasClone.elements]
+					Object.assign(draft.canvas.elements[elementIdx], elementNewData)
+				})
+			})
+		},
+		updateCanvasElementMovingSettings: (
+			elementId: number,
+			newMovingSettings: Pick<CanvasElementMovingSettings, 'startMouseX' | 'startMouseY'>,
+		) => {
+			set((state) => {
+				return produce(state, (draft) => {
+					const elementIdx = arrUtils.getItemIdxByPropNameAndValue(draft.canvas.elements, 'id', elementId)
+					if (elementIdx < 0) return draft
 
-				// @ts-expect-error
-				canvasClone.elements[elementIdx] = { ...canvasClone.elements[elementIdx], ...elementNewData }
+					const elem = draft.canvas.elements[elementIdx]
 
-				return { canvas: canvasClone }
+					elem.moving.shapeInitialX = elem.x
+					elem.moving.shapeInitialY = elem.y
+
+					elem.moving.startMouseX = newMovingSettings.startMouseX
+					elem.moving.startMouseY = newMovingSettings.startMouseY
+				})
 			})
 		},
 	}
