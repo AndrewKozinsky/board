@@ -1,9 +1,9 @@
-import { KeyboardKeys, keyboardUtils } from '../../utils/keyboardUtils.ts'
-import { MouseKeys } from '../../utils/mouseUtils.ts'
-import { getStore, updateStore } from '../store/store.ts'
-import { Cursor } from '../store/storeTypes.ts'
-import { boardConfig } from './boardConfig.ts'
-import { renderCanvas } from './render/renderCanvas.ts'
+import { KeyboardKeys, keyboardUtils } from '../../../utils/keyboardUtils.ts'
+import { MouseKeys } from '../../../utils/mouseUtils.ts'
+import { getStore, updateStore } from '../../store/store.ts'
+import { Cursor } from '../../store/storeTypes.ts'
+import { boardConfig } from '../boardConfig.ts'
+import { renderCanvas } from '../render/renderCanvas.ts'
 
 let isMousePressed = false
 let isCmdPressed = false

@@ -2,10 +2,13 @@ import { Application, Container, Renderer } from 'pixi.js'
 import { getStore, updateStore, useBoardStore } from '../store/store.ts'
 import { canvasUtils } from './canvasUtils.ts'
 import { canvasBg } from './canvasBg.ts'
-import { moveCanvas } from './moveCanvas.ts'
-import { moveElements } from './moveElements.ts'
+import { deleteElements } from './elemInteraction/deleteElements.ts'
+import { hoverElements } from './elemInteraction/hoverElements.ts'
+import { moveCanvas } from './canvasInteraction/moveCanvas.ts'
+import { moveElements } from './elemInteraction/moveElements.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
-import { scaleCanvas } from './scaleCanvas.ts'
+import { scaleCanvas } from './canvasInteraction/scaleCanvas.ts'
+import { selectElements } from './elemInteraction/selectElements.ts'
 
 export const main = {
 	async init($canvasContainer: HTMLDivElement) {
@@ -16,8 +19,11 @@ export const main = {
 
 		scaleCanvas.setEventListeners()
 		moveCanvas.setEventListeners()
+
+		hoverElements.init()
+		selectElements.init()
 		moveElements.init()
-		// Я бы ещё убрал функционал выделения элемента в отдельный объект, а не хранил это в данных объекта.
+		deleteElements.init()
 
 		renderCanvas.render()
 	},

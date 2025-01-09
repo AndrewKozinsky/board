@@ -17,6 +17,9 @@ export const keyboardUtils = {
 	isSpacePressed(event: KeyboardEvent) {
 		return event.code === 'Space'
 	},
+	isDeletePressed(event: KeyboardEvent) {
+		return event.code === 'Backspace'
+	},
 }
 
 /**

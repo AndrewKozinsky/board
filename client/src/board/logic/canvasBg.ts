@@ -4,7 +4,7 @@ import { boardColors } from './boardConfig.ts'
 import { canvasUtils } from './canvasUtils.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
 
-// Фоновый прямоугольник нужен чтобы ловить щелчки по холсту
+// Фоновый прямоугольник чтобы ловить щелчки по холсту
 // чтобы убрать выделение со всех элементов.
 export const canvasBg = {
 	/** Создание фонового прямоугольника */

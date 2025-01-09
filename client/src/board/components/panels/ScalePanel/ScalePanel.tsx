@@ -1,5 +1,5 @@
 import Button from '../../../../shared/Button/Button.tsx'
-import { scaleCanvas, ZoomDirection } from '../../../logic/scaleCanvas.ts'
+import { scaleCanvas, ZoomDirection } from '../../../logic/canvasInteraction/scaleCanvas.ts'
 import { useBoardStore } from '../../../store/store.ts'
 import { MinusIcon } from '../../icons/MinusIcon.tsx'
 import { PlusIcon } from '../../icons/PlusIcon.tsx'

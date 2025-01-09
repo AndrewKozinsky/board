@@ -1,11 +1,8 @@
-import { FederatedPointerEvent, Graphics, log2 } from 'pixi.js'
+import { Graphics } from 'pixi.js'
 import { OutlineFilter } from 'pixi-filters'
-import { arrUtils } from '../../../utils/arrayUtils.ts'
 import { getStore } from '../../store/store.ts'
 import { InteractionStatus, ShapeElement, ShapeElementFigure, ToolsName } from '../../store/storeTypes.ts'
 import { boardColors } from '../boardConfig.ts'
-import { canvasUtils } from '../canvasUtils.ts'
-import { renderCanvas } from './renderCanvas.ts'
 
 export const figureRenderer = {
 	/**
@@ -24,10 +21,12 @@ export const figureRenderer = {
 	 */
 	drawNewFigure(figureData: ShapeElement) {
 		const graphics = new Graphics()
+
+		// Включение интерактивности чтобы заработали обработчики событий на фигуре
+		graphics.eventMode = 'static'
 		graphics.label = figureData.id.toString()
 
 		this.updateFigure(graphics, figureData)
-		this.setShapeInteraction(graphics, figureData)
 
 		getStore.$mainContainer.addChild(graphics)
 
@@ -80,64 +79,6 @@ export const figureRenderer = {
 		} else {
 			graphics.filters = []
 		}
-	},
-
-	/**
-	 * Ставит обработчики наведения и щелчка по фигуре
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	setShapeInteraction(graphics: Graphics, figureData: ShapeElement) {
-		// Включение интерактивности чтобы заработали обработчики событий на фигуре
-		graphics.eventMode = 'static'
-
-		graphics.on('pointerover', () => {
-			this.toggleHover(figureData.id, true)
-		})
-		graphics.on('pointerout', () => {
-			this.toggleHover(figureData.id, false)
-		})
-
-		graphics.on('pointerdown', (e) => {
-			this.selectFigure(figureData.id)
-		})
-	},
-
-	/**
-	 * Переключает в данных показ/скрытие обводки сообщающий о наведение на элемент
-	 * @param figureDataId — идентификатор фигуры
-	 * @param isUnderHover — навели ли на фигуру
-	 */
-	toggleHover(figureDataId: number, isUnderHover: boolean) {
-		const figureData = arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', figureDataId)
-		if (!figureData) return
-
-		if (getStore.tool !== ToolsName.Select || figureData.interactionStatus === InteractionStatus.Selected) return
-
-		getStore.updateCanvasElement(figureData.id, {
-			interactionStatus: isUnderHover ? InteractionStatus.Hovered : InteractionStatus.Default,
-		})
-
-		renderCanvas.render()
-	},
-
-	/**
-	 * Делает фигуру выделенной
-	 * @param figureDataId — идентификатор фигуры
-	 */
-	selectFigure(figureDataId: number) {
-		const figureData = arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', figureDataId)
-		if (!figureData) return
-
-		if (figureData.interactionStatus === InteractionStatus.Selected) return
-
-		canvasUtils.makeAllElemsUnselected()
-
-		getStore.updateCanvasElement(figureData.id, {
-			interactionStatus: InteractionStatus.Selected,
-		})
-
-		renderCanvas.render()
 	},
 }
 

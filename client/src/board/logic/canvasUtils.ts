@@ -50,4 +50,9 @@ export const canvasUtils = {
 
 		return arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', elemId)
 	},
+
+	getSelectedElems() {
+		// Если уже есть выделенный элемент, то сделать его невыделенным.
+		return getStore.canvas.elements.filter((elem) => elem.interactionStatus === InteractionStatus.Selected)
+	},
 }

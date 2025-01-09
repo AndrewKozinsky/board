@@ -1,7 +1,7 @@
-import { isKeysPressed, keyboardUtils } from '../../utils/keyboardUtils.ts'
-import { getStore, updateStore } from '../store/store.ts'
-import { boardConfig } from './boardConfig.ts'
-import { renderCanvas } from './render/renderCanvas.ts'
+import { isKeysPressed, keyboardUtils } from '../../../utils/keyboardUtils.ts'
+import { getStore, updateStore } from '../../store/store.ts'
+import { boardConfig } from '../boardConfig.ts'
+import { renderCanvas } from '../render/renderCanvas.ts'
 
 export enum ZoomDirection {
 	// Приблизить
