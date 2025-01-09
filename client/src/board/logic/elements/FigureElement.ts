@@ -5,7 +5,7 @@ import { boardColors } from '../misc/boardConfig.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { InteractionStatus, ShapeElementFigure } from '../../canvasStore/canvasStoreTypes.ts'
 
-export type ShapeElement = {
+type ShapeElement = {
 	x: number
 	y: number
 	shape: ShapeElementFigure
@@ -31,7 +31,7 @@ export class FigureElement {
 	strokeColor?: string
 	strokeWidth?: number
 
-	constructor(figureData: ShapeElement) {
+	constructor(inputData: ShapeElement) {
 		this.id = arrUtils.getHighestItemId(canvasStore.elements) + 1
 		const graphics = new Graphics()
 		this.graphics = graphics
@@ -39,14 +39,14 @@ export class FigureElement {
 		// Включение интерактивности чтобы заработали обработчики событий на фигуре
 		graphics.eventMode = 'static'
 		graphics.label = this.id.toString()
-		this.x = figureData.x
-		this.y = figureData.y
-		this.shape = figureData.shape
-		this.width = figureData.width
-		this.height = figureData.height
-		this.backgroundColor = figureData.backgroundColor
-		this.strokeColor = figureData.strokeColor
-		this.strokeWidth = figureData.strokeWidth
+		this.x = inputData.x
+		this.y = inputData.y
+		this.shape = inputData.shape
+		this.width = inputData.width
+		this.height = inputData.height
+		this.backgroundColor = inputData.backgroundColor
+		this.strokeColor = inputData.strokeColor
+		this.strokeWidth = inputData.strokeWidth
 
 		canvasStore.$mainContainer.addChild(graphics)
 
@@ -57,8 +57,7 @@ export class FigureElement {
 	updateFigure() {
 		this.graphics.clear()
 
-		const updateShapeFn = this.getUpdateFigureFunction()
-		updateShapeFn()
+		this.updateFigureCoords()
 
 		this.graphics.x = this.x
 		this.graphics.y = this.y
@@ -96,7 +95,7 @@ export class FigureElement {
 	/**
 	 * Принимает тип фигуры и возвращает функцию обновляющую параметры фигуры этого типа
 	 */
-	getUpdateFigureFunction() {
+	updateFigureCoords() {
 		const obj: Record<ShapeElementFigure, () => void> = {
 			[ShapeElementFigure.Rectangle]: () => this.updateRectangle(),
 			[ShapeElementFigure.Circle]: () => this.updateCircle(),
@@ -109,7 +108,7 @@ export class FigureElement {
 			[ShapeElementFigure.SpeechBalloon]: () => this.updateSpeechBalloon(),
 		}
 
-		return obj[this.shape]
+		return obj[this.shape]()
 	}
 
 	/** Обновляет параметры прямоугольника */

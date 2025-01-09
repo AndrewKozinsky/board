@@ -1,17 +1,16 @@
-import { loadFontAsBase64 } from 'pixi.js'
 import { detectOS, OSNames } from './os.ts'
 
 const isMacOS = detectOS() === OSNames.mac
 
 export const keyboardUtils = {
-	isCtrlPressed(event: KeyboardEvent) {
-		if (isMacOS) return event.key === 'Meta'
+	isCtrlPressed(event: { code: string; ctrlKey: boolean }) {
+		if (isMacOS) return event.code === 'MetaLeft'
 		return event.ctrlKey
 	},
-	isAltPressed(event: KeyboardEvent) {
+	isAltPressed(event: { altKey: boolean }) {
 		return event.altKey
 	},
-	isShiftPressed(event: KeyboardEvent) {
+	isShiftPressed(event: { shiftKey: boolean }) {
 		return event.shiftKey
 	},
 	isSpacePressed(event: KeyboardEvent) {
@@ -57,7 +56,7 @@ export enum KeyboardKeys {
 	Plus = '=',
 	Minus = '-',
 	Space = 'space',
-	Esc = 'esc',
+	Esc = 'Escape',
 	S = 's',
 
 	// Alt on Windows OR Option on MacOS

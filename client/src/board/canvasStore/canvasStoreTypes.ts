@@ -1,5 +1,5 @@
-import { Application, Container, ContainerChild, Graphics, Renderer } from 'pixi.js'
-import { FigureElement } from '../logic/render/figureRenderer.ts'
+import { Application, Container, ContainerChild, Renderer } from 'pixi.js'
+import { FigureElement } from '../logic/elements/FigureElement.ts'
 import { ToolsName } from '../types/commonTypes.ts'
 
 export enum Cursor {

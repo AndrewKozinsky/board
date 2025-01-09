@@ -14,14 +14,11 @@ const { zoomValues } = boardConfig
 const minZoomValue = zoomValues[0]
 const maxZoomValue = zoomValues[zoomValues.length - 1]
 
-let isCmdPressed = false
-
-// TODO Такие методы как pointerdown уже возвращают информации о нажатых модифицирующих клавишах,
-// поэтому дополнительные обработчики нажатия клавиш можно не делать.
-// Разузной это подробнее и если это так, то код можно упростить.
 export const scaleCanvas = {
+	isCmdPressed: false,
+
 	/** Устанавливает обработчики отвечающие за масштабирование холста */
-	setEventListeners() {
+	init() {
 		// Масштабировать если нажали + или -
 		window.addEventListener('keydown', (event) => {
 			if (isKeysPressed(event, boardConfig.commands.zoomCanvasIn.hotKeys)) {
@@ -34,26 +31,26 @@ export const scaleCanvas = {
 		// Проверить нажали ли Cmd
 		document.addEventListener('keydown', (event) => {
 			if (keyboardUtils.isCtrlPressed(event)) {
-				isCmdPressed = true
+				this.isCmdPressed = true
 			}
 		})
 		document.addEventListener('keyup', (event) => {
 			if (keyboardUtils.isCtrlPressed(event)) {
-				isCmdPressed = false
+				this.isCmdPressed = false
 			}
 		})
 
 		// Если потеряли фокус, то скорее всего переключились на другое приложение,
 		// поэтому поставить isCmdPressed в false
 		window.addEventListener('blur', () => {
-			isCmdPressed = false
+			this.isCmdPressed = false
 		})
 
 		// Масштабировать если нажали Cmd и крутят колесо мыши
 		canvasStore.app.canvas.addEventListener(
 			'wheel',
 			(event) => {
-				if (!isCmdPressed) return
+				if (!this.isCmdPressed) return
 				this.zoomCanvasByMouse(event)
 			},
 			{ passive: true },

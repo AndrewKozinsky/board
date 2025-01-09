@@ -4,14 +4,15 @@ import { canvasStore } from '../canvasStore/canvasStore.ts'
 import { ShapeElementFigure } from '../canvasStore/canvasStoreTypes.ts'
 import { canvasUtils } from './misc/canvasUtils.ts'
 import { canvasBg } from './misc/canvasBg.ts'
-import { deleteElements } from './elements/deleteElements.ts'
-import { hoverElements } from './elements/hoverElements.ts'
+import { deleteElements } from './elemInteraction/deleteElements.ts'
+import { hoverElements } from './elemInteraction/hoverElements.ts'
 import { moveCanvas } from './canvasInteraction/moveCanvas.ts'
-import { moveElements } from './elements/moveElements.ts'
-import { FigureElement } from './render/figureRenderer.ts'
+import { moveElements } from './elemInteraction/moveElements.ts'
+import { FigureElement } from './elements/FigureElement.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
 import { scaleCanvas } from './canvasInteraction/scaleCanvas.ts'
-import { selectElements } from './elements/selectElements.ts'
+import { selectElements } from './elemInteraction/selectElements.ts'
+import { tools } from './tools/tools.ts'
 
 export const main = {
 	async init($canvasContainer: HTMLDivElement) {
@@ -20,13 +21,15 @@ export const main = {
 		this.createRootContainers(app)
 		canvasBg.create()
 
-		scaleCanvas.setEventListeners()
-		moveCanvas.setEventListeners()
+		scaleCanvas.init()
+		moveCanvas.init()
 
 		hoverElements.init()
 		selectElements.init()
 		moveElements.init()
 		deleteElements.init()
+
+		tools.init()
 
 		await wait(10, () => {
 			canvasStore.elements.push(

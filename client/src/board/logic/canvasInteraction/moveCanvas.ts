@@ -5,20 +5,20 @@ import { renderCanvas } from '../render/renderCanvas.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { Cursor } from '../../canvasStore/canvasStoreTypes.ts'
 
-let isMousePressed = false
-let isCmdPressed = false
-let isSpacePressed = false
-let mouseStartX = 0
-let mouseStartY = 0
-
 // TODO Такие методы как pointerdown уже возвращают информации о нажатых модифицирующих клавишах,
 // поэтому дополнительные обработчики нажатия клавиш можно не делать.
 // Разузной это подробнее и если это так, то код можно упростить.
 
 // Методы работы с передвижением холста
 export const moveCanvas = {
+	isMousePressed: false,
+	isCmdPressed: false,
+	isSpacePressed: false,
+	mouseStartX: 0,
+	mouseStartY: 0,
+
 	/** Установка обработчиков заставляющих холст двигаться */
-	setEventListeners() {
+	init() {
 		if (boardConfig.commands.moveCanvas1.mouseKey === MouseKeys.Wheel) {
 			this.setMoveByMouseWheel()
 		} else {
@@ -26,6 +26,7 @@ export const moveCanvas = {
 		}
 
 		const moveCommand2 = boardConfig.commands.moveCanvas2
+
 		if (moveCommand2.mouseKey === MouseKeys.PressLeft && moveCommand2.hotKeys[0] === KeyboardKeys.Space) {
 			this.setMoveByMouseAndSpaceKey()
 		} else {
@@ -35,10 +36,10 @@ export const moveCanvas = {
 
 	/** Холст перемещается если прокручивают мышью */
 	setMoveByMouseWheel() {
-		canvasStore.app.canvas.addEventListener(
+		canvasStore.app.stage.on(
 			'wheel',
 			(event) => {
-				if (isCmdPressed) return
+				if (this.isCmdPressed) return
 
 				const { deltaX, deltaY } = event
 				this.moveCanvas(deltaX, deltaY)
@@ -51,57 +52,58 @@ export const moveCanvas = {
 	setMoveByMouseAndSpaceKey() {
 		document.addEventListener('keydown', (event) => {
 			if (keyboardUtils.isSpacePressed(event) && !event.repeat) {
-				isSpacePressed = true
+				this.isSpacePressed = true
 				this.setDragCursor()
 			}
 			if (keyboardUtils.isCtrlPressed(event) && !event.repeat) {
-				isCmdPressed = true
+				this.isCmdPressed = true
 			}
 		})
 
 		document.addEventListener('keyup', (event) => {
 			if (keyboardUtils.isSpacePressed(event)) {
-				isSpacePressed = false
+				this.isSpacePressed = false
 				this.clearCursorView()
 			}
+
 			if (keyboardUtils.isCtrlPressed(event)) {
-				isCmdPressed = false
+				this.isCmdPressed = false
 			}
 		})
 
 		// Если потеряли фокус, то скорее всего переключились на другое приложение,
 		// поэтому поставить isCmdPressed в false
 		window.addEventListener('blur', () => {
-			isCmdPressed = false
+			this.isCmdPressed = false
 		})
 
 		document.addEventListener('mousedown', (event) => {
-			isMousePressed = true
-			mouseStartX = event.clientX
-			mouseStartY = event.clientY
+			this.isMousePressed = true
+			this.mouseStartX = event.clientX
+			this.mouseStartY = event.clientY
 
-			if (isSpacePressed) {
+			if (this.isSpacePressed) {
 				this.setDraggingCursor()
 			}
 		})
 
 		document.addEventListener('mouseup', () => {
-			isMousePressed = false
+			this.isMousePressed = false
 
-			if (isSpacePressed) {
+			if (this.isSpacePressed) {
 				this.setDragCursor()
 			} else {
 				this.clearCursorView()
 			}
 		})
 
-		document.addEventListener('mousemove', (event) => {
-			if (isMousePressed && isSpacePressed) {
-				const offsetX = mouseStartX - event.clientX
-				const offsetY = mouseStartY - event.clientY
+		document.addEventListener('pointermove', (event) => {
+			if (this.isMousePressed && this.isSpacePressed) {
+				const offsetX = this.mouseStartX - event.clientX
+				const offsetY = this.mouseStartY - event.clientY
 
-				mouseStartX = event.clientX
-				mouseStartY = event.clientY
+				this.mouseStartX = event.clientX
+				this.mouseStartY = event.clientY
 
 				this.moveCanvas(offsetX, offsetY)
 
@@ -116,8 +118,8 @@ export const moveCanvas = {
 	 * @param relativeY — относительное расстояние по вертикале.
 	 */
 	moveCanvas(relativeX: number, relativeY: number) {
-		canvasStore.offset.x = canvasStore.offset.x -= relativeX
-		canvasStore.offset.y = canvasStore.offset.y -= relativeY
+		canvasStore.offset.x -= relativeX
+		canvasStore.offset.y -= relativeY
 
 		renderCanvas.render()
 	},

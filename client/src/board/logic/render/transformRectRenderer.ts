@@ -4,7 +4,7 @@ import { boardColors } from '../misc/boardConfig.ts'
 import { canvasUtils } from '../misc/canvasUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
-import { FigureElement } from './figureRenderer.ts'
+import { FigureElement } from '../elements/FigureElement.ts'
 import { renderCanvas } from './renderCanvas.ts'
 
 // Названия интерактивных элементов с помощью которых изменяется размер выделенной фигуры.

@@ -1,6 +1,6 @@
 import { pixiUtils } from '../../../utils/pixiUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
-import { FigureElement } from './figureRenderer.ts'
+import { FigureElement } from '../elements/FigureElement.ts'
 import { transformRectRenderer } from './transformRectRenderer.ts'
 
 export const renderCanvas = {

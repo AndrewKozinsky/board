@@ -1,7 +1,7 @@
 import { keyboardUtils } from '../../../utils/keyboardUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { canvasUtils } from '../misc/canvasUtils.ts'
-import { FigureElement } from '../render/figureRenderer.ts'
+import { FigureElement } from '../elements/FigureElement.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 
 export const deleteElements = {
