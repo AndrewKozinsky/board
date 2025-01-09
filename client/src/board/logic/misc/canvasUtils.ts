@@ -1,7 +1,7 @@
 import { FederatedPointerEvent } from 'pixi.js'
-import { arrUtils } from '../../utils/arrayUtils.ts'
-import { canvasStore } from '../canvasStore/canvasStore.ts'
-import { CanvasElement, InteractionStatus } from '../canvasStore/canvasStoreTypes.ts'
+import { arrUtils } from '../../../utils/arrayUtils.ts'
+import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { CanvasElement, InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
 
 // Методы для работы с холстом
 export const canvasUtils = {

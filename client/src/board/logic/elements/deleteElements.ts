@@ -1,15 +1,22 @@
 import { keyboardUtils } from '../../../utils/keyboardUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
-import { canvasUtils } from '../canvasUtils.ts'
+import { canvasUtils } from '../misc/canvasUtils.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 
 export const deleteElements = {
 	init() {
 		document.addEventListener('keydown', (event) => {
 			if (keyboardUtils.isDeletePressed(event)) {
-				this.setDeletionStatusForSelectedElems()
+				this.deleteSelectedElems()
 			}
 		})
+	},
+
+	deleteSelectedElems() {
+		this.setDeletionStatusForSelectedElems()
+		renderCanvas.render()
+		this.eraseDeletedElems()
+		this.deleteFromDataElemsWithDeletionStatus()
 	},
 
 	/** Помечает выделенные элементы на удаление */
@@ -18,7 +25,6 @@ export const deleteElements = {
 		if (!selectedElems.length) return
 
 		selectedElems.forEach((elem) => (elem.delete = true))
-		renderCanvas.render()
 	},
 
 	/** Стирает на холсте элементы помеченные на удаление */

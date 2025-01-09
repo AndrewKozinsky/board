@@ -1,7 +1,7 @@
 import { FederatedPointerEvent, Graphics, Rectangle } from 'pixi.js'
 import { arrUtils } from '../../../utils/arrayUtils.ts'
-import { boardColors } from '../boardConfig.ts'
-import { canvasUtils } from '../canvasUtils.ts'
+import { boardColors } from '../misc/boardConfig.ts'
+import { canvasUtils } from '../misc/canvasUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { InteractionStatus, ShapeElement } from '../../canvasStore/canvasStoreTypes.ts'
 import { renderCanvas } from './renderCanvas.ts'
@@ -192,10 +192,10 @@ export const transformRectRenderer = {
 			{ x: x - hitBoxThickness, y, width: hitBoxThickness, height },
 		)
 
-		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[0], x, y)
-		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[1], x + width, y)
-		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[2], x + width, y + height)
-		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[3], x, y + height)
+		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[0], x, y, true, true)
+		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[1], x + width, y, false, true)
+		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[2], x + width, y + height, false, false)
+		this.updateCornerRectCoordsAndSize(cornerRectsGraphics[3], x, y + height, true, false)
 	},
 
 	/**
@@ -227,18 +227,22 @@ export const transformRectRenderer = {
 	 * @param graphics — графика квадрата
 	 * @param x — координата x
 	 * @param y — координата y
+	 * @param leftSide — если квадрат с правой стороны, то в функции будет сделано небольшое смещение значения для симметричного положения квадрата
+	 * @param topSide — если квадрат с верхней стороны, то в функции будет сделано небольшое смещение значения для симметричного положения квадрата
 	 */
-	updateCornerRectCoordsAndSize(graphics: Graphics, x: number, y: number) {
+	updateCornerRectCoordsAndSize(graphics: Graphics, x: number, y: number, leftSide: boolean, topSide: boolean) {
 		graphics.clear()
 
 		const scaleFactor = canvasUtils.getScaleMultiplier()
-		const scaledX = x - 3 * scaleFactor
-		const scaledY = y - 3 * scaleFactor
-		const scaledWidth = 7 * scaleFactor
+
+		const scaledX = (leftSide ? x - 1 : x) - 4 * scaleFactor
+		const scaledY = (topSide ? y - 1 : y) - 4 * scaleFactor
+		const scaledWidth = 9 * scaleFactor
 		const scaledStrokeWidth = scaleFactor
+		const rounding = 1.5 * scaleFactor
 
 		graphics
-			.rect(scaledX, scaledY, scaledWidth, scaledWidth)
+			.roundRect(scaledX, scaledY, scaledWidth, scaledWidth, rounding)
 			.fill({ color: '#fff' })
 			.stroke({ width: scaledStrokeWidth, color: boardColors.selected })
 	},

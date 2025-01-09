@@ -1,5 +1,5 @@
 import { ToolsName } from '../types/commonTypes.ts'
-import { getUIStore } from '../uiStore/uiStore'
+import { getUIStore, useUIStore } from '../uiStore/uiStore'
 import { CanvasStoreType, Cursor, InteractionStatus, ShapeElementFigure } from './canvasStoreTypes.ts'
 
 export const canvasStore: CanvasStoreType = {
@@ -7,7 +7,15 @@ export const canvasStore: CanvasStoreType = {
 	devicePixelRatio: window.devicePixelRatio || 1,
 	$bgContainer: null as any,
 	$mainContainer: null as any,
-	tool: ToolsName.Select,
+
+	_tool: ToolsName.Select,
+	get tool() {
+		return this._tool
+	},
+	set tool(value: ToolsName) {
+		useUIStore.setState({ tool: value })
+		this._tool = value
+	},
 
 	_scale: 100,
 	get scale() {

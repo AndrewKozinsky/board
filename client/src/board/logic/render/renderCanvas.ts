@@ -1,5 +1,5 @@
 import { pixiUtils } from '../../../utils/pixiUtils.ts'
-import { deleteElements } from '../elemInteraction/deleteElements.ts'
+import { deleteElements } from '../elements/deleteElements.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { figureRenderer } from './figureRenderer.ts'
 import { transformRectRenderer } from './transformRectRenderer.ts'
@@ -39,8 +39,5 @@ export const renderCanvas = {
 				figureRenderer.entryPoint(elemData)
 			}
 		}
-
-		deleteElements.eraseDeletedElems()
-		deleteElements.deleteFromDataElemsWithDeletionStatus()
 	},
 }

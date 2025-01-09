@@ -18,12 +18,16 @@ export type CanvasStoreType = {
 	devicePixelRatio: number
 	$bgContainer: Container<ContainerChild>
 	$mainContainer: Container<ContainerChild>
+
+	_tool: ToolsName
+	get tool(): ToolsName
+	set tool(val: ToolsName)
+
 	// Уровень масштабирования холста. 1 = 100%
-	tool: ToolsName
-	// Масштабирование холста
 	_scale: number
 	get scale(): number
 	set scale(val: number)
+
 	// Смещение холста
 	offset: {
 		x: number

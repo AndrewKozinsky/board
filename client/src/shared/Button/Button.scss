@@ -4,7 +4,6 @@
 	display: flex;
 	justify-content: center;
 	font-size: 2rem;
-	padding: 0.4rem;
 	border-radius: $radius-1;
 	user-select: none;
 
@@ -23,4 +22,16 @@
 
 .button--active {
 	background-color: white;
+	cursor: default;
+
+	&:hover {
+		background-color: white;
+	}
+}
+
+.button--middle {
+	padding: 0.4rem;
+}
+.button--big {
+	padding: 1rem;
 }

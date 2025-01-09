@@ -1,8 +1,8 @@
 import { Graphics } from 'pixi.js'
 import { OutlineFilter } from 'pixi-filters'
-import { boardColors } from '../boardConfig.ts'
+import { boardColors } from '../misc/boardConfig.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
-import { canvasUtils } from '../canvasUtils.ts'
+import { canvasUtils } from '../misc/canvasUtils.ts'
 import { InteractionStatus, ShapeElement, ShapeElementFigure } from '../../canvasStore/canvasStoreTypes.ts'
 
 export const figureRenderer = {

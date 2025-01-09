@@ -1,5 +1,5 @@
-import { KeyboardKeys } from '../../utils/keyboardUtils.ts'
-import { MouseKeys } from '../../utils/mouseUtils.ts'
+import { KeyboardKeys } from '../../../utils/keyboardUtils.ts'
+import { MouseKeys } from '../../../utils/mouseUtils.ts'
 
 export const boardColors = {
 	canvasBackground: '#F0F0F0FF',
