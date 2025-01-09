@@ -1,6 +1,6 @@
 import { pixiUtils } from '../../../utils/pixiUtils.ts'
 import { deleteElements } from '../elemInteraction/deleteElements.ts'
-import { canvasStore } from '../store/canvasStore.ts'
+import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { figureRenderer } from './figureRenderer.ts'
 import { transformRectRenderer } from './transformRectRenderer.ts'
 
@@ -30,7 +30,7 @@ export const renderCanvas = {
 
 	/* Отрисовка элементов сцены */
 	drawElements() {
-		const elemsData = canvasStore.canvas.elements
+		const elemsData = canvasStore.elements
 
 		for (let i = 0; i < elemsData.length; i++) {
 			const elemData = elemsData[i]

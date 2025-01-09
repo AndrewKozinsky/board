@@ -1,4 +1,5 @@
 import { Application, Container, Renderer } from 'pixi.js'
+import { canvasStore } from '../canvasStore/canvasStore.ts'
 import { canvasUtils } from './canvasUtils.ts'
 import { canvasBg } from './canvasBg.ts'
 import { deleteElements } from './elemInteraction/deleteElements.ts'
@@ -8,7 +9,6 @@ import { moveElements } from './elemInteraction/moveElements.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
 import { scaleCanvas } from './canvasInteraction/scaleCanvas.ts'
 import { selectElements } from './elemInteraction/selectElements.ts'
-import { canvasStore } from './store/canvasStore.ts'
 
 export const main = {
 	async init($canvasContainer: HTMLDivElement) {

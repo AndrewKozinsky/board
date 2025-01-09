@@ -2,8 +2,8 @@ import { KeyboardKeys, keyboardUtils } from '../../../utils/keyboardUtils.ts'
 import { MouseKeys } from '../../../utils/mouseUtils.ts'
 import { boardConfig } from '../boardConfig.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
-import { canvasStore } from '../store/canvasStore.ts'
-import { Cursor } from '../store/canvasStoreTypes.ts'
+import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { Cursor } from '../../canvasStore/canvasStoreTypes.ts'
 
 let isMousePressed = false
 let isCmdPressed = false

@@ -1,8 +1,9 @@
 import { FederatedPointerEvent, log2 } from 'pixi.js'
-import { canvasStore } from '../store/canvasStore.ts'
+import { ToolsName } from '../../types/commonTypes.ts'
+import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { canvasUtils } from '../canvasUtils.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
-import { InteractionStatus, ToolsName } from '../store/canvasStoreTypes.ts'
+import { InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
 
 export const hoverElements = {
 	init() {

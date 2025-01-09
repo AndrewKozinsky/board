@@ -1,7 +1,7 @@
 import { FederatedPointerEvent } from 'pixi.js'
 import { arrUtils } from '../../utils/arrayUtils.ts'
-import { canvasStore } from './store/canvasStore.ts'
-import { CanvasElement, InteractionStatus } from './store/canvasStoreTypes.ts'
+import { canvasStore } from '../canvasStore/canvasStore.ts'
+import { CanvasElement, InteractionStatus } from '../canvasStore/canvasStoreTypes.ts'
 
 // Методы для работы с холстом
 export const canvasUtils = {
@@ -20,7 +20,7 @@ export const canvasUtils = {
 	makeAllElemsUnselected() {
 		// Если уже есть выделенный элемент, то сделать его невыделенным.
 		const selectedElem = arrUtils.getItemByPropNameAndValue(
-			canvasStore.canvas.elements,
+			canvasStore.elements,
 			'interactionStatus',
 			InteractionStatus.Selected,
 		)
@@ -48,18 +48,18 @@ export const canvasUtils = {
 			return false
 		}
 
-		return arrUtils.getItemByPropNameAndValue(canvasStore.canvas.elements, 'id', elemId)
+		return arrUtils.getItemByPropNameAndValue(canvasStore.elements, 'id', elemId)
 	},
 
 	getSelectedElems() {
 		// Если уже есть выделенный элемент, то сделать его невыделенным.
-		return canvasStore.canvas.elements.filter((elem) => elem.interactionStatus === InteractionStatus.Selected)
+		return canvasStore.elements.filter((elem) => elem.interactionStatus === InteractionStatus.Selected)
 	},
 
 	updateCanvasElement: (elementId: number, elementNewData: Partial<CanvasElement>) => {
-		const elementIdx = arrUtils.getItemIdxByPropNameAndValue(canvasStore.canvas.elements, 'id', elementId)
+		const elementIdx = arrUtils.getItemIdxByPropNameAndValue(canvasStore.elements, 'id', elementId)
 		if (elementIdx < 0) return
 
-		Object.assign(canvasStore.canvas.elements[elementIdx], elementNewData)
+		Object.assign(canvasStore.elements[elementIdx], elementNewData)
 	},
 }

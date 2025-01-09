@@ -2,8 +2,8 @@ import { FederatedPointerEvent, Graphics, Rectangle } from 'pixi.js'
 import { arrUtils } from '../../../utils/arrayUtils.ts'
 import { boardColors } from '../boardConfig.ts'
 import { canvasUtils } from '../canvasUtils.ts'
-import { canvasStore } from '../store/canvasStore.ts'
-import { InteractionStatus, ShapeElement } from '../store/canvasStoreTypes.ts'
+import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { InteractionStatus, ShapeElement } from '../../canvasStore/canvasStoreTypes.ts'
 import { renderCanvas } from './renderCanvas.ts'
 
 // Названия интерактивных элементов с помощью которых изменяется размер выделенной фигуры.
@@ -51,7 +51,7 @@ export const transformRectRenderer = {
 	init() {
 		// Данные выделенной фигуры
 		const selectedFigure = arrUtils.getItemByPropNameAndValue(
-			canvasStore.canvas.elements,
+			canvasStore.elements,
 			'interactionStatus',
 			InteractionStatus.Selected,
 		)
@@ -261,7 +261,7 @@ export const transformRectRenderer = {
 		startMouseY = e.global.y
 
 		const selectedElem = arrUtils.getItemByPropNameAndValue(
-			canvasStore.canvas.elements,
+			canvasStore.elements,
 			'interactionStatus',
 			InteractionStatus.Selected,
 		)
@@ -284,7 +284,7 @@ export const transformRectRenderer = {
 		if (!selectedInteractiveRectName) return
 
 		const selectedElem = arrUtils.getItemByPropNameAndValue(
-			canvasStore.canvas.elements,
+			canvasStore.elements,
 			'interactionStatus',
 			InteractionStatus.Selected,
 		)

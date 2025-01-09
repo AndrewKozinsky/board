@@ -1,6 +1,6 @@
 import { Graphics } from 'pixi.js'
 import { boardColors } from './boardConfig.ts'
-import { canvasStore } from './store/canvasStore.ts'
+import { canvasStore } from '../canvasStore/canvasStore.ts'
 import { canvasUtils } from './canvasUtils.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
 

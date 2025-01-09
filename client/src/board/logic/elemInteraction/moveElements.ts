@@ -1,8 +1,9 @@
 import { FederatedPointerEvent } from 'pixi.js'
+import { ToolsName } from '../../types/commonTypes.ts'
 import { canvasUtils } from '../canvasUtils.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
-import { canvasStore } from '../store/canvasStore.ts'
-import { InteractionStatus, ToolsName } from '../store/canvasStoreTypes.ts'
+import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
 
 // При щелчке по управляющим элементам сюда будут помещаться данные выделенной фигуры
 // для правильного расчёта после перемещения.

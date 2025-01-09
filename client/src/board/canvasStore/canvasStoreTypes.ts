@@ -1,9 +1,5 @@
 import { Application, Container, ContainerChild, Graphics, Renderer } from 'pixi.js'
-
-export enum ToolsName {
-	Select = 'select',
-	Shape = 'shape',
-}
+import { ToolsName } from '../types/commonTypes.ts'
 
 export enum Cursor {
 	Default = 'default',
@@ -25,16 +21,16 @@ export type CanvasStoreType = {
 	// Уровень масштабирования холста. 1 = 100%
 	tool: ToolsName
 	// Масштабирование холста
-	scale: number
+	_scale: number
+	get scale(): number
+	set scale(val: number)
 	// Смещение холста
 	offset: {
 		x: number
 		y: number
 	}
-	canvas: {
-		elements: CanvasElement[]
-	}
 	cursor: Cursor
+	elements: CanvasElement[]
 }
 
 export type CanvasElement = ShapeElement | TextElement

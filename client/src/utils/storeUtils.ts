@@ -1,5 +1,6 @@
 type UseStore = { getState: () => any; setState: (...args: any[]) => any }
 
+// DEPRECATED
 export function createUpdateStoreProxy<T extends Record<string, any>>(
 	store: T,
 	useStore: UseStore,
