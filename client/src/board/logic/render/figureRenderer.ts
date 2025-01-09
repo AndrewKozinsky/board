@@ -1,73 +1,84 @@
 import { Graphics } from 'pixi.js'
 import { OutlineFilter } from 'pixi-filters'
+import { arrUtils } from '../../../utils/arrayUtils.ts'
 import { boardColors } from '../misc/boardConfig.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
-import { canvasUtils } from '../misc/canvasUtils.ts'
-import { InteractionStatus, ShapeElement, ShapeElementFigure } from '../../canvasStore/canvasStoreTypes.ts'
+import { InteractionStatus, ShapeElementFigure } from '../../canvasStore/canvasStoreTypes.ts'
 
-export const figureRenderer = {
-	/**
-	 * По полученным данным фигуры отрисовывает новую на холсте или изменяет уже существующую
-	 * @param figureData — данные фигуры
-	 */
-	entryPoint(figureData: ShapeElement) {
-		const { graphics } = figureData
+export type ShapeElement = {
+	x: number
+	y: number
+	shape: ShapeElementFigure
+	width: number
+	height: number
+	backgroundColor: string
+	strokeColor?: string
+	strokeWidth?: number
+}
 
-		graphics === null ? this.drawNewFigure(figureData) : this.updateFigure(graphics!, figureData)
-	},
+export class FigureElement {
+	id: number
+	x: number
+	y: number
+	// Навели ли на элемент (должна появиться синяя обводка)
+	interactionStatus = InteractionStatus.Default
+	delete = false
+	graphics: Graphics
+	shape: ShapeElementFigure
+	width: number
+	height: number
+	backgroundColor: string
+	strokeColor?: string
+	strokeWidth?: number
 
-	/**
-	 * Создаёт новую фигуру на холсте по переданным данным
-	 * @param figureData — данные фигуры
-	 */
-	drawNewFigure(figureData: ShapeElement) {
+	constructor(figureData: ShapeElement) {
+		this.id = arrUtils.getHighestItemId(canvasStore.elements) + 1
 		const graphics = new Graphics()
+		this.graphics = graphics
 
 		// Включение интерактивности чтобы заработали обработчики событий на фигуре
 		graphics.eventMode = 'static'
-		graphics.label = figureData.id.toString()
-
-		this.updateFigure(graphics, figureData)
+		graphics.label = this.id.toString()
+		this.x = figureData.x
+		this.y = figureData.y
+		this.shape = figureData.shape
+		this.width = figureData.width
+		this.height = figureData.height
+		this.backgroundColor = figureData.backgroundColor
+		this.strokeColor = figureData.strokeColor
+		this.strokeWidth = figureData.strokeWidth
 
 		canvasStore.$mainContainer.addChild(graphics)
 
-		canvasUtils.updateCanvasElement(figureData.id, { graphics })
-	},
+		this.updateFigure()
+	}
 
-	/**
-	 * Обновляет фигуру по переданным данным
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	updateFigure(graphics: Graphics, figureData: ShapeElement) {
-		graphics.clear()
+	/** Обновляет фигуру по переданным данным */
+	updateFigure() {
+		this.graphics.clear()
 
-		const updateShapeFn = figureShape.getUpdateFigureFunction(figureData.shape)
-		updateShapeFn(graphics, figureData)
+		const updateShapeFn = this.getUpdateFigureFunction()
+		updateShapeFn()
 
-		graphics.x = figureData.x
-		graphics.y = figureData.y
+		this.graphics.x = this.x
+		this.graphics.y = this.y
 
-		this.setShapeStyle(graphics, figureData)
-	},
+		this.setShapeStyle()
+	}
 
-	/**
-	 * Устанавливает стили фигуры
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	setShapeStyle(graphics: Graphics, figureData: ShapeElement) {
-		const { backgroundColor, strokeColor, strokeWidth = 0 } = figureData
+	/** Устанавливает стили фигуры */
+	setShapeStyle() {
+		const { backgroundColor, strokeColor, strokeWidth = 0 } = this
 
 		if (backgroundColor) {
-			graphics.fill(backgroundColor)
+			this.graphics.fill(backgroundColor)
 		}
 
 		if (strokeColor) {
-			graphics.stroke({ color: strokeColor, width: strokeWidth })
+			this.graphics.stroke({ color: strokeColor, width: strokeWidth })
 		}
 
-		if (figureData.interactionStatus === InteractionStatus.Hovered) {
+		if (this.interactionStatus === InteractionStatus.Hovered) {
 			const filter = new OutlineFilter({
 				color: boardColors.selected,
 				quality: 10,
@@ -76,78 +87,59 @@ export const figureRenderer = {
 			filter.antialias = 'on'
 			filter.resolution = canvasStore.devicePixelRatio
 
-			graphics.filters = [filter]
+			this.graphics.filters = [filter]
 		} else {
-			graphics.filters = []
+			this.graphics.filters = []
 		}
-	},
-}
+	}
 
-const figureShape = {
 	/**
 	 * Принимает тип фигуры и возвращает функцию обновляющую параметры фигуры этого типа
-	 * @param figureType — тип фигуры
 	 */
-	getUpdateFigureFunction(figureType: ShapeElementFigure) {
-		const obj: Record<ShapeElementFigure, (graphics: Graphics, settings: ShapeElement) => void> = {
-			[ShapeElementFigure.Rectangle]: this.updateRectangle,
-			[ShapeElementFigure.Circle]: this.updateCircle,
-			[ShapeElementFigure.Triangle]: this.updateTriangle,
-			[ShapeElementFigure.Diamond]: this.updateDiamond,
-			[ShapeElementFigure.Hexagon]: this.updateHexagon,
-			[ShapeElementFigure.Star]: this.updateStar,
-			[ShapeElementFigure.LeftArrow]: this.updateLeftArrow,
-			[ShapeElementFigure.RightArrow]: this.updateRightArrow,
-			[ShapeElementFigure.SpeechBalloon]: this.updateSpeechBalloon,
+	getUpdateFigureFunction() {
+		const obj: Record<ShapeElementFigure, () => void> = {
+			[ShapeElementFigure.Rectangle]: () => this.updateRectangle(),
+			[ShapeElementFigure.Circle]: () => this.updateCircle(),
+			[ShapeElementFigure.Triangle]: () => this.updateTriangle(),
+			[ShapeElementFigure.Diamond]: () => this.updateDiamond(),
+			[ShapeElementFigure.Hexagon]: () => this.updateHexagon(),
+			[ShapeElementFigure.Star]: () => this.updateStar(),
+			[ShapeElementFigure.LeftArrow]: () => this.updateLeftArrow(),
+			[ShapeElementFigure.RightArrow]: () => this.updateRightArrow(),
+			[ShapeElementFigure.SpeechBalloon]: () => this.updateSpeechBalloon(),
 		}
 
-		return obj[figureType]
-	},
+		return obj[this.shape]
+	}
 
-	/**
-	 * Обновляет параметры прямоугольника
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	updateRectangle(graphics: Graphics, figureData: ShapeElement) {
-		const { width, height } = figureData
+	/** Обновляет параметры прямоугольника */
+	updateRectangle() {
+		const { width, height, graphics } = this
 
 		graphics.rect(0, 0, width, height)
-	},
+	}
 
-	/**
-	 * Обновляет параметры круга
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	updateCircle(graphics: Graphics, figureData: ShapeElement) {
-		const { width, height } = figureData
+	/** Обновляет параметры круга */
+	updateCircle() {
+		const { width, height, graphics } = this
 
 		graphics.ellipse(0, 0, width, height)
-	},
+	}
 
-	/**
-	 * Обновляет параметры треугольника
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	updateTriangle(graphics: Graphics, figureData: ShapeElement) {
-		const { width, height } = figureData
+	/** Обновляет параметры треугольника */
+	updateTriangle() {
+		const { width, height, graphics } = this
 
 		graphics
 			.moveTo(width / 2, 0)
 			.lineTo(width, height)
 			.lineTo(0, height)
 			.closePath()
-	},
+	}
 
-	/**
-	 * Обновляет параметры ромба
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	updateDiamond(graphics: Graphics, figureData: ShapeElement) {
-		const { width, height } = figureData
+	/** Обновляет параметры ромба */
+	updateDiamond() {
+		const { width, height, graphics } = this
 
 		graphics
 			.moveTo(width / 2, 0)
@@ -155,15 +147,11 @@ const figureShape = {
 			.lineTo(width / 2, height)
 			.lineTo(0, height / 2)
 			.closePath()
-	},
+	}
 
-	/**
-	 * Обновляет параметры шестиугольника
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	updateHexagon(graphics: Graphics, figureData: ShapeElement) {
-		const { width, height } = figureData
+	/** Обновляет параметры шестиугольника */
+	updateHexagon() {
+		const { width, height, graphics } = this
 
 		const onePcWidth = width / 100
 
@@ -175,15 +163,11 @@ const figureShape = {
 			.lineTo(onePcWidth * 23, height) // 5
 			.lineTo(0, height / 2) // 6
 			.closePath()
-	},
+	}
 
-	/**
-	 * Обновляет параметры звезды
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	updateStar(graphics: Graphics, figureData: ShapeElement) {
-		const { width, height } = figureData
+	/** Обновляет параметры звезды */
+	updateStar() {
+		const { width, height, graphics } = this
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
@@ -200,15 +184,11 @@ const figureShape = {
 			.lineTo(0, onePcHeight * 38) // 9
 			.lineTo(onePcWidth * 38, onePcHeight * 38) // 10
 			.closePath()
-	},
+	}
 
-	/**
-	 * Обновляет параметры стрелки влево
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	updateLeftArrow(graphics: Graphics, figureData: ShapeElement) {
-		const { width, height } = figureData
+	/** Обновляет параметры стрелки влево */
+	updateLeftArrow() {
+		const { width, height, graphics } = this
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
@@ -222,15 +202,11 @@ const figureShape = {
 			.lineTo(onePcWidth * 50, onePcHeight * 72) // 6
 			.lineTo(onePcWidth * 50, height) // 7
 			.closePath()
-	},
+	}
 
-	/**
-	 * Обновляет параметры стрелки вправо
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	updateRightArrow(graphics: Graphics, figureData: ShapeElement) {
-		const { width, height } = figureData
+	/** Обновляет параметры стрелки вправо */
+	updateRightArrow() {
+		const { width, height, graphics } = this
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
@@ -244,15 +220,11 @@ const figureShape = {
 			.lineTo(onePcWidth * 50, onePcHeight * 72) // 6
 			.lineTo(0, onePcHeight * 72) // 7
 			.closePath()
-	},
+	}
 
-	/**
-	 * Обновляет параметры выноски с речью
-	 * @param graphics — ссылка на объект Graphics из Pixi.js
-	 * @param figureData — данные фигуры
-	 */
-	updateSpeechBalloon(graphics: Graphics, figureData: ShapeElement) {
-		const { width, height } = figureData
+	/** Обновляет параметры выноски с речью */
+	updateSpeechBalloon() {
+		const { width, height, graphics } = this
 
 		const onePcWidth = width / 100
 		const onePcHeight = height / 100
@@ -266,5 +238,5 @@ const figureShape = {
 			.lineTo(onePcWidth * 13, onePcHeight * 71) // 6
 			.lineTo(0, onePcHeight * 71) // 7
 			.closePath()
-	},
+	}
 }

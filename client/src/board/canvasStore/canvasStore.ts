@@ -1,3 +1,4 @@
+import { FigureElement } from '../logic/render/figureRenderer.ts'
 import { ToolsName } from '../types/commonTypes.ts'
 import { getUIStore, useUIStore } from '../uiStore/uiStore'
 import { CanvasStoreType, Cursor, InteractionStatus, ShapeElementFigure } from './canvasStoreTypes.ts'
@@ -31,31 +32,24 @@ export const canvasStore: CanvasStoreType = {
 		y: 90,
 	},
 	cursor: Cursor.Default,
-	elements: [
-		{
-			id: 1,
-			type: 'figureElement',
-			shape: ShapeElementFigure.Rectangle,
-			graphics: null,
-			x: 150,
-			y: 70,
-			width: 100,
-			height: 200,
-			backgroundColor: 'ccc',
-			delete: false,
-		},
-		{
-			id: 2,
-			type: 'figureElement',
-			shape: ShapeElementFigure.Star,
-			graphics: null,
-			x: 350,
-			y: 270,
-			width: 200,
-			height: 200,
-			backgroundColor: 'ccc',
-			interactionStatus: InteractionStatus.Selected,
-			delete: false,
-		},
-	],
+	elements: [],
 }
+
+/*const elems = [
+	new FigureElement({
+		shape: ShapeElementFigure.Rectangle,
+		x: 150,
+		y: 70,
+		width: 100,
+		height: 200,
+		backgroundColor: 'ccc',
+	}),
+	new FigureElement({
+		shape: ShapeElementFigure.Star,
+		x: 350,
+		y: 270,
+		width: 200,
+		height: 200,
+		backgroundColor: 'ccc',
+	}),
+]*/

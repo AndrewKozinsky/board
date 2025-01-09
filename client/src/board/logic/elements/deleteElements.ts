@@ -1,6 +1,7 @@
 import { keyboardUtils } from '../../../utils/keyboardUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { canvasUtils } from '../misc/canvasUtils.ts'
+import { FigureElement } from '../render/figureRenderer.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 
 export const deleteElements = {
@@ -30,7 +31,7 @@ export const deleteElements = {
 	/** Стирает на холсте элементы помеченные на удаление */
 	eraseDeletedElems() {
 		canvasStore.elements.forEach((elem) => {
-			if (!elem.delete || elem.type !== 'figureElement') return
+			if (!elem.delete || !(elem instanceof FigureElement)) return
 
 			elem.graphics!.destroy()
 		})

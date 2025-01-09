@@ -1,7 +1,6 @@
 import { pixiUtils } from '../../../utils/pixiUtils.ts'
-import { deleteElements } from '../elements/deleteElements.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
-import { figureRenderer } from './figureRenderer.ts'
+import { FigureElement } from './figureRenderer.ts'
 import { transformRectRenderer } from './transformRectRenderer.ts'
 
 export const renderCanvas = {
@@ -35,8 +34,8 @@ export const renderCanvas = {
 		for (let i = 0; i < elemsData.length; i++) {
 			const elemData = elemsData[i]
 
-			if (elemData.type === 'figureElement') {
-				figureRenderer.entryPoint(elemData)
+			if (elemData instanceof FigureElement) {
+				elemData.updateFigure()
 			}
 		}
 	},

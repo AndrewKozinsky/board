@@ -1,4 +1,5 @@
 import { Application, Container, ContainerChild, Graphics, Renderer } from 'pixi.js'
+import { FigureElement } from '../logic/render/figureRenderer.ts'
 import { ToolsName } from '../types/commonTypes.ts'
 
 export enum Cursor {
@@ -37,7 +38,7 @@ export type CanvasStoreType = {
 	elements: CanvasElement[]
 }
 
-export type CanvasElement = ShapeElement | TextElement
+export type CanvasElement = FigureElement | TextElement
 
 type ElementBase = {
 	id: number
@@ -48,7 +49,7 @@ type ElementBase = {
 	delete: boolean
 }
 
-export type ShapeElement = ElementBase & {
+/*export type ShapeElement = ElementBase & {
 	type: 'figureElement'
 	shape: ShapeElementFigure
 	// Если элемента ещё нет на холсте, то тут будет null.
@@ -59,7 +60,7 @@ export type ShapeElement = ElementBase & {
 	backgroundColor?: string
 	strokeColor?: string
 	strokeWidth?: number
-}
+}*/
 
 export enum ShapeElementFigure {
 	Rectangle = 'rectangle',

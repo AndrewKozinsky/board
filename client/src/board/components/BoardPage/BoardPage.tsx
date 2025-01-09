@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react'
 import { main } from '../../logic/main.ts'
 import LeftPanel from '../panels/LeftPanel/LeftPanel.tsx'
 import TopPanel from '../panels/TopPanel/TopPanel.tsx'
-import './Board.scss'
+import './BoardPage.scss'
 
-function Board() {
+function BoardPage() {
 	const canvasContainerRef = useRef<null | HTMLDivElement>(null)
 
 	useEffect(() => {
@@ -19,4 +19,4 @@ function Board() {
 	)
 }
 
-export default Board
+export default BoardPage

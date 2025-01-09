@@ -1,11 +1,14 @@
 import { Application, Container, Renderer } from 'pixi.js'
+import { wait } from '../../utils/promise.ts'
 import { canvasStore } from '../canvasStore/canvasStore.ts'
+import { ShapeElementFigure } from '../canvasStore/canvasStoreTypes.ts'
 import { canvasUtils } from './misc/canvasUtils.ts'
 import { canvasBg } from './misc/canvasBg.ts'
 import { deleteElements } from './elements/deleteElements.ts'
 import { hoverElements } from './elements/hoverElements.ts'
 import { moveCanvas } from './canvasInteraction/moveCanvas.ts'
 import { moveElements } from './elements/moveElements.ts'
+import { FigureElement } from './render/figureRenderer.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
 import { scaleCanvas } from './canvasInteraction/scaleCanvas.ts'
 import { selectElements } from './elements/selectElements.ts'
@@ -24,6 +27,30 @@ export const main = {
 		selectElements.init()
 		moveElements.init()
 		deleteElements.init()
+
+		await wait(10, () => {
+			canvasStore.elements.push(
+				new FigureElement({
+					shape: ShapeElementFigure.Rectangle,
+					x: 150,
+					y: 70,
+					width: 100,
+					height: 200,
+					backgroundColor: 'ccc',
+				}),
+			)
+
+			canvasStore.elements.push(
+				new FigureElement({
+					shape: ShapeElementFigure.Star,
+					x: 350,
+					y: 270,
+					width: 200,
+					height: 200,
+					backgroundColor: 'ccc',
+				}),
+			)
+		})
 
 		renderCanvas.render()
 	},

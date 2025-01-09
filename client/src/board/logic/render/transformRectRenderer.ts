@@ -3,7 +3,8 @@ import { arrUtils } from '../../../utils/arrayUtils.ts'
 import { boardColors } from '../misc/boardConfig.ts'
 import { canvasUtils } from '../misc/canvasUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
-import { InteractionStatus, ShapeElement } from '../../canvasStore/canvasStoreTypes.ts'
+import { InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
+import { FigureElement } from './figureRenderer.ts'
 import { renderCanvas } from './renderCanvas.ts'
 
 // Названия интерактивных элементов с помощью которых изменяется размер выделенной фигуры.
@@ -62,7 +63,7 @@ export const transformRectRenderer = {
 			return
 		}
 
-		if (selectedFigure.type !== 'figureElement') {
+		if (!(selectedFigure instanceof FigureElement)) {
 			return
 		}
 
@@ -153,7 +154,7 @@ export const transformRectRenderer = {
 	 * Обновляет размеры и координаты всех частей трансформирующего прямоугольника в зависимости от объекта выделенного на холсте.
 	 * @param selectedElem — данные выделенного элемента
 	 */
-	updateAllCoordsAndSize(selectedElem: ShapeElement) {
+	updateAllCoordsAndSize(selectedElem: FigureElement) {
 		// =====
 		const { x, y, width, height } = selectedElem
 
@@ -269,7 +270,7 @@ export const transformRectRenderer = {
 			'interactionStatus',
 			InteractionStatus.Selected,
 		)
-		if (!selectedElem || selectedElem.type !== 'figureElement') return
+		if (!selectedElem || !(selectedElem instanceof FigureElement)) return
 
 		shapeInitialCoords.x = selectedElem.x
 		shapeInitialCoords.y = selectedElem.y
@@ -292,7 +293,7 @@ export const transformRectRenderer = {
 			'interactionStatus',
 			InteractionStatus.Selected,
 		)
-		if (!selectedElem || selectedElem.type !== 'figureElement') return
+		if (!selectedElem || !(selectedElem instanceof FigureElement)) return
 
 		const diffX = (e.global.x - startMouseX) * canvasUtils.getScaleMultiplier()
 		const diffY = (e.global.y - startMouseY) * canvasUtils.getScaleMultiplier()

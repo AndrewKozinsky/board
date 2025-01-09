@@ -1,8 +1,8 @@
-import Board from '../../board/components/Board/Board.tsx'
+import BoardPage from '../../board/components/BoardPage/BoardPage.tsx'
 import './css/global.scss'
 
 function App() {
-	return <Board />
+	return <BoardPage />
 }
 
 export default App

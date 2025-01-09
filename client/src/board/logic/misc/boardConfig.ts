@@ -28,5 +28,13 @@ export const boardConfig = {
 			prompt: 'Уменьшение масштаба',
 			hotKeys: [KeyboardKeys.Minus],
 		},
+		switchToSelectTool: {
+			prompt: 'Инструмент «Выделение»',
+			hotKeys: [KeyboardKeys.Esc],
+		},
+		switchToFigureTool: {
+			prompt: 'Инструмент «Фигура»',
+			hotKeys: [KeyboardKeys.S],
+		},
 	},
 }

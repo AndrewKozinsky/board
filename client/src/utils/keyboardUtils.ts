@@ -57,6 +57,8 @@ export enum KeyboardKeys {
 	Plus = '=',
 	Minus = '-',
 	Space = 'space',
+	Esc = 'esc',
+	S = 's',
 
 	// Alt on Windows OR Option on MacOS
 	Alt = 'altKey',
