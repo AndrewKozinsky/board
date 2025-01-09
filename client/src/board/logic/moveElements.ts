@@ -1,20 +1,48 @@
 import { FederatedPointerEvent } from 'pixi.js'
-import { arrUtils } from '../../utils/arrayUtils.ts'
 import { getStore } from '../store/store.ts'
 import { InteractionStatus, ToolsName } from '../store/storeTypes.ts'
 import { canvasUtils } from './canvasUtils.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
 
+// При щелчке по управляющим элементам сюда будут помещаться данные выделенной фигуры
+// для правильного расчёта после перемещения.
+const shapeInitialCoords = { x: 0, y: 0 }
+let elemUnderCursorId: null | number = null
+
+// Глобальные координаты точки по которой щелкнули мышью
+// для начала перетаскивания управляющих прямоугольников для изменения размера фигуры.
+let startMouseX = 0
+let startMouseY = 0
+
 export const moveElements = {
 	init() {
-		getStore.app.stage.eventMode = 'static'
+		getStore.app.stage.on('pointerdown', (e) => {
+			this.setMovingStartCoords(e)
+		})
+
 		getStore.app.stage.on('pointermove', (e) => {
 			this.moveElemUnderCursor(e)
 		})
 
-		getStore.app.stage.on('pointerdown', (e) => {
-			console.log(e.target.label)
+		getStore.app.stage.on('pointerup', (e) => {
+			this.clearMovingStartCoords()
 		})
+	},
+
+	setMovingStartCoords(e: FederatedPointerEvent) {
+		const elemUnderCursor = canvasUtils.getElemUnderCursor(e)
+		if (!elemUnderCursor) return
+
+		elemUnderCursorId = elemUnderCursor.id
+
+		if (getStore.tool !== ToolsName.Select || elemUnderCursor.interactionStatus !== InteractionStatus.Selected)
+			return
+
+		startMouseX = e.global.x
+		startMouseY = e.global.y
+
+		shapeInitialCoords.x = elemUnderCursor.x
+		shapeInitialCoords.y = elemUnderCursor.y
 	},
 
 	/**
@@ -22,23 +50,22 @@ export const moveElements = {
 	 * @param e e — объект события
 	 */
 	moveElemUnderCursor(e: FederatedPointerEvent) {
-		// Найду фигуры, у которых в объекте moving свойства startMouseX и startMouseY не имеют нулевые значения
-		const elemUnderCursor = getStore.canvas.elements.find(
-			(elem) => elem.moving.startMouseX && elem.moving.startMouseY,
-		)
+		if (!elemUnderCursorId) return
 
-		if (!elemUnderCursor) return
-		if (getStore.tool !== ToolsName.Select || elemUnderCursor.interactionStatus !== InteractionStatus.Selected)
-			return
+		if (getStore.tool !== ToolsName.Select) return
 
-		const diffX = (e.global.x - elemUnderCursor.moving.startMouseX) * canvasUtils.getScaleMultiplier()
-		const diffY = (e.global.y - elemUnderCursor.moving.startMouseY) * canvasUtils.getScaleMultiplier()
+		const diffX = (e.global.x - startMouseX) * canvasUtils.getScaleMultiplier()
+		const diffY = (e.global.y - startMouseY) * canvasUtils.getScaleMultiplier()
 
-		const newX = elemUnderCursor.moving.shapeInitialX + diffX
-		const newY = elemUnderCursor.moving.shapeInitialY + diffY
+		const newX = shapeInitialCoords.x + diffX
+		const newY = shapeInitialCoords.y + diffY
 
-		getStore.updateCanvasElement(elemUnderCursor.id, { x: newX, y: newY })
+		getStore.updateCanvasElement(elemUnderCursorId, { x: newX, y: newY })
 
 		renderCanvas.render()
+	},
+
+	clearMovingStartCoords() {
+		elemUnderCursorId = null
 	},
 }

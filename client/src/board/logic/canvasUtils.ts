@@ -1,3 +1,4 @@
+import { FederatedPointerEvent } from 'pixi.js'
 import { arrUtils } from '../../utils/arrayUtils.ts'
 import { getStore } from '../store/store.ts'
 import { InteractionStatus } from '../store/storeTypes.ts'
@@ -37,5 +38,16 @@ export const canvasUtils = {
 	 */
 	getScaleMultiplier() {
 		return 1 / (getStore.canvas.scale / 100)
+	},
+
+	getElemUnderCursor(e: FederatedPointerEvent) {
+		const elemLabel = e.target.label
+		const elemId = +elemLabel
+
+		if (isNaN(elemId)) {
+			return false
+		}
+
+		return arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', elemId)
 	},
 }

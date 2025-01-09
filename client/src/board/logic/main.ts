@@ -17,6 +17,7 @@ export const main = {
 		scaleCanvas.setEventListeners()
 		moveCanvas.setEventListeners()
 		moveElements.init()
+		// Я бы ещё убрал функционал выделения элемента в отдельный объект, а не хранил это в данных объекта.
 
 		renderCanvas.render()
 	},
@@ -35,6 +36,8 @@ export const main = {
 			autoDensity: true, // Ensures proper scaling on Retina displays
 			antialias: true,
 		})
+
+		app.stage.eventMode = 'static'
 
 		useBoardStore.setState({ app })
 

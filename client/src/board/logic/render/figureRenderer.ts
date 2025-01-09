@@ -24,7 +24,7 @@ export const figureRenderer = {
 	 */
 	drawNewFigure(figureData: ShapeElement) {
 		const graphics = new Graphics()
-		graphics.label = 'myFigure'
+		graphics.label = figureData.id.toString()
 
 		this.updateFigure(graphics, figureData)
 		this.setShapeInteraction(graphics, figureData)
@@ -100,12 +100,6 @@ export const figureRenderer = {
 
 		graphics.on('pointerdown', (e) => {
 			this.selectFigure(figureData.id)
-
-			this.setMovingStartCoords(e, figureData.id)
-		})
-
-		graphics.on('pointerup', () => {
-			this.clearMovingStartCoords(figureData.id)
 		})
 	},
 
@@ -144,30 +138,6 @@ export const figureRenderer = {
 		})
 
 		renderCanvas.render()
-	},
-
-	setMovingStartCoords(e: FederatedPointerEvent, figureDataId: number) {
-		const figureData = arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', figureDataId)
-		if (!figureData) return
-
-		if (getStore.tool !== ToolsName.Select || figureData.interactionStatus !== InteractionStatus.Selected) return
-
-		getStore.updateCanvasElementMovingSettings(figureDataId, {
-			startMouseX: e.global.x,
-			startMouseY: e.global.y,
-		})
-	},
-
-	clearMovingStartCoords(figureDataId: number) {
-		const figureData = arrUtils.getItemByPropNameAndValue(getStore.canvas.elements, 'id', figureDataId)
-		if (!figureData) return
-
-		if (getStore.tool !== ToolsName.Select || figureData.interactionStatus !== InteractionStatus.Selected) return
-
-		getStore.updateCanvasElementMovingSettings(figureDataId, {
-			startMouseX: 0,
-			startMouseY: 0,
-		})
 	},
 }
 

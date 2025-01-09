@@ -2,15 +2,7 @@ import { produce } from 'immer'
 import { create } from 'zustand'
 import { arrUtils } from '../../utils/arrayUtils.ts'
 import { createGetStoreProxy, createUpdateStoreProxy } from '../../utils/storeUtils.ts'
-import {
-	BoardStore,
-	CanvasElement,
-	CanvasElementMovingSettings,
-	Cursor,
-	InteractionStatus,
-	ShapeElementFigure,
-	ToolsName,
-} from './storeTypes.ts'
+import { BoardStore, CanvasElement, Cursor, InteractionStatus, ShapeElementFigure, ToolsName } from './storeTypes.ts'
 
 export const useBoardStore = create<BoardStore>((set) => {
 	return {
@@ -71,25 +63,6 @@ export const useBoardStore = create<BoardStore>((set) => {
 					if (elementIdx < 0) return draft
 
 					Object.assign(draft.canvas.elements[elementIdx], elementNewData)
-				})
-			})
-		},
-		updateCanvasElementMovingSettings: (
-			elementId: number,
-			newMovingSettings: Pick<CanvasElementMovingSettings, 'startMouseX' | 'startMouseY'>,
-		) => {
-			set((state) => {
-				return produce(state, (draft) => {
-					const elementIdx = arrUtils.getItemIdxByPropNameAndValue(draft.canvas.elements, 'id', elementId)
-					if (elementIdx < 0) return draft
-
-					const elem = draft.canvas.elements[elementIdx]
-
-					elem.moving.shapeInitialX = elem.x
-					elem.moving.shapeInitialY = elem.y
-
-					elem.moving.startMouseX = newMovingSettings.startMouseX
-					elem.moving.startMouseY = newMovingSettings.startMouseY
 				})
 			})
 		},

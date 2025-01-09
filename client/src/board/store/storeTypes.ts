@@ -35,10 +35,6 @@ export type BoardStore = {
 	}
 	cursor: Cursor
 	updateCanvasElement: (elementId: number, elementNewData: Partial<CanvasElement>) => void
-	updateCanvasElementMovingSettings: (
-		elementId: number,
-		newMovingSettings: Pick<CanvasElementMovingSettings, 'startMouseX' | 'startMouseY'>,
-	) => void
 }
 
 export type CanvasElement = ShapeElement | TextElement
@@ -49,7 +45,6 @@ type ElementBase = {
 	y: number
 	// Навели ли на элемент (должна появиться синяя обводка)
 	interactionStatus?: InteractionStatus
-	moving: CanvasElementMovingSettings
 }
 
 export type ShapeElement = ElementBase & {
@@ -63,18 +58,6 @@ export type ShapeElement = ElementBase & {
 	backgroundColor?: string
 	strokeColor?: string
 	strokeWidth?: number
-}
-
-// Данные элемента необходимые для перемещения
-export type CanvasElementMovingSettings = {
-	// Координаты элемента до перемещения
-	shapeInitialX: number
-	shapeInitialY: number
-	// Координата точку по которой щелкнули мышью для начала перемещения.
-	// Если стоят нули, то значит мышь отпустили.
-	// Таким образом можно понять, что курсор находится над этой фигурой.
-	startMouseX: number
-	startMouseY: number
 }
 
 export enum ShapeElementFigure {
