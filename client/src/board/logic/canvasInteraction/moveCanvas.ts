@@ -1,13 +1,10 @@
 import { KeyboardKeys, keyboardUtils } from '../../../utils/keyboardUtils.ts'
 import { MouseKeys } from '../../../utils/mouseUtils.ts'
-import { boardConfig } from '../misc/boardConfig.ts'
+import { boardConfig } from '../utils/boardConfig.ts'
+import { canvasUtils } from '../utils/canvasUtils.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { Cursor } from '../../canvasStore/canvasStoreTypes.ts'
-
-// TODO Такие методы как pointerdown уже возвращают информации о нажатых модифицирующих клавишах,
-// поэтому дополнительные обработчики нажатия клавиш можно не делать.
-// Разузной это подробнее и если это так, то код можно упростить.
 
 // Методы работы с передвижением холста
 export const moveCanvas = {
@@ -53,7 +50,7 @@ export const moveCanvas = {
 		document.addEventListener('keydown', (event) => {
 			if (keyboardUtils.isSpacePressed(event) && !event.repeat) {
 				this.isSpacePressed = true
-				this.setDragCursor()
+				canvasUtils.setCursor(Cursor.Palm)
 			}
 			if (keyboardUtils.isCtrlPressed(event) && !event.repeat) {
 				this.isCmdPressed = true
@@ -63,7 +60,7 @@ export const moveCanvas = {
 		document.addEventListener('keyup', (event) => {
 			if (keyboardUtils.isSpacePressed(event)) {
 				this.isSpacePressed = false
-				this.clearCursorView()
+				canvasUtils.clearCursor()
 			}
 
 			if (keyboardUtils.isCtrlPressed(event)) {
@@ -83,7 +80,7 @@ export const moveCanvas = {
 			this.mouseStartY = event.clientY
 
 			if (this.isSpacePressed) {
-				this.setDraggingCursor()
+				canvasUtils.setCursor(Cursor.Dragging)
 			}
 		})
 
@@ -91,9 +88,9 @@ export const moveCanvas = {
 			this.isMousePressed = false
 
 			if (this.isSpacePressed) {
-				this.setDragCursor()
+				canvasUtils.setCursor(Cursor.Palm)
 			} else {
-				this.clearCursorView()
+				canvasUtils.clearCursor()
 			}
 		})
 
@@ -107,7 +104,7 @@ export const moveCanvas = {
 
 				this.moveCanvas(offsetX, offsetY)
 
-				this.setDraggingCursor()
+				canvasUtils.setCursor(Cursor.Dragging)
 			}
 		})
 	},
@@ -121,24 +118,6 @@ export const moveCanvas = {
 		canvasStore.offset.x -= relativeX
 		canvasStore.offset.y -= relativeY
 
-		renderCanvas.render()
-	},
-
-	/** Ставит на холсте курсор в виде ладони */
-	setDragCursor() {
-		canvasStore.cursor = Cursor.Palm
-		renderCanvas.render()
-	},
-
-	/** Ставит на холсте курсор перетаскивания */
-	setDraggingCursor() {
-		canvasStore.cursor = Cursor.Dragging
-		renderCanvas.render()
-	},
-
-	/** Ставит на холсте стандартный курсор */
-	clearCursorView() {
-		canvasStore.cursor = Cursor.Default
 		renderCanvas.render()
 	},
 }

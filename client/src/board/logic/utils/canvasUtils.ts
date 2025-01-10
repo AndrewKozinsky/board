@@ -1,7 +1,8 @@
 import { FederatedPointerEvent } from 'pixi.js'
 import { arrUtils } from '../../../utils/arrayUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
-import { CanvasElement, InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
+import { CanvasElement, Cursor, InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
+import { renderCanvas } from '../render/renderCanvas.ts'
 
 // Методы для работы с холстом
 export const canvasUtils = {
@@ -61,5 +62,15 @@ export const canvasUtils = {
 		if (elementIdx < 0) return
 
 		Object.assign(canvasStore.elements[elementIdx], elementNewData)
+	},
+
+	setCursor(cursorType: Cursor) {
+		canvasStore.cursor = cursorType
+		renderCanvas.render()
+	},
+
+	/** Ставит на холсте стандартный курсор */
+	clearCursor() {
+		this.setCursor(Cursor.Default)
 	},
 }

@@ -1,5 +1,5 @@
 import { isKeysPressed, keyboardUtils } from '../../../utils/keyboardUtils.ts'
-import { boardConfig } from '../misc/boardConfig.ts'
+import { boardConfig } from '../utils/boardConfig.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 

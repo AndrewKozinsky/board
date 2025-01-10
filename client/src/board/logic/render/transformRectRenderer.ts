@@ -1,9 +1,9 @@
 import { FederatedPointerEvent, Graphics, Rectangle } from 'pixi.js'
 import { arrUtils } from '../../../utils/arrayUtils.ts'
-import { boardColors } from '../misc/boardConfig.ts'
-import { canvasUtils } from '../misc/canvasUtils.ts'
+import { boardColors } from '../utils/boardConfig.ts'
+import { canvasUtils } from '../utils/canvasUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
-import { InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
+import { Cursor, InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
 import { FigureElement } from '../elements/FigureElement.ts'
 import { renderCanvas } from './renderCanvas.ts'
 
@@ -114,8 +114,8 @@ export const transformRectRenderer = {
 
 		graphics.cursor =
 			sideRectName === InteractiveElemNames.Left || sideRectName === InteractiveElemNames.Right
-				? 'ew-resize'
-				: 'ns-resize'
+				? Cursor.EwResize
+				: Cursor.NsResize
 
 		graphics.on('pointerdown', (e) => this.onInteractiveElemMouseDown(e, sideRectName))
 		graphics.on('globalpointermove', (e) => this.onInteractiveElemMove(e))
@@ -138,8 +138,8 @@ export const transformRectRenderer = {
 
 		graphics.cursor =
 			cornerRectName === InteractiveElemNames.LeftTop || cornerRectName === InteractiveElemNames.RightBottom
-				? 'nwse-resize'
-				: 'nesw-resize'
+				? Cursor.NwseResize
+				: Cursor.NeswResize
 
 		graphics.on('pointerdown', (e) => this.onInteractiveElemMouseDown(e, cornerRectName))
 		graphics.on('globalpointermove', (e) => this.onInteractiveElemMove(e))

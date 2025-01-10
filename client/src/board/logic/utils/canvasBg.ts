@@ -4,8 +4,7 @@ import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { canvasUtils } from './canvasUtils.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 
-// Фоновый прямоугольник чтобы ловить щелчки по холсту
-// чтобы убрать выделение со всех элементов.
+// Фоновый прямоугольник чтобы ловить щелчки по холсту и убирать выделение со всех элементов
 export const canvasBg = {
 	/** Создание фонового прямоугольника */
 	create() {

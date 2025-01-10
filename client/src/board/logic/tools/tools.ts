@@ -1,8 +1,9 @@
 import { isKeysPressed } from '../../../utils/keyboardUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { Cursor } from '../../canvasStore/canvasStoreTypes.ts'
 import { ShapeElementFigure, ShapeToolStatus, ToolsName } from '../../types/commonTypes.ts'
-import { boardConfig } from '../misc/boardConfig.ts'
-import { canvasUtils } from '../misc/canvasUtils.ts'
+import { boardConfig } from '../utils/boardConfig.ts'
+import { canvasUtils } from '../utils/canvasUtils.ts'
 
 export const tools = {
 	/** Добавляет обработчики на выбор инструмента через горячие клавиши */
@@ -29,12 +30,15 @@ export const tools = {
 			canvasStore.tool = {
 				name: ToolsName.Select,
 			}
+			canvasUtils.clearCursor()
 		} else if (toolName === ToolsName.Shape) {
 			canvasStore.tool = {
 				name: ToolsName.Shape,
 				shape: ShapeElementFigure.Rectangle,
 				status: ShapeToolStatus.ReadyForDrawing,
 			}
+
+			canvasUtils.setCursor(Cursor.DrawRectangle)
 		}
 	},
 
@@ -48,5 +52,19 @@ export const tools = {
 			shape: toolName,
 			status: ShapeToolStatus.ReadyForDrawing,
 		}
+
+		const cursorNameMapper: Record<ShapeElementFigure, Cursor> = {
+			[ShapeElementFigure.Rectangle]: Cursor.DrawRectangle,
+			[ShapeElementFigure.Circle]: Cursor.DrawCircle,
+			[ShapeElementFigure.Diamond]: Cursor.DrawDiamond,
+			[ShapeElementFigure.Hexagon]: Cursor.DrawHexagon,
+			[ShapeElementFigure.LeftArrow]: Cursor.DrawLeftArrow,
+			[ShapeElementFigure.RightArrow]: Cursor.DrawRightArrow,
+			[ShapeElementFigure.SpeechBalloon]: Cursor.DrawSpeechBalloon,
+			[ShapeElementFigure.Star]: Cursor.DrawStar,
+			[ShapeElementFigure.Triangle]: Cursor.DrawTriangle,
+		}
+
+		canvasUtils.setCursor(cursorNameMapper[toolName])
 	},
 }
