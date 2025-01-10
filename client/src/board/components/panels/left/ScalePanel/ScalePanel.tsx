@@ -1,8 +1,8 @@
-import Button from '../../../../shared/Button/Button.tsx'
-import { scaleCanvas, ZoomDirection } from '../../../logic/canvasInteraction/scaleCanvas.ts'
-import { useUIStore } from '../../../uiStore/uiStore.ts'
-import { MinusIcon } from '../../icons/MinusIcon.tsx'
-import { PlusIcon } from '../../icons/PlusIcon.tsx'
+import Button from '../../../../../shared/Button/Button.tsx'
+import { scaleCanvas, ZoomDirection } from '../../../../logic/canvasInteraction/scaleCanvas.ts'
+import { useUIStore } from '../../../../uiStore/uiStore.ts'
+import { MinusIcon } from '../../../icons/MinusIcon.tsx'
+import { PlusIcon } from '../../../icons/PlusIcon.tsx'
 import './ScalePanel.scss'
 
 function ScalePanel() {

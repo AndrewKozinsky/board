@@ -1,6 +1,6 @@
-import { ToolsName } from '../types/commonTypes.ts'
+import { Tools, ToolsName } from '../types/commonTypes.ts'
 import { getUIStore, useUIStore } from '../uiStore/uiStore'
-import { CanvasStoreType, Cursor, InteractionStatus, ShapeElementFigure } from './canvasStoreTypes.ts'
+import { CanvasStoreType, Cursor } from './canvasStoreTypes.ts'
 
 export const canvasStore: CanvasStoreType = {
 	app: null as any,
@@ -8,11 +8,13 @@ export const canvasStore: CanvasStoreType = {
 	$bgContainer: null as any,
 	$mainContainer: null as any,
 
-	_tool: ToolsName.Select,
+	_tool: {
+		name: ToolsName.Select,
+	},
 	get tool() {
 		return this._tool
 	},
-	set tool(value: ToolsName) {
+	set tool(value: Tools) {
 		useUIStore.setState({ tool: value })
 		this._tool = value
 	},

@@ -1,8 +1,8 @@
 import ScalePanel from '../ScalePanel/ScalePanel.tsx'
-import './LeftPanel.scss'
 import ToolsPanel from '../ToolsPanel/ToolsPanel.tsx'
+import './LeftPanelsWrapper.scss'
 
-function LeftPanel() {
+function LeftPanelsWrapper() {
 	return (
 		<div className='left-panel'>
 			<ToolsPanel />
@@ -11,4 +11,4 @@ function LeftPanel() {
 	)
 }
 
-export default LeftPanel
+export default LeftPanelsWrapper

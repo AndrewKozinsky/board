@@ -45,7 +45,7 @@ export function isKeysPressed(keyDownEvent: KeyboardEvent, keys: KeyboardKeys[])
 		return key !== KeyboardKeys.Ctrl && key !== KeyboardKeys.Alt && key !== KeyboardKeys.Shift
 	})
 
-	if (symbolKey !== keyDownEvent.key) {
+	if (symbolKey !== keyDownEvent.code) {
 		return false
 	}
 
@@ -57,7 +57,7 @@ export enum KeyboardKeys {
 	Minus = '-',
 	Space = 'space',
 	Esc = 'Escape',
-	S = 's',
+	S = 'KeyS',
 
 	// Alt on Windows OR Option on MacOS
 	Alt = 'altKey',

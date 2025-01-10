@@ -36,7 +36,10 @@ export const moveElements = {
 
 		elemUnderCursorId = elemUnderCursor.id
 
-		if (canvasStore.tool !== ToolsName.Select || elemUnderCursor.interactionStatus !== InteractionStatus.Selected)
+		if (
+			canvasStore.tool.name !== ToolsName.Select ||
+			elemUnderCursor.interactionStatus !== InteractionStatus.Selected
+		)
 			return
 
 		startMouseX = e.global.x
@@ -53,7 +56,7 @@ export const moveElements = {
 	moveElemUnderCursor(e: FederatedPointerEvent) {
 		if (!elemUnderCursorId) return
 
-		if (canvasStore.tool !== ToolsName.Select) return
+		if (canvasStore.tool.name !== ToolsName.Select) return
 
 		const diffX = (e.global.x - startMouseX) * canvasUtils.getScaleMultiplier()
 		const diffY = (e.global.y - startMouseY) * canvasUtils.getScaleMultiplier()

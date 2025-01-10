@@ -1,7 +1,7 @@
 import { Application, Container, Renderer } from 'pixi.js'
 import { wait } from '../../utils/promise.ts'
 import { canvasStore } from '../canvasStore/canvasStore.ts'
-import { ShapeElementFigure } from '../canvasStore/canvasStoreTypes.ts'
+import { ShapeElementFigure } from '../types/commonTypes.ts'
 import { canvasUtils } from './misc/canvasUtils.ts'
 import { canvasBg } from './misc/canvasBg.ts'
 import { deleteElements } from './elemInteraction/deleteElements.ts'

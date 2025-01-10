@@ -1,7 +1,7 @@
-import { ToolsName } from '../types/commonTypes.ts'
+import { Tools } from '../types/commonTypes.ts'
 
 export type UIStore = {
-	tool: ToolsName
+	tool: Tools
 	canvas: {
 		scale: number
 	}

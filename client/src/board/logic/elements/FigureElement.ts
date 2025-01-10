@@ -3,9 +3,11 @@ import { OutlineFilter } from 'pixi-filters'
 import { arrUtils } from '../../../utils/arrayUtils.ts'
 import { boardColors } from '../misc/boardConfig.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
-import { InteractionStatus, ShapeElementFigure } from '../../canvasStore/canvasStoreTypes.ts'
+import { InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
+import { ShapeElementFigure } from '../../types/commonTypes.ts'
 
-type ShapeElement = {
+type FigureElementInput = {
+	id?: number
 	x: number
 	y: number
 	shape: ShapeElementFigure
@@ -31,8 +33,8 @@ export class FigureElement {
 	strokeColor?: string
 	strokeWidth?: number
 
-	constructor(inputData: ShapeElement) {
-		this.id = arrUtils.getHighestItemId(canvasStore.elements) + 1
+	constructor(inputData: FigureElementInput) {
+		this.id = inputData.id ?? arrUtils.getHighestItemId(canvasStore.elements) + 1
 		const graphics = new Graphics()
 		this.graphics = graphics
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { main } from '../../logic/main.ts'
-import LeftPanel from '../panels/LeftPanel/LeftPanel.tsx'
-import TopPanel from '../panels/TopPanel/TopPanel.tsx'
+import LeftPanelsWrapper from '../panels/left/LeftPanelsWrapper/LeftPanelsWrapper.tsx'
+import TopPanelsWrapper from '../panels/top/TopPanelsWrapper/TopPanelsWrapper.tsx'
 import './BoardPage.scss'
 
 function BoardPage() {
@@ -13,8 +13,8 @@ function BoardPage() {
 
 	return (
 		<div className='board' ref={canvasContainerRef}>
-			<TopPanel />
-			<LeftPanel />
+			<TopPanelsWrapper />
+			<LeftPanelsWrapper />
 		</div>
 	)
 }

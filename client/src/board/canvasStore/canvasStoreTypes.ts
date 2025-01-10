@@ -1,6 +1,7 @@
 import { Application, Container, ContainerChild, Renderer } from 'pixi.js'
 import { FigureElement } from '../logic/elements/FigureElement.ts'
-import { ToolsName } from '../types/commonTypes.ts'
+import { TextElement } from '../logic/elements/TextElement.ts'
+import { Tools } from '../types/commonTypes.ts'
 
 export enum Cursor {
 	Default = 'default',
@@ -20,9 +21,9 @@ export type CanvasStoreType = {
 	$bgContainer: Container<ContainerChild>
 	$mainContainer: Container<ContainerChild>
 
-	_tool: ToolsName
-	get tool(): ToolsName
-	set tool(val: ToolsName)
+	_tool: Tools
+	get tool(): Tools
+	set tool(val: Tools)
 
 	// Уровень масштабирования холста. 1 = 100%
 	_scale: number
@@ -39,41 +40,3 @@ export type CanvasStoreType = {
 }
 
 export type CanvasElement = FigureElement | TextElement
-
-type ElementBase = {
-	id: number
-	x: number
-	y: number
-	// Навели ли на элемент (должна появиться синяя обводка)
-	interactionStatus?: InteractionStatus
-	delete: boolean
-}
-
-/*export type ShapeElement = ElementBase & {
-	type: 'figureElement'
-	shape: ShapeElementFigure
-	// Если элемента ещё нет на холсте, то тут будет null.
-	// Если есть, то ссылка объект Graphics потому что я обновляю параметры этого объекта, а не создаю новый при каждой перерисовке.
-	graphics: null | Graphics
-	width: number
-	height: number
-	backgroundColor?: string
-	strokeColor?: string
-	strokeWidth?: number
-}*/
-
-export enum ShapeElementFigure {
-	Rectangle = 'rectangle',
-	Circle = 'circle',
-	Triangle = 'triangle',
-	Diamond = 'diamond',
-	Hexagon = 'hexagon',
-	Star = 'star',
-	LeftArrow = 'leftArrow',
-	RightArrow = 'rightArrow',
-	SpeechBalloon = 'speechBalloon',
-}
-
-type TextElement = ElementBase & {
-	type: 'textElement'
-}

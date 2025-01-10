@@ -6,7 +6,9 @@ import { ToolsName } from '../types/commonTypes.ts'
 
 export const useUIStore = create<UIStore>((set) => {
 	return {
-		tool: ToolsName.Select,
+		tool: {
+			name: ToolsName.Select,
+		},
 		canvas: {
 			scale: 100,
 		},

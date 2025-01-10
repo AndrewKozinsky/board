@@ -10,11 +10,19 @@
 	height: $topPanelHeight;
 	background-color: $panelBackground;
 	backdrop-filter: blur($panelBlurStrength);
-	user-select: none;
 }
 
 .top-part__logo {
 	font-size: 2rem;
 	padding: 0.6rem 1.2rem;
-	border-right: 1px solid $grayColor-2;
+	user-select: none;
+}
+
+.top-part__divider {
+	width: 1px;
+	background-color: rgba(0, 0, 0, .1);
+}
+
+.top-part__panel {
+	padding: 0.2rem 1.2rem;
 }

@@ -24,7 +24,10 @@ export const hoverElements = {
 		const elemUnderCursor = canvasUtils.getElemUnderCursor(e)
 		if (!elemUnderCursor) return
 
-		if (canvasStore.tool !== ToolsName.Select || elemUnderCursor.interactionStatus === InteractionStatus.Selected)
+		if (
+			canvasStore.tool.name !== ToolsName.Select ||
+			elemUnderCursor.interactionStatus === InteractionStatus.Selected
+		)
 			return
 
 		canvasUtils.updateCanvasElement(elemUnderCursor.id, {
