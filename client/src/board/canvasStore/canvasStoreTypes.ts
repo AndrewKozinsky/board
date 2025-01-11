@@ -47,6 +47,10 @@ export type CanvasStoreType = {
 	_scale: number
 	get scale(): number
 	set scale(val: number)
+	// Точка трансформации относительно которой будет происходить изменение масштаба
+	// Задаётся в процентах от ширины/высоты экрана
+	scalePivotX: number
+	scalePivotY: number
 
 	// Смещение холста
 	offset: {

@@ -34,6 +34,8 @@ export const canvasStore: CanvasStoreType = {
 		getUIStore.setCanvasScale(value)
 		this._scale = value
 	},
+	scalePivotX: 0.5,
+	scalePivotY: 0.5,
 
 	offset: {
 		x: 0,

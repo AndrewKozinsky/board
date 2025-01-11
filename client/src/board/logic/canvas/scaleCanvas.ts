@@ -2,6 +2,7 @@ import { isKeysPressed, keyboardUtils } from '../../../utils/keyboardUtils.ts'
 import { boardConfig } from './boardConfig.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { canvasUtils } from './canvasUtils.ts'
 import { mainContainer } from './mainContainer.ts'
 
 export enum ZoomDirection {
@@ -64,7 +65,10 @@ export const scaleCanvas = {
 	 */
 	zoomCanvasByMouse(e: WheelEvent) {
 		const newScale = canvasStore.scale + e.deltaY
-		this.zoom(newScale, e.clientX, e.clientY)
+
+		const { width, height } = canvasUtils.getCanvasSize()
+
+		this.zoom(newScale, e.clientX / width, e.clientY / height)
 	},
 
 	/**
@@ -74,17 +78,19 @@ export const scaleCanvas = {
 	zoomCanvasOneStep(direction: ZoomDirection) {
 		const newScale = this.getZoomValueNextStep(direction)
 
-		const { clientWidth, clientHeight } = canvasStore.app.canvas
-		this.zoom(newScale, clientWidth / 2, clientHeight / 2)
+		this.zoom(newScale, 0.5, 0.5)
 	},
 
 	/**
 	 * Масштабирование холста
 	 * @param newScale — новое значение масштаба холста в процентах (100 — масштаб 1:1)
-	 * @param canvasPivotLeftPx — координата X точки трансформации в пикселах
-	 * @param canvasPivotTopPx — координата Y точки трансформации в пикселах
+	 * @param canvasPivotLeftPc — координата X точки трансформации в процентах
+	 * @param canvasPivotTopPc — координата Y точки трансформации в процентах
 	 */
-	zoom(newScale: number, canvasPivotLeftPx: number, canvasPivotTopPx: number) {
+	zoom(newScale: number, canvasPivotLeftPc: number, canvasPivotTopPc: number) {
+		canvasStore.scalePivotX = canvasPivotLeftPc
+		canvasStore.scalePivotY = canvasPivotTopPc
+
 		if (newScale < minZoomValue || newScale > maxZoomValue) {
 			canvasStore.scale = newScale < minZoomValue ? minZoomValue : maxZoomValue
 			renderCanvas.render()
