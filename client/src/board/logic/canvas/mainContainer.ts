@@ -49,19 +49,6 @@ export const mainContainer = {
 		canvasStore.$mainContainer.addChild($contentContainer)
 	},
 
-	/*getSizes() {
-		const canvasSize = canvasUtils.getCanvasSize()
-
-		const x = 0
-		const y = 0
-		const width = canvasSize.width
-		const height = canvasSize.height
-
-		const arr: [number, number, number, number] = [x, y, width, height]
-
-		return arr
-	},*/
-
 	ff() {
 		const canvasSize = canvasUtils.getCanvasSize()
 		const container = canvasStore.$mainContainer
@@ -76,28 +63,38 @@ export const mainContainer = {
 
 		containerMask.clear()
 		containerMask.rect(0, 0, canvasSize.width, canvasSize.height).fill(0xffffff)
-
-		containerBg.clear()
-		containerBg.rect(0, 0, canvasSize.width, canvasSize.height).fill(0xffffff)
-	},
-
-	redrawAll() {
-		const canvasSize = canvasUtils.getCanvasSize()
-
-		// containerMask.clear()
-		// containerMask.rect(...sizes).fill(0xffffff)
-		// containerBg.clear()
-		// containerBg.rect(...sizes).fill(0xffffff)
-		// const pivotX = sizes[2] / 2
-		// const pivotY = sizes[3] / 2
-		/*containerMask.x = pivotX
+		containerMask.x = pivotX
 		containerMask.y = pivotY
 		containerMask.pivot.x = pivotX
 		containerMask.pivot.y = pivotY
 
+		containerBg.clear()
+		containerBg.rect(0, 0, canvasSize.width, canvasSize.height)
 		containerBg.x = pivotX
 		containerBg.y = pivotY
 		containerBg.pivot.x = pivotX
-		containerBg.pivot.y = pivotY*/
+		containerBg.pivot.y = pivotY
+	},
+
+	setSizes(graphics: Graphics) {
+		const canvasSize = canvasUtils.getCanvasSize()
+
+		const x = 0
+		const y = 0
+		const width = canvasSize.width
+		const height = canvasSize.height
+		const scale = canvasUtils.getScaleMultiplier()
+
+		graphics.clear()
+		graphics.rect(x, y, width, height)
+		graphics.scale.x = scale
+		graphics.scale.y = scale
+	},
+
+	redrawAll() {
+		this.setSizes(containerMask)
+		this.setSizes(containerBg)
+
+		containerMask.fill(0xffffff)
 	},
 }
