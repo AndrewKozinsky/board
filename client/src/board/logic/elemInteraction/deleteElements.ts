@@ -1,7 +1,7 @@
 import { keyboardUtils } from '../../../utils/keyboardUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
-import { canvasUtils } from '../utils/canvasUtils.ts'
-import { FigureElement } from '../elements/FigureElement.ts'
+import { canvasUtils } from '../canvas/canvasUtils.ts'
+import { FigureElement } from '../elems/FigureElement.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 
 export const deleteElements = {
@@ -13,11 +13,21 @@ export const deleteElements = {
 		})
 	},
 
+	/** Удаляет выделенные на сцене элементы */
 	deleteSelectedElems() {
 		this.setDeletionStatusForSelectedElems()
 		renderCanvas.render()
 		this.eraseDeletedElems()
-		this.deleteFromDataElemsWithDeletionStatus()
+	},
+
+	/**
+	 * Удаляет элемент по переданному идентификатору
+	 * @param id — идентификатор элемента
+	 */
+	deleteElemById(id: number) {
+		this.setDeletionStatusForElemWithId(id)
+		renderCanvas.render()
+		this.eraseDeletedElems()
 	},
 
 	/** Помечает выделенные элементы на удаление */
@@ -28,17 +38,22 @@ export const deleteElements = {
 		selectedElems.forEach((elem) => (elem.delete = true))
 	},
 
-	/** Стирает на холсте элементы помеченные на удаление */
+	/** Помечает элемент с указанным идентификатором на удаление */
+	setDeletionStatusForElemWithId(id: number) {
+		const elem = canvasUtils.getElemById(id)
+		if (!elem) return
+
+		elem.delete = true
+	},
+
+	/** Стирает на холсте и в данных элементы помеченные на удаление */
 	eraseDeletedElems() {
 		canvasStore.elements.forEach((elem) => {
 			if (!elem.delete || !(elem instanceof FigureElement)) return
 
 			elem.graphics!.destroy()
 		})
-	},
 
-	/** Удаляет данные элементов отмеченных на удаление */
-	deleteFromDataElemsWithDeletionStatus() {
 		canvasStore.elements = canvasStore.elements.filter((elem) => !elem.delete)
 	},
 }

@@ -1,4 +1,4 @@
-import { Tools, ToolsName } from '../types/commonTypes.ts'
+import { ShapeElementFigure, ShapeToolStatus, Tools, ToolsName } from '../types/commonTypes.ts'
 import { getUIStore, useUIStore } from '../uiStore/uiStore'
 import { CanvasStoreType, Cursor } from './canvasStoreTypes.ts'
 
@@ -11,6 +11,11 @@ export const canvasStore: CanvasStoreType = {
 	_tool: {
 		name: ToolsName.Select,
 	},
+	/*_tool: {
+		name: ToolsName.Shape,
+		shape: ShapeElementFigure.Rectangle,
+		status: ShapeToolStatus.ReadyForDrawing,
+	},*/
 	get tool() {
 		return this._tool
 	},
@@ -20,6 +25,7 @@ export const canvasStore: CanvasStoreType = {
 	},
 
 	_scale: 100,
+	// _scale: 7,
 	get scale() {
 		return this._scale
 	},
@@ -29,8 +35,8 @@ export const canvasStore: CanvasStoreType = {
 	},
 
 	offset: {
-		x: 120,
-		y: 90,
+		x: 0,
+		y: 0,
 	},
 	cursor: Cursor.Default,
 	elements: [],

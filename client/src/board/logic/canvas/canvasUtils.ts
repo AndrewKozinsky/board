@@ -38,9 +38,13 @@ export const canvasUtils = {
 	 * при любом масштабе холста, то их следует умножить на множитель масштаба.
 	 */
 	getScaleMultiplier() {
-		return 1 / (canvasStore.scale / 100)
+		return 100 / canvasStore.scale
 	},
 
+	/**
+	 * Получение элемента под курсором мыши
+	 * @param e — объект события
+	 */
 	getElemUnderCursor(e: FederatedPointerEvent) {
 		const elemLabel = e.target.label
 		const elemId = +elemLabel
@@ -52,11 +56,24 @@ export const canvasUtils = {
 		return arrUtils.getItemByPropNameAndValue(canvasStore.elements, 'id', elemId)
 	},
 
+	/** Получить элементы сцены отмеченные выделенными */
 	getSelectedElems() {
-		// Если уже есть выделенный элемент, то сделать его невыделенным.
 		return canvasStore.elements.filter((elem) => elem.interactionStatus === InteractionStatus.Selected)
 	},
 
+	/**
+	 * Получить элемент по идентификатору
+	 * @param id — идентификатор элемента
+	 */
+	getElemById(id: number) {
+		return canvasStore.elements.find((elem) => elem.id === id)
+	},
+
+	/**
+	 * Изменение данных указанного элемента холста
+	 * @param elementId — идентификатор элемента
+	 * @param elementNewData — новые данные элемента
+	 */
 	updateCanvasElement: (elementId: number, elementNewData: Partial<CanvasElement>) => {
 		const elementIdx = arrUtils.getItemIdxByPropNameAndValue(canvasStore.elements, 'id', elementId)
 		if (elementIdx < 0) return
@@ -64,6 +81,10 @@ export const canvasUtils = {
 		Object.assign(canvasStore.elements[elementIdx], elementNewData)
 	},
 
+	/**
+	 * Установка курсора для холста
+	 * @param cursorType — тип курсора
+	 */
 	setCursor(cursorType: Cursor) {
 		canvasStore.cursor = cursorType
 		renderCanvas.render()

@@ -2,8 +2,8 @@ import { isKeysPressed } from '../../../utils/keyboardUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { Cursor } from '../../canvasStore/canvasStoreTypes.ts'
 import { ShapeElementFigure, ShapeToolStatus, ToolsName } from '../../types/commonTypes.ts'
-import { boardConfig } from '../utils/boardConfig.ts'
-import { canvasUtils } from '../utils/canvasUtils.ts'
+import { boardConfig } from '../canvas/boardConfig.ts'
+import { canvasUtils } from '../canvas/canvasUtils.ts'
 
 export const tools = {
 	/** Добавляет обработчики на выбор инструмента через горячие клавиши */
@@ -43,13 +43,13 @@ export const tools = {
 	},
 
 	/**
-	 * Делает активным указанный инструмент
-	 * @param toolName — имя инструмента
+	 * Изменяет тип фигуры, которую хотят нарисовать
+	 * @param shapeName — имя фигуры, на которую хотят поменять текущую
 	 */
-	changeFigureShape(toolName: ShapeElementFigure) {
+	changeFigureShape(shapeName: ShapeElementFigure) {
 		canvasStore.tool = {
 			name: ToolsName.Shape,
-			shape: toolName,
+			shape: shapeName,
 			status: ShapeToolStatus.ReadyForDrawing,
 		}
 
@@ -65,6 +65,6 @@ export const tools = {
 			[ShapeElementFigure.Triangle]: Cursor.DrawTriangle,
 		}
 
-		canvasUtils.setCursor(cursorNameMapper[toolName])
+		canvasUtils.setCursor(cursorNameMapper[shapeName])
 	},
 }

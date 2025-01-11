@@ -2,24 +2,26 @@ import { Application, Container, Renderer } from 'pixi.js'
 import { wait } from '../../utils/promise.ts'
 import { canvasStore } from '../canvasStore/canvasStore.ts'
 import { ShapeElementFigure } from '../types/commonTypes.ts'
-import { canvasUtils } from './utils/canvasUtils.ts'
-import { canvasBg } from './utils/canvasBg.ts'
+import { mainContainer } from './canvas/mainContainer.ts'
+import { drawFigures } from './elems/drawFigure.ts'
+import { canvasUtils } from './canvas/canvasUtils.ts'
+import { canvasBackground } from './canvas/canvasBackground.ts'
 import { deleteElements } from './elemInteraction/deleteElements.ts'
 import { hoverElements } from './elemInteraction/hoverElements.ts'
-import { moveCanvas } from './canvasInteraction/moveCanvas.ts'
+import { moveCanvas } from './canvas/moveCanvas.ts'
 import { moveElements } from './elemInteraction/moveElements.ts'
-import { FigureElement } from './elements/FigureElement.ts'
+import { FigureElement } from './elems/FigureElement.ts'
 import { renderCanvas } from './render/renderCanvas.ts'
-import { scaleCanvas } from './canvasInteraction/scaleCanvas.ts'
+import { scaleCanvas } from './canvas/scaleCanvas.ts'
 import { selectElements } from './elemInteraction/selectElements.ts'
 import { tools } from './tools/tools.ts'
 
 export const main = {
 	async init($canvasContainer: HTMLDivElement) {
-		const app = await this.createApp($canvasContainer)
+		await this.createApp($canvasContainer)
 
-		this.createRootContainers(app)
-		canvasBg.create()
+		canvasBackground.init()
+		mainContainer.init()
 
 		scaleCanvas.init()
 		moveCanvas.init()
@@ -31,12 +33,14 @@ export const main = {
 
 		tools.init()
 
+		drawFigures.init()
+
 		await wait(10, () => {
 			canvasStore.elements.push(
 				new FigureElement({
 					shape: ShapeElementFigure.Rectangle,
-					x: 150,
-					y: 70,
+					x: 250,
+					y: 170,
 					width: 100,
 					height: 200,
 					backgroundColor: 'ccc',
@@ -46,8 +50,8 @@ export const main = {
 			canvasStore.elements.push(
 				new FigureElement({
 					shape: ShapeElementFigure.Star,
-					x: 350,
-					y: 270,
+					x: 450,
+					y: 370,
 					width: 200,
 					height: 200,
 					backgroundColor: 'ccc',
@@ -86,19 +90,5 @@ export const main = {
 		})
 
 		return app
-	},
-
-	createRootContainers(app: Application<Renderer>) {
-		const $bgContainer = new Container()
-		$bgContainer.label = 'bgContainer'
-
-		const $mainContainer = new Container()
-		$mainContainer.label = 'mainContainer'
-
-		app.stage.addChild($bgContainer)
-		app.stage.addChild($mainContainer)
-
-		canvasStore.$bgContainer = $bgContainer
-		canvasStore.$mainContainer = $mainContainer
 	},
 }

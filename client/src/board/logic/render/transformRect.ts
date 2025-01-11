@@ -1,10 +1,10 @@
 import { FederatedPointerEvent, Graphics, Rectangle } from 'pixi.js'
 import { arrUtils } from '../../../utils/arrayUtils.ts'
-import { boardColors } from '../utils/boardConfig.ts'
-import { canvasUtils } from '../utils/canvasUtils.ts'
+import { boardColors } from '../canvas/boardConfig.ts'
+import { canvasUtils } from '../canvas/canvasUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { Cursor, InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
-import { FigureElement } from '../elements/FigureElement.ts'
+import { FigureElement } from '../elems/FigureElement.ts'
 import { renderCanvas } from './renderCanvas.ts'
 
 // Названия интерактивных элементов с помощью которых изменяется размер выделенной фигуры.
@@ -27,11 +27,6 @@ let cornerRectsGraphics: Graphics[] = []
 // для правильного расчёта после трансформации.
 const shapeInitialCoords = { x: 0, y: 0, width: 0, height: 0 }
 
-// Глобальные координаты точки по которой щелкнули мышью
-// для начала перетаскивания управляющих прямоугольников для изменения размера фигуры.
-let startMouseX = 0
-let startMouseY = 0
-
 // Название интерактивного прямоугольника, по которому щелкнули.
 let selectedInteractiveRectName: null | InteractiveElemNames = null
 
@@ -43,7 +38,12 @@ type BoxCoords = {
 }
 
 // Набор методов для создания и управления трансформирующего прямоугольника
-export const transformRectRenderer = {
+export const transformRect = {
+	// Глобальные координаты точки по которой щелкнули мышью
+	// для начала перетаскивания управляющих прямоугольников для изменения размера фигуры.
+	startMouseX: 0,
+	startMouseY: 0,
+
 	/**
 	 * Функция, запускаемая при каждой перерисовке сцены.
 	 * Тут определяется нужно ли создавать графику для отрисовки трансформирующего прямоугольника
@@ -119,7 +119,7 @@ export const transformRectRenderer = {
 
 		graphics.on('pointerdown', (e) => this.onInteractiveElemMouseDown(e, sideRectName))
 		graphics.on('globalpointermove', (e) => this.onInteractiveElemMove(e))
-		graphics.on('pointerup', this.onInteractiveElemMouseOn)
+		graphics.on('pointerup', this.onInteractiveElemMouseUp)
 
 		sideRectsGraphics.push(graphics)
 
@@ -143,7 +143,7 @@ export const transformRectRenderer = {
 
 		graphics.on('pointerdown', (e) => this.onInteractiveElemMouseDown(e, cornerRectName))
 		graphics.on('globalpointermove', (e) => this.onInteractiveElemMove(e))
-		graphics.on('pointerup', this.onInteractiveElemMouseOn)
+		graphics.on('pointerup', this.onInteractiveElemMouseUp)
 
 		cornerRectsGraphics.push(graphics)
 
@@ -262,8 +262,8 @@ export const transformRectRenderer = {
 	 * @param rectName — название интерактивной части
 	 */
 	onInteractiveElemMouseDown(e: FederatedPointerEvent, rectName: InteractiveElemNames) {
-		startMouseX = e.global.x
-		startMouseY = e.global.y
+		this.startMouseX = e.global.x
+		this.startMouseY = e.global.y
 
 		const selectedElem = arrUtils.getItemByPropNameAndValue(
 			canvasStore.elements,
@@ -295,8 +295,8 @@ export const transformRectRenderer = {
 		)
 		if (!selectedElem || !(selectedElem instanceof FigureElement)) return
 
-		const diffX = (e.global.x - startMouseX) * canvasUtils.getScaleMultiplier()
-		const diffY = (e.global.y - startMouseY) * canvasUtils.getScaleMultiplier()
+		const diffX = (e.global.x - this.startMouseX) * canvasUtils.getScaleMultiplier()
+		const diffY = (e.global.y - this.startMouseY) * canvasUtils.getScaleMultiplier()
 
 		const setNewPositionMapper: Record<InteractiveElemNames, () => void> = {
 			[InteractiveElemNames.Right]: () => {
@@ -363,7 +363,7 @@ export const transformRectRenderer = {
 	},
 
 	/** Обработчик отпускания мыши */
-	onInteractiveElemMouseOn() {
+	onInteractiveElemMouseUp() {
 		selectedInteractiveRectName = null
 	},
 }

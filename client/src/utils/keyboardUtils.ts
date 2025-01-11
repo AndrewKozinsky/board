@@ -24,20 +24,20 @@ export const keyboardUtils = {
 /**
  * Получает объект события нажатия клавиш и проверяет точное соответствие между желаемыми клавишами и нажатыми.
  * Возвращает ложь если есть несоответствии.
- * @param keyDownEvent — событие нажатия клавил
+ * @param e — событие нажатия клавил
  * @param keys — массив клавиш, которые должны быть нажаты
  */
-export function isKeysPressed(keyDownEvent: KeyboardEvent, keys: KeyboardKeys[]) {
-	if (keyDownEvent.ctrlKey !== (!isMacOS && keyDownEvent.ctrlKey)) {
+export function isKeysPressed(e: KeyboardEvent, keys: KeyboardKeys[]) {
+	if (e.ctrlKey !== (!isMacOS && e.ctrlKey)) {
 		return false
 	}
-	if (keyDownEvent.metaKey !== (isMacOS && keys.includes(KeyboardKeys.Ctrl))) {
+	if (e.metaKey !== (isMacOS && keys.includes(KeyboardKeys.Ctrl))) {
 		return false
 	}
-	if (keyDownEvent.altKey !== keyboardUtils.isAltPressed(keyDownEvent)) {
+	if (e.altKey !== keyboardUtils.isAltPressed(e)) {
 		return false
 	}
-	if (keyDownEvent.shiftKey !== keyboardUtils.isShiftPressed(keyDownEvent)) {
+	if (e.shiftKey !== keyboardUtils.isShiftPressed(e)) {
 		return false
 	}
 
@@ -45,7 +45,7 @@ export function isKeysPressed(keyDownEvent: KeyboardEvent, keys: KeyboardKeys[])
 		return key !== KeyboardKeys.Ctrl && key !== KeyboardKeys.Alt && key !== KeyboardKeys.Shift
 	})
 
-	if (symbolKey !== keyDownEvent.code) {
+	if (symbolKey !== e.code) {
 		return false
 	}
 
@@ -53,8 +53,8 @@ export function isKeysPressed(keyDownEvent: KeyboardEvent, keys: KeyboardKeys[])
 }
 
 export enum KeyboardKeys {
-	Plus = '=',
-	Minus = '-',
+	Plus = 'Equal',
+	Minus = 'Minus',
 	Space = 'space',
 	Esc = 'Escape',
 	S = 'KeyS',

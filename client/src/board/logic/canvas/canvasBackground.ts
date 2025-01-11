@@ -5,15 +5,29 @@ import { canvasUtils } from './canvasUtils.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 
 // Фоновый прямоугольник чтобы ловить щелчки по холсту и убирать выделение со всех элементов
-export const canvasBg = {
+export const canvasBackground = {
 	/** Создание фонового прямоугольника */
-	create() {
+	init() {
 		const bgRectGraphic = new Graphics()
+		bgRectGraphic.label = 'backgroundRect'
+
 		this.drawRectangle(bgRectGraphic)
 
 		this.addEventListeners(bgRectGraphic)
 
-		canvasStore.$bgContainer.addChild(bgRectGraphic)
+		canvasStore.app.stage.addChild(bgRectGraphic)
+	},
+
+	/**
+	 * Отрисовка прямоугольника
+	 * @param bgRectGraphic — объект графики куда рисуется прямоугольник.
+	 */
+	drawRectangle(bgRectGraphic: Graphics) {
+		bgRectGraphic.clear()
+
+		const canvasSize = canvasUtils.getCanvasSize()
+		bgRectGraphic.rect(0, 0, canvasSize.width, canvasSize.height)
+		bgRectGraphic.fill(boardColors.canvasBackground)
 	},
 
 	/** Добавление слушателей событий для фонового прямоугольника */
@@ -27,18 +41,6 @@ export const canvasBg = {
 		addEventListener('resize', () => {
 			this.drawRectangle(bgRectGraphic)
 		})
-	},
-
-	/**
-	 * Отрисовка прямоугольника
-	 * @param bgRectGraphic — объект графики куда рисуется прямоугольник.
-	 */
-	drawRectangle(bgRectGraphic: Graphics) {
-		bgRectGraphic.clear()
-
-		const canvasSize = canvasUtils.getCanvasSize()
-		bgRectGraphic.rect(0, 0, canvasSize.width, canvasSize.height)
-		bgRectGraphic.fill(boardColors.canvasBackground)
 	},
 
 	/** Убирает выделение с выделенного элемента */

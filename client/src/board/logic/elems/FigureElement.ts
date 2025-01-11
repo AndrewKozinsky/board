@@ -1,7 +1,7 @@
 import { Graphics } from 'pixi.js'
 import { OutlineFilter } from 'pixi-filters'
 import { arrUtils } from '../../../utils/arrayUtils.ts'
-import { boardColors } from '../utils/boardConfig.ts'
+import { boardColors } from '../canvas/boardConfig.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
 import { ShapeElementFigure } from '../../types/commonTypes.ts'
@@ -13,7 +13,7 @@ type FigureElementInput = {
 	shape: ShapeElementFigure
 	width: number
 	height: number
-	backgroundColor: string
+	backgroundColor?: string
 	strokeColor?: string
 	strokeWidth?: number
 }
@@ -43,10 +43,10 @@ export class FigureElement {
 		graphics.label = this.id.toString()
 		this.x = inputData.x
 		this.y = inputData.y
-		this.shape = inputData.shape
+		this.shape = inputData.shape ?? ShapeElementFigure.Rectangle
 		this.width = inputData.width
 		this.height = inputData.height
-		this.backgroundColor = inputData.backgroundColor
+		this.backgroundColor = inputData.backgroundColor ?? '#ccc'
 		this.strokeColor = inputData.strokeColor
 		this.strokeWidth = inputData.strokeWidth
 
