@@ -14,7 +14,7 @@ export const mainContainer = {
 		this.createContainerMask()
 		this.createContainerBg()
 		this.createContentContainer()
-		this.ff()
+		this.setPivots()
 	},
 
 	/** Создание главного контейнера */
@@ -49,7 +49,7 @@ export const mainContainer = {
 		canvasStore.$mainContainer.addChild($contentContainer)
 	},
 
-	ff() {
+	setPivots() {
 		const canvasSize = canvasUtils.getCanvasSize()
 		const container = canvasStore.$mainContainer
 
@@ -76,7 +76,7 @@ export const mainContainer = {
 		containerBg.pivot.y = pivotY
 	},
 
-	setSizes(graphics: Graphics) {
+	setSize(graphics: Graphics) {
 		const canvasSize = canvasUtils.getCanvasSize()
 
 		const x = 0
@@ -92,8 +92,8 @@ export const mainContainer = {
 	},
 
 	redrawAll() {
-		this.setSizes(containerMask)
-		this.setSizes(containerBg)
+		this.setSize(containerMask)
+		this.setSize(containerBg)
 
 		containerMask.fill(0xffffff)
 	},

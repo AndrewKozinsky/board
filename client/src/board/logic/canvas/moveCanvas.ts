@@ -115,8 +115,8 @@ export const moveCanvas = {
 	 * @param relativeY — относительное расстояние по вертикале.
 	 */
 	moveCanvas(relativeX: number, relativeY: number) {
-		canvasStore.offset.x -= relativeX
-		canvasStore.offset.y -= relativeY
+		canvasStore.offset.x -= relativeX * canvasUtils.getScaleMultiplier()
+		canvasStore.offset.y -= relativeY * canvasUtils.getScaleMultiplier()
 
 		renderCanvas.render()
 	},

@@ -91,17 +91,7 @@ export const scaleCanvas = {
 			return
 		}
 
-		const currentScale = canvasStore.scale
-		const roundedNewScale = Math.round(newScale)
-
-		// const scaleDiff = (currentScale - roundedNewScale) / 100 // .25
-
-		// const leftOffsetPx = canvasPivotLeftPx * scaleDiff
-		// const topOffsetPx = canvasPivotTopPx * scaleDiff
-
-		// canvasStore.offset.x = canvasStore.offset.x + leftOffsetPx
-		// canvasStore.offset.y = canvasStore.offset.y + topOffsetPx
-		canvasStore.scale = roundedNewScale
+		canvasStore.scale = Math.round(newScale)
 
 		mainContainer.redrawAll()
 

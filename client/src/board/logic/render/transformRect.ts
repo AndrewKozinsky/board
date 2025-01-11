@@ -123,7 +123,7 @@ export const transformRect = {
 
 		sideRectsGraphics.push(graphics)
 
-		canvasStore.$mainContainer.addChild(graphics)
+		canvasStore.$contentContainer.addChild(graphics)
 	},
 
 	/**
@@ -147,7 +147,7 @@ export const transformRect = {
 
 		cornerRectsGraphics.push(graphics)
 
-		canvasStore.$mainContainer.addChild(graphics)
+		canvasStore.$contentContainer.addChild(graphics)
 	},
 
 	/**
