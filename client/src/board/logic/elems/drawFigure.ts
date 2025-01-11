@@ -49,8 +49,6 @@ export const drawFigures = {
 	onInteractiveElemMove(e: FederatedPointerEvent) {
 		if (!drawnFigure) return
 
-		// const width = e.x - this.startMouseX
-		// const height = e.y - this.startMouseY
 		const width = e.x - this.startMouseX
 		const height = e.y - this.startMouseY
 
