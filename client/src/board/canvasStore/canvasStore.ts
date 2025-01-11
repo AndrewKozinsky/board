@@ -7,6 +7,7 @@ export const canvasStore: CanvasStoreType = {
 	devicePixelRatio: window.devicePixelRatio || 1,
 	$bgContainer: null as any,
 	$mainContainer: null as any,
+	$contentContainer: null as any,
 
 	_tool: {
 		name: ToolsName.Select,

@@ -13,8 +13,8 @@ function BoardPage() {
 
 	return (
 		<div className='board' ref={canvasContainerRef}>
-			<TopPanelsWrapper />
-			<LeftPanelsWrapper />
+			{/*<TopPanelsWrapper />*/}
+			{/*<LeftPanelsWrapper />*/}
 		</div>
 	)
 }

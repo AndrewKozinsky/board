@@ -37,6 +37,7 @@ export type CanvasStoreType = {
 	devicePixelRatio: number
 	$bgContainer: Container<ContainerChild>
 	$mainContainer: Container<ContainerChild>
+	$contentContainer: Container<ContainerChild>
 
 	_tool: Tools
 	get tool(): Tools

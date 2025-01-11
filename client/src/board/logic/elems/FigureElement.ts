@@ -50,7 +50,7 @@ export class FigureElement {
 		this.strokeColor = inputData.strokeColor
 		this.strokeWidth = inputData.strokeWidth
 
-		canvasStore.$mainContainer.addChild(graphics)
+		canvasStore.$contentContainer.addChild(graphics)
 
 		this.updateFigure()
 	}

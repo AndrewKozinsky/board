@@ -2,6 +2,7 @@ import { isKeysPressed, keyboardUtils } from '../../../utils/keyboardUtils.ts'
 import { boardConfig } from './boardConfig.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { mainContainer } from './mainContainer.ts'
 
 export enum ZoomDirection {
 	// Приблизить
@@ -90,17 +91,19 @@ export const scaleCanvas = {
 			return
 		}
 
+		const currentScale = canvasStore.scale
 		const roundedNewScale = Math.round(newScale)
 
-		const currentScale = canvasStore.scale
-		const scaleDiff = (currentScale - roundedNewScale) / 100 // .25
+		// const scaleDiff = (currentScale - roundedNewScale) / 100 // .25
 
-		const leftOffsetPx = canvasPivotLeftPx * scaleDiff
-		const topOffsetPx = canvasPivotTopPx * scaleDiff
+		// const leftOffsetPx = canvasPivotLeftPx * scaleDiff
+		// const topOffsetPx = canvasPivotTopPx * scaleDiff
 
-		canvasStore.offset.x = canvasStore.offset.x + leftOffsetPx
-		canvasStore.offset.y = canvasStore.offset.y + topOffsetPx
+		// canvasStore.offset.x = canvasStore.offset.x + leftOffsetPx
+		// canvasStore.offset.y = canvasStore.offset.y + topOffsetPx
 		canvasStore.scale = roundedNewScale
+
+		mainContainer.redrawAll()
 
 		renderCanvas.render()
 	},
