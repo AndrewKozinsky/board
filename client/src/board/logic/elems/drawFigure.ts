@@ -11,13 +11,32 @@ let drawnFigure: null | FigureElement = null
 export const drawFigures = {
 	// Глобальные координаты точки по которой щелкнули мышью
 	// для начала рисования фигуры.
-	startMouseX: 0,
-	startMouseY: 0,
+	startX: 0,
+	startY: 0,
 
 	init() {
 		canvasStore.app.stage.on('pointerdown', (e) => this.onInteractiveElemMouseDown(e))
 		canvasStore.app.stage.on('pointermove', (e) => this.onInteractiveElemMove(e))
 		canvasStore.app.stage.on('pointerup', this.onInteractiveElemMouseUp)
+	},
+
+	/**
+	 * Фигуры могут рисовать на масштабированном холсте.
+	 * Функция переводит переданную координату в как будто её нарисовали на холсте без масштабирования.
+	 * @param x — координата X
+	 * @param y — координата Y
+	 */
+	toUnscaledCoordinates(x: number, y: number) {
+		const canvasSize = canvasUtils.getCanvasSize()
+
+		const centerX = canvasSize.width / 2
+		const centerY = canvasSize.height / 2
+		const scale = canvasStore.scale / 100
+
+		const unscaledX = (x - centerX) / scale + centerX
+		const unscaledY = (y - centerY) / scale + centerY
+
+		return { x: unscaledX, y: unscaledY }
 	},
 
 	/**
@@ -27,11 +46,11 @@ export const drawFigures = {
 	onInteractiveElemMouseDown(e: FederatedPointerEvent) {
 		if (canvasStore.tool.name !== ToolsName.Shape) return
 
-		this.startMouseX = e.global.x
-		this.startMouseY = e.global.y
+		this.startX = e.global.x
+		this.startY = e.global.y
 
 		// Convert mouse coordinates to unscaled canvas space
-		const { x, y } = this.toUnscaledCoordinates(this.startMouseX, this.startMouseY)
+		const { x, y } = this.toUnscaledCoordinates(this.startX, this.startY)
 
 		drawnFigure = new FigureElement({
 			x: x - canvasStore.offset.x,
@@ -52,31 +71,29 @@ export const drawFigures = {
 	onInteractiveElemMove(e: FederatedPointerEvent) {
 		if (!drawnFigure) return
 
+		let width = 0
+		let height = 0
+		const scale = canvasStore.scale / 100
+
+		// Если русуют с низу справа наверх слева
+		/*if (this.startX > e.x && this.startY > e.y) {
+			width = (this.startX - e.x) / scale
+			height = (this.startY - e.y) / scale
+		}*/
+
 		// Adjust width and height for the unscaled canvas
-		const rectWidth = (e.x - this.startMouseX) / (canvasStore.scale / 100)
-		const rectHeight = (e.y - this.startMouseY) / (canvasStore.scale / 100)
+		width = (e.x - this.startX) / scale
+		height = (e.y - this.startY) / scale
 
 		// Draw the rectangle
-		drawnFigure.width = rectWidth
-		drawnFigure.height = rectHeight
+		drawnFigure.width = width
+		drawnFigure.height = height
 
 		renderCanvas.render()
 	},
 
-	// Convert mouse coordinates to unscaled canvas space
-	toUnscaledCoordinates(mouseX: number, mouseY: number): { x: number; y: number } {
-		const canvasSize = canvasUtils.getCanvasSize()
-		const centerX = canvasSize.width / 2
-		const centerY = canvasSize.height / 2
-		const scale = canvasStore.scale / 100
-
-		const unscaledX = (mouseX - centerX) / scale + centerX
-		const unscaledY = (mouseY - centerY) / scale + centerY
-		return { x: unscaledX, y: unscaledY }
-	},
-
 	/** Обработчик отпускания мыши после рисования фигуры */
-	onInteractiveElemMouseUp: function () {
+	onInteractiveElemMouseUp() {
 		if (!drawnFigure) return
 
 		if (!drawnFigure.width && !drawnFigure.height) {
