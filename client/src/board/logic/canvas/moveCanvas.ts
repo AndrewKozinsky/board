@@ -89,8 +89,6 @@ export const moveCanvas = {
 
 			if (this.isSpacePressed) {
 				canvasUtils.setCursor(Cursor.Palm)
-			} else {
-				canvasUtils.clearCursor()
 			}
 		})
 
