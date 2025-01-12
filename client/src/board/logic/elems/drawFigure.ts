@@ -1,6 +1,10 @@
 import { FederatedPointerEvent } from 'pixi.js'
+import { KeyboardKeys, keyboardUtils } from '../../../utils/keyboardUtils.ts'
+import { MouseKeys } from '../../../utils/mouseUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { Cursor } from '../../canvasStore/canvasStoreTypes.ts'
 import { ToolsName } from '../../types/commonTypes.ts'
+import { boardConfig } from '../canvas/boardConfig.ts'
 import { deleteElements } from '../elemInteraction/deleteElements.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 import { canvasUtils } from '../canvas/canvasUtils.ts'
@@ -13,11 +17,33 @@ export const drawFigures = {
 	// для начала рисования фигуры.
 	startX: 0,
 	startY: 0,
+	isSpacePressed: false,
 
 	init() {
 		canvasStore.app.stage.on('pointerdown', (e) => this.onInteractiveElemMouseDown(e))
 		canvasStore.app.stage.on('pointermove', (e) => this.onInteractiveElemMove(e))
 		canvasStore.app.stage.on('pointerup', this.onInteractiveElemMouseUp)
+
+		// Просто проверка, что клавиши в конфигурации не изменились
+		if (boardConfig.commands.moveCanvas2.hotKeys[0] === KeyboardKeys.Space) {
+			this.checkIsSpacePressed()
+		} else {
+			throw new Error('Клавиша перемещение холста изменилась')
+		}
+	},
+
+	checkIsSpacePressed() {
+		document.addEventListener('keydown', (event) => {
+			if (keyboardUtils.isSpacePressed(event) && !event.repeat) {
+				this.isSpacePressed = true
+			}
+		})
+
+		document.addEventListener('keyup', (event) => {
+			if (keyboardUtils.isSpacePressed(event)) {
+				this.isSpacePressed = false
+			}
+		})
 	},
 
 	/**
@@ -44,7 +70,7 @@ export const drawFigures = {
 	 * @param e — объект события
 	 */
 	onInteractiveElemMouseDown(e: FederatedPointerEvent) {
-		if (canvasStore.tool.name !== ToolsName.Shape) return
+		if (canvasStore.tool.name !== ToolsName.Shape || this.isSpacePressed) return
 
 		this.startX = e.global.x
 		this.startY = e.global.y
@@ -69,7 +95,7 @@ export const drawFigures = {
 	 * @param e e — объект события
 	 */
 	onInteractiveElemMove(e: FederatedPointerEvent) {
-		if (!drawnFigure) return
+		if (!drawnFigure || this.isSpacePressed) return
 
 		let width = 0
 		let height = 0

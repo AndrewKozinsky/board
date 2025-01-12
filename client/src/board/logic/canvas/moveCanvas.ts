@@ -1,10 +1,11 @@
 import { KeyboardKeys, keyboardUtils } from '../../../utils/keyboardUtils.ts'
 import { MouseKeys } from '../../../utils/mouseUtils.ts'
-import { boardConfig } from './boardConfig.ts'
-import { canvasUtils } from './canvasUtils.ts'
-import { renderCanvas } from '../render/renderCanvas.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { Cursor } from '../../canvasStore/canvasStoreTypes.ts'
+import { ToolsName } from '../../types/commonTypes.ts'
+import { renderCanvas } from '../render/renderCanvas.ts'
+import { boardConfig } from './boardConfig.ts'
+import { canvasUtils } from './canvasUtils.ts'
 
 // Методы работы с передвижением холста
 export const moveCanvas = {
@@ -16,18 +17,20 @@ export const moveCanvas = {
 
 	/** Установка обработчиков заставляющих холст двигаться */
 	init() {
+		// Просто проверка, что клавиши в конфигурации не изменились
 		if (boardConfig.commands.moveCanvas1.mouseKey === MouseKeys.Wheel) {
 			this.setMoveByMouseWheel()
 		} else {
-			throw new Error('Не установлено перемещение холста')
+			throw new Error('Кнопка перемещение холста изменилась')
 		}
 
 		const moveCommand2 = boardConfig.commands.moveCanvas2
 
+		// Просто проверка, что клавиши в конфигурации не изменились
 		if (moveCommand2.mouseKey === MouseKeys.PressLeft && moveCommand2.hotKeys[0] === KeyboardKeys.Space) {
 			this.setMoveByMouseAndSpaceKey()
 		} else {
-			throw new Error('Не установлено перемещение холста')
+			throw new Error('Клавиша перемещение холста изменилась')
 		}
 	},
 
@@ -60,7 +63,10 @@ export const moveCanvas = {
 		document.addEventListener('keyup', (event) => {
 			if (keyboardUtils.isSpacePressed(event)) {
 				this.isSpacePressed = false
-				canvasUtils.clearCursor()
+
+				if (canvasStore.tool.name === ToolsName.Select) {
+					canvasUtils.clearCursor()
+				}
 			}
 
 			if (keyboardUtils.isCtrlPressed(event)) {
