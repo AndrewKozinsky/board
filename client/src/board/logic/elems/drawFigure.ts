@@ -75,15 +75,36 @@ export const drawFigures = {
 		let height = 0
 		const scale = canvasStore.scale / 100
 
-		// Если русуют с низу справа наверх слева
-		/*if (this.startX > e.x && this.startY > e.y) {
+		// Если рисуют снизу справа наверх слева
+		if (this.startX > e.x && this.startY > e.y) {
+			const { x, y } = this.toUnscaledCoordinates(e.x, e.y)
+			drawnFigure.x = x
+			drawnFigure.y = y
+
 			width = (this.startX - e.x) / scale
 			height = (this.startY - e.y) / scale
-		}*/
+		}
+		// Если рисуют снизу слева наверх слева
+		else if (this.startX < e.x && this.startY > e.y) {
+			const { y } = this.toUnscaledCoordinates(e.x, e.y)
+			drawnFigure.y = y
 
-		// Adjust width and height for the unscaled canvas
-		width = (e.x - this.startX) / scale
-		height = (e.y - this.startY) / scale
+			width = (e.x - this.startX) / scale
+			height = (this.startY - e.y) / scale
+		}
+		// Если рисуют сверху слева вниз слева
+		else if (this.startX < e.x && this.startY < e.y) {
+			width = (e.x - this.startX) / scale
+			height = (e.y - this.startY) / scale
+		}
+		// Если рисуют сверху справа вниз налево
+		else if (this.startX > e.x && this.startY < e.y) {
+			const { x } = this.toUnscaledCoordinates(e.x, e.y)
+			drawnFigure.x = x
+
+			width = (this.startX - e.x) / scale
+			height = (e.y - this.startY) / scale
+		}
 
 		// Draw the rectangle
 		drawnFigure.width = width
