@@ -30,9 +30,12 @@ export const drawFigures = {
 		this.startMouseX = e.global.x
 		this.startMouseY = e.global.y
 
+		// Convert mouse coordinates to unscaled canvas space
+		const { x, y } = this.toUnscaledCoordinates(this.startMouseX, this.startMouseY)
+
 		drawnFigure = new FigureElement({
-			x: e.global.x - canvasStore.offset.x,
-			y: e.global.y - canvasStore.offset.y,
+			x: x - canvasStore.offset.x,
+			y: y - canvasStore.offset.y,
 			shape: canvasStore.tool.shape,
 			height: 0,
 			width: 0,
@@ -49,15 +52,27 @@ export const drawFigures = {
 	onInteractiveElemMove(e: FederatedPointerEvent) {
 		if (!drawnFigure) return
 
-		const width = e.x - this.startMouseX
-		const height = e.y - this.startMouseY
+		// Adjust width and height for the unscaled canvas
+		const rectWidth = (e.x - this.startMouseX) / (canvasStore.scale / 100)
+		const rectHeight = (e.y - this.startMouseY) / (canvasStore.scale / 100)
 
-		// drawnFigure.width = width
-		// drawnFigure.height = height
-		drawnFigure.width = width * canvasUtils.getScaleMultiplier()
-		drawnFigure.height = height * canvasUtils.getScaleMultiplier()
+		// Draw the rectangle
+		drawnFigure.width = rectWidth
+		drawnFigure.height = rectHeight
 
 		renderCanvas.render()
+	},
+
+	// Convert mouse coordinates to unscaled canvas space
+	toUnscaledCoordinates(mouseX: number, mouseY: number): { x: number; y: number } {
+		const canvasSize = canvasUtils.getCanvasSize()
+		const centerX = canvasSize.width / 2
+		const centerY = canvasSize.height / 2
+		const scale = canvasStore.scale / 100
+
+		const unscaledX = (mouseX - centerX) / scale + centerX
+		const unscaledY = (mouseY - centerY) / scale + centerY
+		return { x: unscaledX, y: unscaledY }
 	},
 
 	/** Обработчик отпускания мыши после рисования фигуры */

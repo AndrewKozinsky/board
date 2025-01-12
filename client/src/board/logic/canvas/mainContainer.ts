@@ -5,13 +5,13 @@ import { canvasUtils } from './canvasUtils.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 
 export let containerBg: Graphics = null as any
-export let containerMask: Graphics = null as any
+// export let containerMask: Graphics = null as any
 
 // Главный контейнер куда помещается содержимое сцены
 export const mainContainer = {
 	init() {
 		this.createContainer()
-		this.createContainerMask()
+		// this.createContainerMask()
 		this.createContainerBg()
 		this.createContentContainer()
 		this.setPivots()
@@ -26,12 +26,12 @@ export const mainContainer = {
 		canvasStore.app.stage.addChild($mainContainer)
 	},
 
-	createContainerMask() {
+	/*createContainerMask() {
 		containerMask = new Graphics()
 		containerMask.label = 'mainContainerMask'
 
 		canvasStore.$mainContainer.mask = containerMask
-	},
+	},*/
 
 	createContainerBg() {
 		containerBg = new Graphics()
@@ -66,6 +66,13 @@ export const mainContainer = {
 		containerBg.y = pivotY
 		containerBg.pivot.x = pivotX
 		containerBg.pivot.y = pivotY
+
+		// containerMask.clear()
+		// containerMask.rect(0, 0, canvasSize.width, canvasSize.height).fill(boardColors.canvasBackground) // 0xffffff
+		// containerMask.x = pivotX
+		// containerMask.y = pivotY
+		// containerMask.pivot.x = pivotX
+		// containerMask.pivot.y = pivotY
 	},
 
 	redrawAll() {
@@ -85,5 +92,10 @@ export const mainContainer = {
 		containerBg.rect(0, 0, canvasSize.width, canvasSize.height).fill(boardColors.canvasBackground) // 0xffffff
 		containerBg.scale.x = scale
 		containerBg.scale.y = scale
+
+		// containerMask.clear()
+		// containerMask.rect(0, 0, canvasSize.width, canvasSize.height).fill(boardColors.canvasBackground) // 0xffffff
+		// containerMask.scale.x = scale
+		// containerMask.scale.y = scale
 	},
 }
