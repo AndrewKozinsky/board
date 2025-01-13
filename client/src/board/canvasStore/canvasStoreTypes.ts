@@ -12,8 +12,7 @@ export enum Cursor {
 	NwseResize = 'nwse-resize',
 	NeswResize = 'nesw-resize',
 
-	// Готовил строку на
-	// https://yoksel.github.io/url-encoder/
+	// Готовил строку на yoksel.github.io/url-encoder
 	// В конце строки нужно добавить 4 17, pointer
 	DrawRectangle = "url(\"data:image/svg+xml,%3Csvg width='22px' height='22px' viewBox='0 0 22 22' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cpath d='M18,2.5 L18.5,11 L10,11.5 L9.5,3 L18,2.5 Z' stroke='%23000000'%3E%3C/path%3E%3Crect fill='%23000000' x='0' y='16' width='9' height='1'%3E%3C/rect%3E%3Crect fill='%23000000' x='4' y='12' width='1' height='9'%3E%3C/rect%3E%3C/g%3E%3C/svg%3E\") 4 17, pointer",
 	DrawCircle = "url(\"data:image/svg+xml,%3Csvg width='22px' height='22px' viewBox='0 0 22 22' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Crect fill='%23000000' x='0' y='16' width='9' height='1'%3E%3C/rect%3E%3Crect fill='%23000000' x='4' y='12' width='1' height='9'%3E%3C/rect%3E%3Ccircle stroke='%23000000' cx='13.5' cy='6.5' r='5'%3E%3C/circle%3E%3C/g%3E%3C/svg%3E\") 4 17, pointer",
@@ -47,6 +46,7 @@ export type CanvasStoreType = {
 	_scale: number
 	get scale(): number
 	set scale(val: number)
+
 	// Точка трансформации относительно которой будет происходить изменение масштаба
 	// Задаётся в процентах от ширины/высоты экрана
 	scalePivotX: number
@@ -57,7 +57,20 @@ export type CanvasStoreType = {
 		x: number
 		y: number
 	}
+
+	// Курсор холста
 	cursor: Cursor
+	// Если временно нужно показать другой курсор, например при перемещении холста, то он ставится в это поле.
+	// Как только необходимость в нём исчезает, то его нужно обнулить и тогда покажется курсор установленный в cursor.
+	// specialCursor имеет больший приоритет над обычным курсором.
+	specialCursor: null | Cursor
+
+	pressedKeys: {
+		ctrl: boolean
+		alt: boolean
+		shift: boolean
+	}
+
 	elements: CanvasElement[]
 }
 

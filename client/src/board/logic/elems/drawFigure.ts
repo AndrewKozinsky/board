@@ -1,8 +1,6 @@
 import { FederatedPointerEvent } from 'pixi.js'
 import { KeyboardKeys, keyboardUtils } from '../../../utils/keyboardUtils.ts'
-import { MouseKeys } from '../../../utils/mouseUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
-import { Cursor } from '../../canvasStore/canvasStoreTypes.ts'
 import { ToolsName } from '../../types/commonTypes.ts'
 import { boardConfig } from '../canvas/boardConfig.ts'
 import { deleteElements } from '../elemInteraction/deleteElements.ts'
@@ -12,6 +10,7 @@ import { FigureElement } from './FigureElement.ts'
 
 let drawnFigure: null | FigureElement = null
 
+// Рисует фигуру
 export const drawFigures = {
 	// Глобальные координаты точки по которой щелкнули мышью
 	// для начала рисования фигуры.
@@ -19,6 +18,7 @@ export const drawFigures = {
 	startY: 0,
 	isSpacePressed: false,
 
+	// Ставит обработчики для рисования фигуры
 	init() {
 		canvasStore.app.stage.on('pointerdown', (e) => this.onInteractiveElemMouseDown(e))
 		canvasStore.app.stage.on('pointermove', (e) => this.onInteractiveElemMove(e))

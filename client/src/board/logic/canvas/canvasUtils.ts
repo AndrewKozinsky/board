@@ -1,7 +1,7 @@
 import { FederatedPointerEvent } from 'pixi.js'
 import { arrUtils } from '../../../utils/arrayUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
-import { CanvasElement, Cursor, InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
+import { CanvasElement, CanvasStoreType, Cursor, InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 
 // Методы для работы с холстом
@@ -28,9 +28,7 @@ export const canvasUtils = {
 
 		if (!selectedElem) return
 
-		this.updateCanvasElement(selectedElem.id, {
-			interactionStatus: InteractionStatus.Default,
-		})
+		selectedElem.interactionStatus = InteractionStatus.Default
 	},
 
 	/**
@@ -90,8 +88,12 @@ export const canvasUtils = {
 		renderCanvas.render()
 	},
 
-	/** Ставит на холсте стандартный курсор */
-	clearCursor() {
-		this.setCursor(Cursor.Default)
+	/**
+	 * Установка курсора для холста
+	 * @param cursorType — тип курсора
+	 */
+	setSpecialCursor(cursorType: CanvasStoreType['specialCursor']) {
+		canvasStore.specialCursor = cursorType
+		renderCanvas.render()
 	},
 }

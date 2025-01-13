@@ -5,10 +5,11 @@ import { renderCanvas } from '../render/renderCanvas.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
 
+// Ставит обработчики на выделение элемента
 export const selectElements = {
 	init() {
 		canvasStore.app.stage.on('pointerdown', (e) => {
-			this.selectFigure(e)
+			this.selectElem(e)
 		})
 	},
 
@@ -16,7 +17,7 @@ export const selectElements = {
 	 * Делает фигуру выделенной
 	 * @param e — событие щелчка по элементу или холсту
 	 */
-	selectFigure(e: FederatedPointerEvent) {
+	selectElem(e: FederatedPointerEvent) {
 		const elemUnderCursor = canvasUtils.getElemUnderCursor(e)
 		if (!elemUnderCursor) return
 
@@ -28,9 +29,7 @@ export const selectElements = {
 
 		canvasUtils.makeAllElemsUnselected()
 
-		canvasUtils.updateCanvasElement(elemUnderCursor.id, {
-			interactionStatus: InteractionStatus.Selected,
-		})
+		elemUnderCursor.interactionStatus = InteractionStatus.Selected
 
 		renderCanvas.render()
 	},

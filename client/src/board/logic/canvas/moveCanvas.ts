@@ -2,7 +2,6 @@ import { KeyboardKeys, keyboardUtils } from '../../../utils/keyboardUtils.ts'
 import { MouseKeys } from '../../../utils/mouseUtils.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
 import { Cursor } from '../../canvasStore/canvasStoreTypes.ts'
-import { ToolsName } from '../../types/commonTypes.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 import { boardConfig } from './boardConfig.ts'
 import { canvasUtils } from './canvasUtils.ts'
@@ -10,7 +9,6 @@ import { canvasUtils } from './canvasUtils.ts'
 // Методы работы с передвижением холста
 export const moveCanvas = {
 	isMousePressed: false,
-	isCmdPressed: false,
 	isSpacePressed: false,
 	mouseStartX: 0,
 	mouseStartY: 0,
@@ -39,7 +37,7 @@ export const moveCanvas = {
 		canvasStore.app.stage.on(
 			'wheel',
 			(event) => {
-				if (this.isCmdPressed) return
+				if (canvasStore.pressedKeys.ctrl) return
 
 				const { deltaX, deltaY } = event
 				this.moveCanvas(deltaX, deltaY)
@@ -53,10 +51,7 @@ export const moveCanvas = {
 		document.addEventListener('keydown', (event) => {
 			if (keyboardUtils.isSpacePressed(event) && !event.repeat) {
 				this.isSpacePressed = true
-				canvasUtils.setCursor(Cursor.Palm)
-			}
-			if (keyboardUtils.isCtrlPressed(event) && !event.repeat) {
-				this.isCmdPressed = true
+				canvasUtils.setSpecialCursor(Cursor.Palm)
 			}
 		})
 
@@ -64,20 +59,8 @@ export const moveCanvas = {
 			if (keyboardUtils.isSpacePressed(event)) {
 				this.isSpacePressed = false
 
-				if (canvasStore.tool.name === ToolsName.Select) {
-					canvasUtils.clearCursor()
-				}
+				canvasUtils.setSpecialCursor(null)
 			}
-
-			if (keyboardUtils.isCtrlPressed(event)) {
-				this.isCmdPressed = false
-			}
-		})
-
-		// Если потеряли фокус, то скорее всего переключились на другое приложение,
-		// поэтому поставить isCmdPressed в false
-		window.addEventListener('blur', () => {
-			this.isCmdPressed = false
 		})
 
 		document.addEventListener('mousedown', (event) => {
@@ -86,7 +69,7 @@ export const moveCanvas = {
 			this.mouseStartY = event.clientY
 
 			if (this.isSpacePressed) {
-				canvasUtils.setCursor(Cursor.Dragging)
+				canvasUtils.setSpecialCursor(Cursor.Dragging)
 			}
 		})
 
@@ -94,7 +77,7 @@ export const moveCanvas = {
 			this.isMousePressed = false
 
 			if (this.isSpacePressed) {
-				canvasUtils.setCursor(Cursor.Palm)
+				canvasUtils.setSpecialCursor(null)
 			}
 		})
 
@@ -108,7 +91,7 @@ export const moveCanvas = {
 
 				this.moveCanvas(offsetX, offsetY)
 
-				canvasUtils.setCursor(Cursor.Dragging)
+				canvasUtils.setSpecialCursor(Cursor.Dragging)
 			}
 		})
 	},

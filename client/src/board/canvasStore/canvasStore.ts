@@ -41,6 +41,15 @@ export const canvasStore: CanvasStoreType = {
 		x: 0,
 		y: 0,
 	},
+
 	cursor: Cursor.Default,
+	specialCursor: null,
+
+	pressedKeys: {
+		ctrl: false,
+		alt: false,
+		shift: false,
+	},
+
 	elements: [],
 }

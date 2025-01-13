@@ -11,15 +11,13 @@ export const renderCanvas = {
 
 	/** Сборка сцены */
 	buildScene() {
-		const { $mainContainer, app, $contentContainer } = canvasStore
-
-		const { scale, offset, cursor } = canvasStore
+		const { app, $mainContainer, $contentContainer, scale, offset, cursor, specialCursor } = canvasStore
 
 		$mainContainer.scale = scale / 100
 		$contentContainer.position.x = offset.x
 		$contentContainer.position.y = offset.y
 
-		app.canvas.style.cursor = cursor
+		app.canvas.style.cursor = specialCursor ? specialCursor : cursor
 
 		this.drawElements()
 		transformRect.init()

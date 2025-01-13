@@ -1,4 +1,4 @@
-import { isKeysPressed, keyboardUtils } from '../../../utils/keyboardUtils.ts'
+import { isKeysPressed } from '../../../utils/keyboardUtils.ts'
 import { boardConfig } from './boardConfig.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 import { canvasStore } from '../../canvasStore/canvasStore.ts'
@@ -17,8 +17,6 @@ const minZoomValue = zoomValues[0]
 const maxZoomValue = zoomValues[zoomValues.length - 1]
 
 export const scaleCanvas = {
-	isCmdPressed: false,
-
 	/** Устанавливает обработчики отвечающие за масштабирование холста */
 	init() {
 		// Масштабировать если нажали + или -
@@ -30,29 +28,11 @@ export const scaleCanvas = {
 			}
 		})
 
-		// Проверить нажали ли Cmd
-		document.addEventListener('keydown', (event) => {
-			if (keyboardUtils.isCtrlPressed(event)) {
-				this.isCmdPressed = true
-			}
-		})
-		document.addEventListener('keyup', (event) => {
-			if (keyboardUtils.isCtrlPressed(event)) {
-				this.isCmdPressed = false
-			}
-		})
-
-		// Если потеряли фокус, то скорее всего переключились на другое приложение,
-		// поэтому поставить isCmdPressed в false
-		window.addEventListener('blur', () => {
-			this.isCmdPressed = false
-		})
-
 		// Масштабировать если нажали Cmd и крутят колесо мыши
 		canvasStore.app.canvas.addEventListener(
 			'wheel',
 			(event) => {
-				if (!this.isCmdPressed) return
+				if (!canvasStore.pressedKeys.ctrl) return
 				this.zoomCanvasByMouse(event)
 			},
 			{ passive: true },
@@ -91,6 +71,7 @@ export const scaleCanvas = {
 		canvasStore.scalePivotX = canvasPivotLeftPc
 		canvasStore.scalePivotY = canvasPivotTopPc
 
+		// Поставить самое большое или самое маленькое значение если вышли из этого диапазона
 		if (newScale < minZoomValue || newScale > maxZoomValue) {
 			canvasStore.scale = newScale < minZoomValue ? minZoomValue : maxZoomValue
 			renderCanvas.render()

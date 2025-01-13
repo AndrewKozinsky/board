@@ -30,7 +30,8 @@ export const tools = {
 			canvasStore.tool = {
 				name: ToolsName.Select,
 			}
-			canvasUtils.clearCursor()
+
+			canvasUtils.setCursor(Cursor.Default)
 		} else if (toolName === ToolsName.Shape) {
 			canvasStore.tool = {
 				name: ToolsName.Shape,

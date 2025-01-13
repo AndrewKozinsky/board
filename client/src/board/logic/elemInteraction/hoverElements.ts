@@ -30,9 +30,7 @@ export const hoverElements = {
 		)
 			return
 
-		canvasUtils.updateCanvasElement(elemUnderCursor.id, {
-			interactionStatus: isUnderHover ? InteractionStatus.Hovered : InteractionStatus.Default,
-		})
+		elemUnderCursor.interactionStatus = isUnderHover ? InteractionStatus.Hovered : InteractionStatus.Default
 
 		renderCanvas.render()
 	},

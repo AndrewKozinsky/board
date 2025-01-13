@@ -300,61 +300,38 @@ export const transformRect = {
 
 		const setNewPositionMapper: Record<InteractiveElemNames, () => void> = {
 			[InteractiveElemNames.Right]: () => {
-				const newWidth = shapeInitialCoords.width + diffX
-				canvasUtils.updateCanvasElement(selectedElem.id, { width: newWidth })
+				selectedElem.width = shapeInitialCoords.width + diffX
 			},
 			[InteractiveElemNames.Left]: () => {
-				const newWidth = shapeInitialCoords.width - diffX
-				const newX = shapeInitialCoords.x + diffX
-
-				canvasUtils.updateCanvasElement(selectedElem.id, { x: newX, width: newWidth })
+				selectedElem.x = shapeInitialCoords.x + diffX
+				selectedElem.width = shapeInitialCoords.width - diffX
 			},
 			[InteractiveElemNames.Bottom]: () => {
-				const newHeight = shapeInitialCoords.height + diffY
-
-				canvasUtils.updateCanvasElement(selectedElem.id, { height: newHeight })
+				selectedElem.height = shapeInitialCoords.height + diffY
 			},
 			[InteractiveElemNames.Top]: () => {
-				const newHeight = shapeInitialCoords.height - diffY
-				const newY = shapeInitialCoords.y + diffY
-
-				canvasUtils.updateCanvasElement(selectedElem.id, { y: newY, height: newHeight })
+				selectedElem.height = shapeInitialCoords.height - diffY
+				selectedElem.y = shapeInitialCoords.y + diffY
 			},
 			[InteractiveElemNames.LeftTop]: () => {
-				const newX = shapeInitialCoords.x + diffX
-				const newWidth = shapeInitialCoords.width - diffX
-
-				const newY = shapeInitialCoords.y + diffY
-				const newHeight = shapeInitialCoords.height - diffY
-
-				canvasUtils.updateCanvasElement(selectedElem.id, {
-					x: newX,
-					y: newY,
-					width: newWidth,
-					height: newHeight,
-				})
+				selectedElem.x = shapeInitialCoords.x + diffX
+				selectedElem.y = shapeInitialCoords.y + diffY
+				selectedElem.width = shapeInitialCoords.width - diffX
+				selectedElem.height = shapeInitialCoords.height - diffY
 			},
 			[InteractiveElemNames.RightTop]: () => {
-				const newWidth = shapeInitialCoords.width + diffX
-
-				const newY = shapeInitialCoords.y + diffY
-				const newHeight = shapeInitialCoords.height - diffY
-
-				canvasUtils.updateCanvasElement(selectedElem.id, { y: newY, width: newWidth, height: newHeight })
+				selectedElem.y = shapeInitialCoords.y + diffY
+				selectedElem.width = shapeInitialCoords.width + diffX
+				selectedElem.height = shapeInitialCoords.height - diffY
 			},
 			[InteractiveElemNames.RightBottom]: () => {
-				const newWidth = shapeInitialCoords.width + diffX
-				const newHeight = shapeInitialCoords.height + diffY
-
-				canvasUtils.updateCanvasElement(selectedElem.id, { width: newWidth, height: newHeight })
+				selectedElem.width = shapeInitialCoords.width + diffX
+				selectedElem.height = shapeInitialCoords.height + diffY
 			},
 			[InteractiveElemNames.LeftBottom]: () => {
-				const newX = shapeInitialCoords.x + diffX
-				const newWidth = shapeInitialCoords.width - diffX
-
-				const newHeight = shapeInitialCoords.height + diffY
-
-				canvasUtils.updateCanvasElement(selectedElem.id, { x: newX, width: newWidth, height: newHeight })
+				selectedElem.x = shapeInitialCoords.x + diffX
+				selectedElem.width = shapeInitialCoords.width - diffX
+				selectedElem.height = shapeInitialCoords.height + diffY
 			},
 		}
 
