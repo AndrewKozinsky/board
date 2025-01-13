@@ -12,17 +12,13 @@ let drawnFigure: null | FigureElement = null
 
 // Рисует фигуру
 export const drawFigures = {
-	// Глобальные координаты точки по которой щелкнули мышью
-	// для начала рисования фигуры.
-	startX: 0,
-	startY: 0,
 	isSpacePressed: false,
 
 	// Ставит обработчики для рисования фигуры
 	init() {
-		canvasStore.app.stage.on('pointerdown', (e) => this.onInteractiveElemMouseDown(e))
-		canvasStore.app.stage.on('pointermove', (e) => this.onInteractiveElemMove(e))
-		canvasStore.app.stage.on('pointerup', this.onInteractiveElemMouseUp)
+		canvasStore.app.stage.on('pointerdown', (e) => this.onMouseDown(e))
+		canvasStore.app.stage.on('pointermove', (e) => this.onMouseMove(e))
+		canvasStore.app.stage.on('pointerup', this.onMouseUp)
 
 		// Просто проверка, что клавиши в конфигурации не изменились
 		if (boardConfig.commands.moveCanvas2.hotKeys[0] === KeyboardKeys.Space) {
@@ -69,14 +65,12 @@ export const drawFigures = {
 	 * Обработчик нажатия мыши по холсту для начала рисования фигуры
 	 * @param e — объект события
 	 */
-	onInteractiveElemMouseDown(e: FederatedPointerEvent) {
-		if (canvasStore.tool.name !== ToolsName.Shape || this.isSpacePressed) return
-
-		this.startX = e.global.x
-		this.startY = e.global.y
+	onMouseDown(e: FederatedPointerEvent) {
+		const { startX, startY } = canvasStore.mouseMetrics
+		if (canvasStore.tool.name !== ToolsName.Shape || this.isSpacePressed || !startX || !startY) return
 
 		// Convert mouse coordinates to unscaled canvas space
-		const { x, y } = this.toUnscaledCoordinates(this.startX, this.startY)
+		const { x, y } = this.toUnscaledCoordinates(startX, startY)
 
 		drawnFigure = new FigureElement({
 			x: x - canvasStore.offset.x,
@@ -94,42 +88,43 @@ export const drawFigures = {
 	 * В соответствии с движением изменяется размер рисуемой фигуры.
 	 * @param e e — объект события
 	 */
-	onInteractiveElemMove(e: FederatedPointerEvent) {
-		if (!drawnFigure || this.isSpacePressed) return
+	onMouseMove(e: FederatedPointerEvent) {
+		const { startX, startY } = canvasStore.mouseMetrics
+		if (!drawnFigure || this.isSpacePressed || !startX || !startY) return
 
 		let width = 0
 		let height = 0
 		const scale = canvasStore.scale / 100
 
 		// Если рисуют снизу справа наверх слева
-		if (this.startX > e.x && this.startY > e.y) {
+		if (startX > e.x && startY > e.y) {
 			const { x, y } = this.toUnscaledCoordinates(e.x, e.y)
 			drawnFigure.x = x
 			drawnFigure.y = y
 
-			width = (this.startX - e.x) / scale
-			height = (this.startY - e.y) / scale
+			width = (startX - e.x) / scale
+			height = (startY - e.y) / scale
 		}
 		// Если рисуют снизу слева наверх слева
-		else if (this.startX < e.x && this.startY > e.y) {
+		else if (startX < e.x && startY > e.y) {
 			const { y } = this.toUnscaledCoordinates(e.x, e.y)
 			drawnFigure.y = y
 
-			width = (e.x - this.startX) / scale
-			height = (this.startY - e.y) / scale
+			width = (e.x - startX) / scale
+			height = (startY - e.y) / scale
 		}
 		// Если рисуют сверху слева вниз слева
-		else if (this.startX < e.x && this.startY < e.y) {
-			width = (e.x - this.startX) / scale
-			height = (e.y - this.startY) / scale
+		else if (startX < e.x && startY < e.y) {
+			width = (e.x - startX) / scale
+			height = (e.y - startY) / scale
 		}
 		// Если рисуют сверху справа вниз налево
-		else if (this.startX > e.x && this.startY < e.y) {
+		else if (startX > e.x && startY < e.y) {
 			const { x } = this.toUnscaledCoordinates(e.x, e.y)
 			drawnFigure.x = x
 
-			width = (this.startX - e.x) / scale
-			height = (e.y - this.startY) / scale
+			width = (startX - e.x) / scale
+			height = (e.y - startY) / scale
 		}
 
 		// Draw the rectangle
@@ -140,7 +135,7 @@ export const drawFigures = {
 	},
 
 	/** Обработчик отпускания мыши после рисования фигуры */
-	onInteractiveElemMouseUp() {
+	onMouseUp() {
 		if (!drawnFigure) return
 
 		if (!drawnFigure.width && !drawnFigure.height) {

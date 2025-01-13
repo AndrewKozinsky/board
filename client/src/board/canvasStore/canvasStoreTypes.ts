@@ -71,6 +71,19 @@ export type CanvasStoreType = {
 		shift: boolean
 	}
 
+	mouseMetrics: {
+		// Координата щелчка. Null если ещё не нажимали или уже отжали
+		startX: null | number
+		startY: null | number
+		// Текущее положение мыши
+		currentX: number
+		currentY: number
+		// Расстояние, которое прошла мышь после нажатия.
+		// Null если мышь отжали
+		width: null | number
+		height: null | number
+	}
+
 	elements: CanvasElement[]
 }
 

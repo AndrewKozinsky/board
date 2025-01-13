@@ -10,8 +10,8 @@ import { canvasUtils } from './canvasUtils.ts'
 export const moveCanvas = {
 	isMousePressed: false,
 	isSpacePressed: false,
-	mouseStartX: 0,
-	mouseStartY: 0,
+	lastMouseX: 0,
+	lastMouseY: 0,
 
 	/** Установка обработчиков заставляющих холст двигаться */
 	init() {
@@ -52,6 +52,12 @@ export const moveCanvas = {
 			if (keyboardUtils.isSpacePressed(event) && !event.repeat) {
 				this.isSpacePressed = true
 				canvasUtils.setSpecialCursor(Cursor.Palm)
+
+				// Это нужно когда в процессе рисования фигуры нажали пробел.
+				// Тогда за основу нужно взять не координаты щелчка мыши, а положение мыши, когда пробел был нажат.
+				// Иначе холст прыгает в положение щелчка мыши.
+				this.lastMouseX = canvasStore.mouseMetrics.currentX
+				this.lastMouseY = canvasStore.mouseMetrics.currentY
 			}
 		})
 
@@ -65,8 +71,8 @@ export const moveCanvas = {
 
 		document.addEventListener('mousedown', (event) => {
 			this.isMousePressed = true
-			this.mouseStartX = event.clientX
-			this.mouseStartY = event.clientY
+			this.lastMouseX = event.clientX
+			this.lastMouseY = event.clientY
 
 			if (this.isSpacePressed) {
 				canvasUtils.setSpecialCursor(Cursor.Dragging)
@@ -82,17 +88,17 @@ export const moveCanvas = {
 		})
 
 		document.addEventListener('pointermove', (event) => {
-			if (this.isMousePressed && this.isSpacePressed) {
-				const offsetX = this.mouseStartX - event.clientX
-				const offsetY = this.mouseStartY - event.clientY
+			if (!(this.isMousePressed && this.isSpacePressed)) return
 
-				this.mouseStartX = event.clientX
-				this.mouseStartY = event.clientY
+			const offsetX = this.lastMouseX - event.clientX
+			const offsetY = this.lastMouseY - event.clientY
 
-				this.moveCanvas(offsetX, offsetY)
+			this.lastMouseX = event.clientX
+			this.lastMouseY = event.clientY
 
-				canvasUtils.setSpecialCursor(Cursor.Dragging)
-			}
+			this.moveCanvas(offsetX, offsetY)
+
+			canvasUtils.setSpecialCursor(Cursor.Dragging)
 		})
 	},
 

@@ -3,6 +3,7 @@ import { wait } from '../../utils/promise.ts'
 import { canvasStore } from '../canvasStore/canvasStore.ts'
 import { ShapeElementFigure } from '../types/commonTypes.ts'
 import { mainContainer } from './canvas/mainContainer.ts'
+import { mouseMetrics } from './canvas/mouseMetrics.ts'
 import { pressingKeys } from './canvas/pressingKeys.ts'
 import { drawFigures } from './elems/drawFigure.ts'
 import { canvasUtils } from './canvas/canvasUtils.ts'
@@ -25,6 +26,8 @@ export const main = {
 		mainContainer.init()
 
 		pressingKeys.init()
+		mouseMetrics.init()
+
 		scaleCanvas.init()
 		moveCanvas.init()
 

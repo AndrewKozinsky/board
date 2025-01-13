@@ -51,5 +51,14 @@ export const canvasStore: CanvasStoreType = {
 		shift: false,
 	},
 
+	mouseMetrics: {
+		startX: null,
+		startY: null,
+		currentX: 0,
+		currentY: 0,
+		width: null,
+		height: null,
+	},
+
 	elements: [],
 }
