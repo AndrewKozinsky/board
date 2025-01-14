@@ -1,6 +1,12 @@
 .scale-panel {
 	display: flex;
 	flex-direction: column;
+	gap: 1rem;
+}
+
+.scale-panel__top {
+	display: flex;
+	flex-direction: column;
 	gap: 0.4rem;
 	user-select: none;
 }

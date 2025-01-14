@@ -28,6 +28,14 @@ export const boardConfig = {
 			prompt: 'Уменьшение масштаба',
 			hotKeys: [KeyboardKeys.Minus],
 		},
+		turnOnFullScreenMode: {
+			prompt: 'Переключение в полноэкранный режим',
+			hotKeys: [KeyboardKeys.Ctrl, KeyboardKeys.F],
+		},
+		turnOffFullScreenMode: {
+			prompt: 'Выход из полноэкранного режима',
+			hotKeys: [KeyboardKeys.Esc],
+		},
 		switchToSelectTool: {
 			prompt: 'Инструмент «Выделение»',
 			hotKeys: [KeyboardKeys.Esc],

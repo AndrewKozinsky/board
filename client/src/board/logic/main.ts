@@ -2,6 +2,7 @@ import { Application, Container, Renderer } from 'pixi.js'
 import { wait } from '../../utils/promise.ts'
 import { canvasStore } from '../canvasStore/canvasStore.ts'
 import { ShapeElementFigure } from '../types/commonTypes.ts'
+import { fullScreen } from './canvas/fullScreen.ts'
 import { mainContainer } from './canvas/mainContainer.ts'
 import { mouseMetrics } from './canvas/mouseMetrics.ts'
 import { pressingKeys } from './canvas/pressingKeys.ts'
@@ -27,6 +28,7 @@ export const main = {
 
 		pressingKeys.init()
 		mouseMetrics.init()
+		fullScreen.init()
 
 		scaleCanvas.init()
 		moveCanvas.init()

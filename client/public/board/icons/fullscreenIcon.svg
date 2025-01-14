@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon fill="#000000" fill-rule="nonzero" points="22 2 22 8 20 8 20 4 16 4 16 2"></polygon>
+        <polygon fill="#000000" fill-rule="nonzero" points="4 16 4 20 8 20 8 22 2 22 2 16"></polygon>
+        <polygon fill="#000000" fill-rule="nonzero" points="8 2 8 4 4 4 4 7.5 2 7.5 2 2"></polygon>
+        <polygon fill="#000000" fill-rule="nonzero" points="22 16 22 22 16 22 16 20 20 20 20 16"></polygon>
+    </g>
+</svg>
