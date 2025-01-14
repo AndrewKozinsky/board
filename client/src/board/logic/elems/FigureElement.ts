@@ -124,7 +124,7 @@ export class FigureElement {
 	updateCircle() {
 		const { width, height, graphics } = this
 
-		graphics.ellipse(0, 0, width, height)
+		graphics.ellipse(width / 2, height / 2, width / 2, height / 2)
 	}
 
 	/** Обновляет параметры треугольника */

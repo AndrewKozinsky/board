@@ -71,10 +71,10 @@ export const moveCanvas = {
 
 		document.addEventListener('mousedown', (event) => {
 			this.isMousePressed = true
-			this.lastMouseX = event.clientX
-			this.lastMouseY = event.clientY
 
 			if (this.isSpacePressed) {
+				this.lastMouseX = event.clientX
+				this.lastMouseY = event.clientY
 				canvasUtils.setSpecialCursor(Cursor.Dragging)
 			}
 		})
