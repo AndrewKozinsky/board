@@ -84,7 +84,9 @@ export type CanvasStoreType = {
 		height: null | number
 	}
 
-	elements: CanvasElement[]
+	_elements: CanvasElement[]
+	get elements(): CanvasElement[]
+	set elements(val: CanvasElement[])
 }
 
 export type CanvasElement = FigureElement | TextElement

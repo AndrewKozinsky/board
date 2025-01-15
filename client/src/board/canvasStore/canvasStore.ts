@@ -1,4 +1,4 @@
-import { ShapeElementFigure, ShapeToolStatus, Tools, ToolsName } from '../types/commonTypes.ts'
+import { ToolsName } from '../types/commonTypes.ts'
 import { getUIStore, useUIStore } from '../uiStore/uiStore'
 import { CanvasStoreType, Cursor } from './canvasStoreTypes.ts'
 
@@ -20,7 +20,7 @@ export const canvasStore: CanvasStoreType = {
 	get tool() {
 		return this._tool
 	},
-	set tool(value: Tools) {
+	set tool(value) {
 		useUIStore.setState({ tool: value })
 		this._tool = value
 	},
@@ -30,7 +30,7 @@ export const canvasStore: CanvasStoreType = {
 	get scale() {
 		return this._scale
 	},
-	set scale(value: number) {
+	set scale(value) {
 		getUIStore.setCanvasScale(value)
 		this._scale = value
 	},
@@ -60,5 +60,12 @@ export const canvasStore: CanvasStoreType = {
 		height: null,
 	},
 
-	elements: [],
+	_elements: [],
+	get elements() {
+		return this._elements
+	},
+	set elements(value) {
+		console.log(444)
+		this._elements = value
+	},
 }
