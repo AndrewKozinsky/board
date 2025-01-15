@@ -38,14 +38,10 @@ export type CanvasStoreType = {
 	$mainContainer: Container<ContainerChild>
 	$contentContainer: Container<ContainerChild>
 
-	_tool: Tools
-	get tool(): Tools
-	set tool(val: Tools)
+	tool: Tools
 
 	// Уровень масштабирования холста в процентах
-	_scale: number
-	get scale(): number
-	set scale(val: number)
+	scale: number
 
 	// Точка трансформации относительно которой будет происходить изменение масштаба
 	// Задаётся в процентах от ширины/высоты экрана
@@ -84,9 +80,7 @@ export type CanvasStoreType = {
 		height: null | number
 	}
 
-	_elements: CanvasElement[]
-	get elements(): CanvasElement[]
-	set elements(val: CanvasElement[])
+	elements: CanvasElement[]
 }
 
 export type CanvasElement = FigureElement | TextElement

@@ -2,38 +2,18 @@ import { ToolsName } from '../types/commonTypes.ts'
 import { getUIStore, useUIStore } from '../uiStore/uiStore'
 import { CanvasStoreType, Cursor } from './canvasStoreTypes.ts'
 
-export const canvasStore: CanvasStoreType = {
+const canvasStoreObj: CanvasStoreType = {
 	app: null as any,
 	devicePixelRatio: window.devicePixelRatio || 1,
 	$bgContainer: null as any,
 	$mainContainer: null as any,
 	$contentContainer: null as any,
 
-	_tool: {
+	tool: {
 		name: ToolsName.Select,
 	},
-	/*_tool: {
-		name: ToolsName.Shape,
-		shape: ShapeElementFigure.Rectangle,
-		status: ShapeToolStatus.ReadyForDrawing,
-	},*/
-	get tool() {
-		return this._tool
-	},
-	set tool(value) {
-		useUIStore.setState({ tool: value })
-		this._tool = value
-	},
 
-	_scale: 100,
-	// _scale: 7,
-	get scale() {
-		return this._scale
-	},
-	set scale(value) {
-		getUIStore.setCanvasScale(value)
-		this._scale = value
-	},
+	scale: 100,
 	scalePivotX: 0.5,
 	scalePivotY: 0.5,
 
@@ -60,12 +40,25 @@ export const canvasStore: CanvasStoreType = {
 		height: null,
 	},
 
-	_elements: [],
-	get elements() {
-		return this._elements
-	},
-	set elements(value) {
-		console.log(444)
-		this._elements = value
-	},
+	elements: [],
 }
+
+export const canvasStore = new Proxy(canvasStoreObj, {
+	set(target: CanvasStoreType, property: keyof CanvasStoreType, newValue: CanvasStoreType[typeof property]) {
+		if (property === 'scale') {
+			getUIStore.setCanvasScale(newValue as number)
+		}
+
+		if (property === 'tool') {
+			useUIStore.setState({ tool: newValue as any })
+		}
+
+		if (property === 'elements') {
+			console.log(444)
+		}
+
+		// @ts-ignore
+		target[property] = newValue
+		return true
+	},
+})
