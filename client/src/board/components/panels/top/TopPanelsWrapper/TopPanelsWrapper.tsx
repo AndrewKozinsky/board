@@ -1,4 +1,5 @@
-import SelectFigurePanel from '../SelectShapePanel/SelectFigurePanel.tsx'
+import ChooseFigurePanel from '../ChooseFigurePanel/ChooseFigurePanel.tsx'
+import SelectedElemPanel from '../SelectedElemPanel/SelectedElemPanel.tsx'
 import './TopPanelsWrapper.scss'
 
 function TopPanelsWrapper() {
@@ -7,7 +8,8 @@ function TopPanelsWrapper() {
 			<div className='top-part__logo'>Доска</div>
 			<div className='top-part__divider' />
 			<div className='top-part__panel'>
-				<SelectFigurePanel />
+				<ChooseFigurePanel />
+				<SelectedElemPanel />
 			</div>
 		</div>
 	)

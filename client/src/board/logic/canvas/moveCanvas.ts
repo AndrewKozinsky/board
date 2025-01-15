@@ -1,6 +1,6 @@
 import { KeyboardKeys, keyboardUtils } from '../../../utils/keyboardUtils.ts'
 import { MouseKeys } from '../../../utils/mouseUtils.ts'
-import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { canvasStore } from '../../canvasStore/canvasStoreProxy.ts'
 import { Cursor } from '../../canvasStore/canvasStoreTypes.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 import { boardConfig } from './boardConfig.ts'

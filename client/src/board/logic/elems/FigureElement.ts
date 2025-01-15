@@ -2,7 +2,7 @@ import { Graphics } from 'pixi.js'
 import { OutlineFilter } from 'pixi-filters'
 import { arrUtils } from '../../../utils/arrayUtils.ts'
 import { boardColors } from '../canvas/boardConfig.ts'
-import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { canvasStore } from '../../canvasStore/canvasStoreProxy.ts'
 import { InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
 import { ShapeElementFigure } from '../../types/commonTypes.ts'
 

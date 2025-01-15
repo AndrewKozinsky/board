@@ -1,6 +1,6 @@
 import { Application, Container, Graphics, Renderer } from 'pixi.js'
 import { boardColors } from './boardConfig.ts'
-import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { canvasStore } from '../../canvasStore/canvasStoreProxy.ts'
 import { canvasUtils } from './canvasUtils.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 

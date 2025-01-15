@@ -1,8 +1,8 @@
 import { ToolsName } from '../types/commonTypes.ts'
-import { getUIStore, useUIStore } from '../uiStore/uiStore'
 import { CanvasStoreType, Cursor } from './canvasStoreTypes.ts'
+import { createElementsArrayProxy } from './elementsArrayProxy.ts'
 
-const canvasStoreObj: CanvasStoreType = {
+export const canvasStoreObj: CanvasStoreType = {
 	app: null as any,
 	devicePixelRatio: window.devicePixelRatio || 1,
 	$bgContainer: null as any,
@@ -40,25 +40,5 @@ const canvasStoreObj: CanvasStoreType = {
 		height: null,
 	},
 
-	elements: [],
+	elements: createElementsArrayProxy(),
 }
-
-export const canvasStore = new Proxy(canvasStoreObj, {
-	set(target: CanvasStoreType, property: keyof CanvasStoreType, newValue: CanvasStoreType[typeof property]) {
-		if (property === 'scale') {
-			getUIStore.setCanvasScale(newValue as number)
-		}
-
-		if (property === 'tool') {
-			useUIStore.setState({ tool: newValue as any })
-		}
-
-		if (property === 'elements') {
-			console.log(444)
-		}
-
-		// @ts-ignore
-		target[property] = newValue
-		return true
-	},
-})

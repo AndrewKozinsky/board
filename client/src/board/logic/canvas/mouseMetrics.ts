@@ -1,5 +1,5 @@
 import { FederatedPointerEvent } from 'pixi.js'
-import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { canvasStore } from '../../canvasStore/canvasStoreProxy.ts'
 
 // Отлавливает координаты мыши и пишет в Хранилище чтобы другие функции могли это использовать
 export const mouseMetrics = {

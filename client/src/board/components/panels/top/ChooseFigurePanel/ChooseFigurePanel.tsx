@@ -4,9 +4,9 @@ import { tools } from '../../../../logic/tools/tools.ts'
 import { ToolsName } from '../../../../types/commonTypes.ts'
 import { useUIStore } from '../../../../uiStore/uiStore.ts'
 import { buttonsConfig } from './fn/buttonsConfig.ts'
-import './SelectShapePanel.scss'
+import './ChooseShapePanel.scss'
 
-function SelectFigurePanel() {
+function ChooseFigurePanel() {
 	const currentTool = useUIStore((s) => s.tool)
 
 	if (currentTool.name !== ToolsName.Shape) {
@@ -34,4 +34,4 @@ function SelectFigurePanel() {
 	)
 }
 
-export default SelectFigurePanel
+export default ChooseFigurePanel

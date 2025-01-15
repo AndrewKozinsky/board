@@ -1,6 +1,6 @@
 import { FederatedPointerEvent } from 'pixi.js'
 import { KeyboardKeys, keyboardUtils } from '../../../utils/keyboardUtils.ts'
-import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { canvasStore } from '../../canvasStore/canvasStoreProxy.ts'
 import { ToolsName } from '../../types/commonTypes.ts'
 import { boardConfig } from '../canvas/boardConfig.ts'
 import { deleteElements } from '../elemInteraction/deleteElements.ts'

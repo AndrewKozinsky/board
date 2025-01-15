@@ -1,6 +1,6 @@
 import { FederatedPointerEvent } from 'pixi.js'
 import { arrUtils } from '../../../utils/arrayUtils.ts'
-import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { canvasStore } from '../../canvasStore/canvasStoreProxy.ts'
 import { CanvasElement, CanvasStoreType, Cursor, InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
 

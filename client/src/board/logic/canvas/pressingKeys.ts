@@ -1,5 +1,5 @@
 import { keyboardUtils } from '../../../utils/keyboardUtils.ts'
-import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { canvasStore } from '../../canvasStore/canvasStoreProxy.ts'
 
 // Отлавливает нажатие клавиш и пишет в Хранилище чтобы другие функции могли знать про нажатые клавиши
 export const pressingKeys = {

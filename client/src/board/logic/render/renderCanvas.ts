@@ -1,5 +1,5 @@
 import { pixiUtils } from '../../../utils/pixiUtils.ts'
-import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { canvasStore } from '../../canvasStore/canvasStoreProxy.ts'
 import { FigureElement } from '../elems/FigureElement.ts'
 import { transformRect } from './transformRect.ts'
 

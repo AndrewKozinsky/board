@@ -1,6 +1,6 @@
 import { Application, Container, Renderer } from 'pixi.js'
 import { wait } from '../../utils/promise.ts'
-import { canvasStore } from '../canvasStore/canvasStore.ts'
+import { canvasStore } from '../canvasStore/canvasStoreProxy.ts'
 import { ShapeElementFigure } from '../types/commonTypes.ts'
 import { fullScreen } from './canvas/fullScreen.ts'
 import { mainContainer } from './canvas/mainContainer.ts'
@@ -42,7 +42,7 @@ export const main = {
 
 		drawFigures.init()
 
-		await wait(10, () => {
+		/*await wait(10, () => {
 			canvasStore.elements.push(
 				new FigureElement({
 					shape: ShapeElementFigure.Rectangle,
@@ -64,7 +64,7 @@ export const main = {
 					backgroundColor: 'ccc',
 				}),
 			)
-		})
+		})*/
 
 		renderCanvas.render()
 	},

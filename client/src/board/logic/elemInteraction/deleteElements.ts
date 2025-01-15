@@ -1,5 +1,5 @@
 import { keyboardUtils } from '../../../utils/keyboardUtils.ts'
-import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { canvasStore } from '../../canvasStore/canvasStoreProxy.ts'
 import { canvasUtils } from '../canvas/canvasUtils.ts'
 import { FigureElement } from '../elems/FigureElement.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'

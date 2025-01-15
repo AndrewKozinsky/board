@@ -1,5 +1,5 @@
 import { Container, Text } from 'pixi.js'
-import { canvasStore } from '../board/canvasStore/canvasStore.ts'
+import { canvasStore } from '../board/canvasStore/canvasStoreProxy.ts'
 import { throttle } from './miscUtils.ts'
 
 // Вспомогательные функции Pixi.js

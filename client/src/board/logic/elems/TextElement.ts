@@ -1,5 +1,5 @@
 import { arrUtils } from '../../../utils/arrayUtils.ts'
-import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { canvasStore } from '../../canvasStore/canvasStoreProxy.ts'
 import { InteractionStatus } from '../../canvasStore/canvasStoreTypes.ts'
 
 type TextElementInput = {

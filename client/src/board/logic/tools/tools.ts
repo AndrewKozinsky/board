@@ -1,5 +1,5 @@
 import { isKeysPressed } from '../../../utils/keyboardUtils.ts'
-import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { canvasStore } from '../../canvasStore/canvasStoreProxy.ts'
 import { Cursor } from '../../canvasStore/canvasStoreTypes.ts'
 import { ShapeElementFigure, ShapeToolStatus, ToolsName } from '../../types/commonTypes.ts'
 import { boardConfig } from '../canvas/boardConfig.ts'

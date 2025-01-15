@@ -1,7 +1,7 @@
 import { isKeysPressed } from '../../../utils/keyboardUtils.ts'
 import { boardConfig } from './boardConfig.ts'
 import { renderCanvas } from '../render/renderCanvas.ts'
-import { canvasStore } from '../../canvasStore/canvasStore.ts'
+import { canvasStore } from '../../canvasStore/canvasStoreProxy.ts'
 import { canvasUtils } from './canvasUtils.ts'
 import { mainContainer } from './mainContainer.ts'
 

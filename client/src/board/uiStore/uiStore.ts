@@ -19,6 +19,7 @@ export const useUIStore = create<UIStore>((set) => {
 				})
 			})
 		},
+		selectedElem: null,
 	}
 })
 
